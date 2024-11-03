@@ -23,7 +23,7 @@ jobs:
         uses: up9cloud/action-rsync@v1.1
         env:
           HOST: dev.digitaleklasse.net
-          KEY: ${{secrets.SSH_DEV_MEDIENHAUS_UDK_BERLIN_DE}}
+          KEY: ${{secrets.SSH_RFWS_DEV}}
           TARGET: /opt/digitaleklasse-net-frontend/
           VERBOSE: true
           USER: root
@@ -42,4 +42,4 @@ jobs:
             systemctl restart digitaleklasse-net-frontend.service
           host: dev.digitaleklasse.net
           user: root
-          key: ${{secrets.SSH_DEV_MEDIENHAUS_UDK_BERLIN_DE}}
+          key: ${{secrets.SSH_RFWS_DEV}}
