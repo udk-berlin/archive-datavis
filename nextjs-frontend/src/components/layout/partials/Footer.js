@@ -3,29 +3,28 @@ import { Separator } from "@/components/ui/separator";
 
 const Footer = () => {
   return (
-    <footer className="flex text-gray-500 space-x-24 ">
-      <section className="max-w-xs">
-        <p>the digitaleklasse took place between 1990-2023 at the berlin university of the arts. initated by joachimn sauter.</p>
-      </section>
-      <Separator orientation="vertical" />
-      <section className="max-w-xs">
-        <p>the digitaleklasse archive was created in the context of the "labor for digital infastructure" and supported by inküle.</p>
-      </section>
-      <section className="max-w-xs">
-        <ul>
+    <footer className=" bg-secondary py-8 flex justify-between px-12  ">
+      <section className=" text-muted ">
+        <ul className="flex space-x-12">
           <li>
-            <Link href="/imprint">imprint</Link>
+            <Link className="!text-popover font-normal" href="/imprint">Contact</Link>
           </li>
           <li>
-            <Link href="/privacy">privacy</Link>
+            <Link className="!text-popover font-normal" href="/privacy">Imprint</Link>
           </li>
           <li>
-            <Link href="/contact">contact</Link>
+            <Link className="!text-popover font-normal" href="/contact">Report Content</Link>
           </li>
           <li>
-            <Link href="/abuse">Report content</Link>
+            <Link className="!text-popover font-normal" href="/abuse">Privacy</Link>
           </li>
         </ul>
+      </section>
+      <section className="max-w-xl text-secondary-forground mb-4">
+        <p className="!text-secondary-foreground">
+          The Digitale Klasse Archive was created in the context of the "labor for digital infastructure" with generous support by inküle. <br/>🄯
+          1990–2023 Digitale Klasse / UdK Berlin
+        </p>
       </section>
     </footer>
   );

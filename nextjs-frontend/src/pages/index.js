@@ -2,84 +2,121 @@ import Link from "next/link";
 import { Card } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
-export default function Home() {
+import ImageCollage from "@/components/ui-compositions/ImageCollage";
 
-  const dummyPerspectives= [
-    {
-      title: "new digital",
-      author: "Jussi Ängeslevä",
-      image: "/images/hero.jpeg"
-    },
-    {
-      title: "media renessaince",
-      author: "Jussi Ängeslevä",
-      image: "/images/3N7A0081.jpeg"
-    },
-    {
-      title: "the social web",
-      author: "Jussi Ängeslevä",
-      image: "/images/3N7A0084.jpeg"
-    },
-    {
-      title: "another era",
-      author: "Jussi Ängeslevä",
-      image: "/images/3N7A0078.jpeg"
-    },
-    {
-      title: "failed parthways",
-      author: "Jussi Ängeslevä",
-      image: "/images/3N7A0080.jpeg"
-    },
-    {
-      title: "some phyiscal",
-      author: "Jussi Ängeslevä",
-      image: "/images/3N7A0083.jpeg"
-    },
-    ]
+const Home = () => {
   return (
-    <>
-      <section className="w-2/3 ">
-        <h3 className="text-4xl leading-[45px]">
-          Welcome to the Digitale Klasse archive, a comprehensive repository of the pioneering work and legacy of the Digitale Klasse at the
-          Berlin University of the Arts. Founded by Joachim Sauter, the Digitale Klasse has been at the forefront of digital art and design
-          education from 1990 to 2023. Explore our archive to discover something something projects, somethign else research, and the some impact
-          of digital media on contemporary art and design.
-        </h3>
-      </section>
+    <div className="grid grid-cols-12 gap-4">
+      <section className="col-span-12 gap-4  grid grid-cols-12">
+        <div className="col-span-5 mt-24 ">
+          <h3 className="text-2xl leading-[37px]">
+            Welcome to the Digitale Klasse Archive:
+            <br />a comprehensive repository of the pioneering work and legacy of the Digitale Klasse at the Berlin University of the Arts.
+          </h3>
+          <p className="mt-4  w-3/4 leading-[25px]">
+            Founded by Joachim Sauter, the Digitale Klasse has been at the forefront of digital art and design education from 1990 to 2023.
+            Explore our archive to discover something something projects, somethign else research, and the some impact of digital media on
+            contemporary art and design.
+          </p>
+        </div>
 
-      <section className="mt-24">
-        <h3 className="text-2xl">perspectives</h3>
-        <p className="text-muted">lore lore</p>
-        <Separator className="mt-4" />
-        <div className="mt-8 mb-12 w-full overflow-x-auto">
-          <div className="flex space-x-10">
-            {dummyPerspectives.map((perspective, index) => (
-              <div key={index} className="flex-shrink-0">
-                <Card className="w-[300px] h-[400px] rounded-xl overflow-hidden shadow-lg">
-                  <img src={perspective.image} className="w-full h-full object-cover" />
-                </Card>
-                <div>
-                  <h4>{perspective.title}</h4>
-                  <p className="text-muted italic">by {perspective.author}</p>
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="col-span-6 col-start-7">
+          <ImageCollage
+            className={"w-full h-[550px]"}
+            images={[
+              { src: "/images/hero.jpeg", alt: "hero", className: "right-0 top-0 w-4/5", aspectRatio: "3:2" },
+              { src: "/images/3N7A0080.jpeg", alt: "hero", className: "left-0 bottom-0 w-1/2" },
+            ]}
+          />
         </div>
       </section>
 
-      <section className="mt-24">
-      <h3 className="text-2xl">data network</h3>
-      <p className="text-muted">lore lore</p>
-      <Separator className="mt-4" />
-        <div className="h-[400px] mt-8">
+      <section className="mt-48 col-span-12 gap-4  grid grid-cols-12">
+        <div className="col-span-6 ">
+          <ImageCollage
+            className={"w-full h-[550px]"}
+            images={[
+              { src: "/images/3N7A0078.jpeg", alt: "hero", className: "left-0 top-0 w-4/5", aspectRatio: "3:2" },
+              { src: "/images/3N7A0083.jpeg", alt: "hero", className: "right-0 bottom-0 w-1/2" },
+            ]}
+          />
         </div>
 
+        <div className="col-span-5 col-start-8 mt-24 w-3/4">
+          <h3 className="text-2xl font-normal">Physical archive</h3>
+          <p className="text-muted mt-4">
+            Text about the archive itself, its medias etc.Text about the archive itself, its medias etc.Text about the archive itself, its
+            medias etc.Text about the archive itself, its medias etc.Text about the archive itself, its medias etc.
+          </p>
+        </div>
       </section>
 
-     
+      <section className="mt-48 col-span-12  gap-4  grid grid-cols-12">
+        <div className="col-span-4 col-start-2 mt-24 w-full">
+          <h3 className="text-2xl font-normal">data network</h3>
+          <p className="text-muted mt-4">
+            Text about the archive itself, its medias etc.Text about the archive itself, its medias etc.Text about the archive itself, its
+            medias etc.Text about the archive itself, its medias etc.Text about the archive itself, its medias etc.
+          </p>
+        </div>
 
-  
-    </>
+        <div className="col-span-7 col-start-6">
+          <ImageCollage
+            className={"w-full h-[550px]"}
+            images={[
+              { src: "/images/3N7A0078.jpeg", alt: "hero", className: "left-0 top-0 w-4/5", aspectRatio: "3:2" },
+              { src: "/images/3N7A0083.jpeg", alt: "hero", className: "right-0 bottom-0 w-1/2" },
+            ]}
+          />
+        </div>
+      </section>
+
+      <section className="mt-48 col-span-12 gap-4 grid grid-cols-12">
+        <div className="col-span-7 ">
+          <ImageCollage
+            className={"w-full h-[650px]"}
+            images={[
+              { src: "/images/3N7A0078.jpeg", alt: "hero", className: "left-20 top-0 w-4/5", aspectRatio: "3:2" },
+              { src: "/images/3N7A0083.jpeg", alt: "hero", className: "left-0 bottom-0 w-1/3" },
+              { src: "/images/3N7A0080.jpeg", alt: "hero", className: "right-0 bottom-20 w-1/3" },
+            ]}
+          />
+        </div>
+
+        <div className="col-span-4 col-start-8 mt-24  w-full">
+          <h3 className="text-2xl font-normal">Perspectives</h3>
+          <p className="text-muted mt-4">
+            Text about the archive itself, its medias etc.Text about the archive itself, its medias etc.Text about the archive itself, its
+            medias etc.Text about the archive itself, its medias etc.Text about the archive itself, its medias etc.
+          </p>
+        </div>
+      </section>
+
+      <section className="mt-48 col-span-12 gap-4 grid grid-cols-12">
+      <div className="col-span-3 col-start-2 ">
+          <h3 className="text-2xl font-normal">Contribute</h3>
+          <p className="text-muted mt-4">
+            Text about the archive itself, its medias etc.Text about the archive itself, its medias etc.Text about the archive itself, its
+            medias etc.Text about the archive itself, its medias etc.Text about the archive itself, its medias etc.
+          </p>
+        </div>
+
+        <div className="col-span-7 col-start-5 ">
+          <ImageCollage
+            className={"w-full h-[550px]"}
+            images={[
+              { src: "/images/3N7A9979.jpeg", alt: "hero", className: "left-20 top-0 w-4/5", aspectRatio: "3:2" },
+              { src: "/images/3N7A0079.jpeg", alt: "hero", className: "right-0 bottom-0 w-1/3" },
+            ]}
+          />
+        </div>
+
+       
+      </section>
+
+      
+    </div>
   );
-}
+};
+
+export default Home;
