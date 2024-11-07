@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import ImageCollage from "@/components/ui-compositions/ImageCollage";
+import Link from "next/link";
 
 const PerspectivesPage = () => {
   const [perspectives, setPerspectives] = useState([
     {
+      id: 1,
       title: "The Renaissance of the Physical",
       author: "Jussi Ängeslevä",
       description:
@@ -12,6 +14,7 @@ const PerspectivesPage = () => {
       images: ["./images/3N7A9987.jpeg"],
     },
     {
+      id: 2,
       title: "Another Headline, this time its much longer and needs two lines instead of one",
       author: "Author 1",
       description:
@@ -20,6 +23,7 @@ const PerspectivesPage = () => {
       images: ["./images/3N7A0081.jpeg"],
     },
     {
+      id: 3,
       title: "The restaurant at the end of the universe",
       author: "Author 1",
       description:
@@ -28,6 +32,7 @@ const PerspectivesPage = () => {
       images: ["./images/3N7A0084.jpeg"],
     },
     {
+      id: 4,
       title: "The Renaissance of the Digital",
       author: "Author 1",
       description:
@@ -56,7 +61,7 @@ const PerspectivesPage = () => {
           </h3>
           <p className="text-xl"> by {perspective.author}</p>
           <p className="mt-4 w-3/4 leading-[25px]">{truncateText(perspective.description, 200)}</p>
-          <p className="mt-2 underline font-bold">Read more</p>
+          <p className="mt-2 underline font-bold"><Link href={`/perspective/${perspective?.id}`}> Read more</Link></p>
         </div>
 
         <div className={`col-span-7 ${isEven ? "order-2" : "order-1"}`}>
