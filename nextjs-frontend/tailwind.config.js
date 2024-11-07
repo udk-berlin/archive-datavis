@@ -12,6 +12,9 @@ module.exports = {
       },
     },
     extend: {
+      width: {
+        "6/7": "85.7142857%", // 6/7 of the full width
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -69,7 +72,7 @@ module.exports = {
     },
   },
   plugins: [
-    require('@tailwindcss/aspect-ratio'),
+    require("@tailwindcss/aspect-ratio"),
     require("tailwindcss-animate"),
     function ({ addUtilities }) {
       addUtilities({
