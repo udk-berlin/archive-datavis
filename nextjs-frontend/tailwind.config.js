@@ -15,6 +15,10 @@ module.exports = {
       width: {
         "6/7": "85.7142857%", // 6/7 of the full width
       },
+      scale: {
+        '101': '1.003',
+        '99': '.997',
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
