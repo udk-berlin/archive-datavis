@@ -46,7 +46,7 @@ const ImageCollage = ({ images, className }) => {
           key={index}
           className={cn("absolute transition-transform w-[500px] transform hover:scale-105 hover:z-10", image.className)}
           style={{
-            transform: isVisible ? `translateY(${scrollY * 0.1 * (index + 1)}px)` : "none", // Adjust the multiplier for different parallax effects
+            transform: isVisible ? `translateY(${scrollY * 0.051 * (index + 1)}px)` : "none", // Adjust the multiplier for different parallax effects
             height: "auto",
           }}
         >
