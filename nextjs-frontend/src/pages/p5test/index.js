@@ -62,35 +62,36 @@ const P5Test = () => {
 
       centralPoint = p5.createVector(0, 0, 0);
 
-      // planets.push(
-      //   new Planet(p5, {
-      //     mode: "displacement",
-      //     distance: 100,
-      //     centralPoint: p5.createVector(0, 0, 0),
-      //     data: [
-      //       1, 14, 4, 8, 3, 9, 9, 12, 7, 11, 5, 5, 13, 11, 4, 10, 16, 9, 18, 7, 7, 9, 11, 3, 8, 5, 9, 6, 12, 10, 7, 14, 2, 9, 4, 2, 6, 6, 3,
-      //       3, 11, 5, 7, 6, 5, 6, 2, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 57,
-      //     ],
-      //   })
-      // );
+      planets.push(
+        new Planet(p5, {
+          mode: "ring",
+          distance: 100,
+          centralPoint: p5.createVector(0, 0, 0),
+          data: [
+            1, 14, 4, 8, 3, 9, 9, 12, 7, 11, 5, 5, 13, 11, 4, 10, 16, 9, 18, 7, 7, 9, 11, 3, 8, 5, 9, 6, 12, 10, 7, 14, 2, 9, 4, 2, 6, 6, 3,
+            3, 11, 5, 7, 6, 5, 6, 2, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 57,
+          ],
+          rotationAngles: { angleX: 45, angleY: 0, angleZ: 0 },
+        })
+      );
 
-      // planets.push(
-      //   new Planet(p5, {
-      //     mode: "displacement",
-      //     distance: 100,
-      //     centralPoint: p5.createVector(0, 0, 500),
-      //     data: [
-      //       1, 14, 4, 8, 3, 9, 9, 12, 7, 11, 5, 5, 13, 11, 4, 10, 16, 9, 18, 7, 7, 9, 11, 3, 8, 5, 9, 6, 12, 10, 7, 14, 2, 9, 4, 2, 6, 6, 3,
-      //       3, 11, 5, 7, 6, 5, 6, 2, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 57,
-      //     ],
-      //   })
-      // );
+      planets.push(
+        new Planet(p5, {
+          mode: "displacement",
+          distance: 100,
+          centralPoint: p5.createVector(-400, 0, 0),
+          data: [
+            1, 14, 4, 8, 3, 9, 9, 12, 7, 11, 5, 5, 13, 11, 4, 10, 16, 9, 18, 7, 7, 9, 11, 3, 8, 5, 9, 6, 12, 10, 7, 14, 2, 9, 4, 2, 6, 6, 3,
+            3, 11, 5, 7, 6, 5, 6, 2, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 57,
+          ],
+        })
+      );
 
       planets.push(
         new Planet(p5, {
           mode: "line",
           distance: 100,
-          centralPoint: p5.createVector(0, 0, 0),
+          centralPoint: p5.createVector(500, 0, 0),
           data: planetData,
         })
       );
