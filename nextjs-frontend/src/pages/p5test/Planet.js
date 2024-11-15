@@ -33,11 +33,10 @@ class Planet {
 
     switch (this.mode) {
       case "displacement":
-        this.displacedPoints = this.createDisplacedPoints({ _points: this.points, distances: data });
+        this.displacedPoints = this.createDisplacedPoints({ _points: this.points, distances: data.map((d) => d.children.length) });
         this.displacedPointsHull = convexHull(this.displacedPoints);
         break;
       case "line":
-        this.displacedPoints = this.createDisplacedPoints({ _points: this.points, distances: data });
         this.points.forEach((point, i) => {
           let p = p5.createVector(point[0], point[1], point[2]);
           let n = data[i].children.length;
@@ -80,7 +79,7 @@ class Planet {
     } else if (Array.isArray(point) && point.length === 3) {
       return this.p5.createVector(point[0], point[1], point[2]);
     } else {
-      throw new Error("centralPoint muss ein p5.Vector oder ein Array der Länge 3 sein.");
+      throw new Error("not a 3d vector");
     }
   }
 
@@ -226,7 +225,6 @@ class Planet {
     this.p5.noFill();
 
     this.p5.stroke(0, 0, 0, 50);
-    //p5.fill(255,0,0)
 
     this.p5.push();
     this.p5.translate(this.centralPoint.x, this.centralPoint.y, this.centralPoint.z);
@@ -260,11 +258,6 @@ class Planet {
         });
         break;
       case "line":
-        // this.points.forEach((p, i) => {
-        //   this.p5.stroke(255, 0, 0);
-        //   this.p5.line(p[0], p[1], p[2], this.displacedPoints[i][0], this.displacedPoints[i][1], this.displacedPoints[i][2]);
-        // });
-
         this.points.forEach((p, i) => {
           this.p5.push();
           this.p5.translate(p[0], p[1], p[2]);
@@ -295,23 +288,6 @@ class Planet {
         break;
       default:
     }
-
-    // points.forEach( (p,i) => {
-    //   p5.stroke(255,0,0)
-    //   p5.line(p[0], p[1], p[2], displacedPoints[i][0], displacedPoints[i][1], displacedPoints[i][2]);
-    // })
-
-    // this.p5.fill(0, 0, 0);
-    // if (img) {
-    //   this.p5.push();
-    //   this.p5.noStroke();
-    //   this.p5.noLights();
-    //   this.p5.translate(0, 250, 0);
-    //   this.p5.rotateX(p5.HALF_PI);
-    //   this.p5.texture(img);
-    //   this.p5.plane(400, 400);
-    //   this.p5.pop();
-    // }
   }
 
   getPoints() {
