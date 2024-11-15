@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import * as THREE from "three";
 import { ConvexGeometry } from "three/examples/jsm/geometries/ConvexGeometry.js";
 
-import { addScreenPositionFunction } from "./screenPosition";
+
 import { useState, useEffect } from "react";
 
 import { NextReactP5Wrapper } from "@p5-wrapper/next";
@@ -58,37 +58,38 @@ const P5Test = () => {
 
     p5.setup = () => {
       p5.createCanvas(windowWidth, 950, p5.WEBGL);
-      addScreenPositionFunction(p5);
+      // addScreenPositionFunction(p5);
 
       centralPoint = p5.createVector(0, 0, 0);
 
-      planets.push(
-        new Planet(p5, {
-          mode: "ring",
-          distance: 100,
-          centralPoint: p5.createVector(0, 0, 0),
-          data: planetData,
-          rotationAngles: { angleX: 45, angleY: 0, angleZ: 0 },
-          orbitRadii: { rx: 200, ry: 100 }
-        }),
+      // planets.push(
+      //   new Planet(p5, {
+      //     mode: "ring",
+      //     distance: 100,
+      //     centralPoint: p5.createVector(0, 0, 0),
+      //     data: planetData,
+      //     rotationAngles: { angleX: 45, angleY: 0, angleZ: 0 },
+      //     orbitRadii: { rx: 200, ry: 100 }
+      //   }),
       
-      );
+      // );
 
-      planets.push(
-        new Planet(p5, {
-          mode: "displacement",
-          distance: 100,
-          centralPoint: p5.createVector(-400, 0, 0),
-          data: planetData,
-        })
-      );
+      // planets.push(
+      //   new Planet(p5, {
+      //     mode: "displacement",
+      //     distance: 100,
+      //     centralPoint: p5.createVector(-400, 0, 0),
+      //     data: planetData,
+      //   })
+      // );
 
       planets.push(
         new Planet(p5, {
           mode: "line",
           distance: 100,
-          centralPoint: p5.createVector(500, 0, 0),
+          centralPoint: p5.createVector(0, 0, 0),
           data: planetData,
+          camera: camera,
         })
       );
 

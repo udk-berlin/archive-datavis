@@ -11,7 +11,7 @@ function addScreenPositionFunction(p5Instance) {
 
 	// the stack to keep track of matrices when using push and pop
 	if (context == R_2D) {
-		p._renderer.matrixStack = [new p5.Matrix()];
+		p._renderer.matrixStack = [new p.constructor.Matrix()];
 	}
 
 	// replace all necessary functions to keep track of transformations
@@ -19,7 +19,7 @@ function addScreenPositionFunction(p5Instance) {
 	if (p.draw instanceof Function) {
 		let drawNative = p.draw;
 		p.draw = function(...args) {
-			if (context == R_2D) p._renderer.matrixStack = [new p5.Matrix()];
+			if (context == R_2D) p._renderer.matrixStack = [new p.constructor.Matrix()];
 			drawNative.apply(p, args);
 		};
 	}
@@ -28,7 +28,7 @@ function addScreenPositionFunction(p5Instance) {
 	if (p.resetMatrix instanceof Function) {
 		let resetMatrixNative = p.resetMatrix;
 		p.resetMatrix = function(...args) {
-			if (context == R_2D) p._renderer.matrixStack = [new p5.Matrix()];
+			if (context == R_2D) p._renderer.matrixStack = [new p.constructor.Matrix()];
 			resetMatrixNative.apply(p, args);
 		};
 	}
@@ -108,7 +108,7 @@ function addScreenPositionFunction(p5Instance) {
 				let rad = p._toRadians(args[0]);
 				let stack = p._renderer.matrixStack;
 				let m = last(stack);
-				let sm = new p5.Matrix();
+				let sm = new p.constructor.Matrix();
 				sm.mat4[4] = Math.tan(rad);
 				sm.mult(m);
 				stack[stack.length - 1] = sm;
@@ -124,7 +124,7 @@ function addScreenPositionFunction(p5Instance) {
 				let rad = p._toRadians(args[0]);
 				let stack = p._renderer.matrixStack;
 				let m = last(stack);
-				let sm = new p5.Matrix();
+				let sm = new p.constructor.Matrix();
 				sm.mat4[1] = Math.tan(rad);
 				sm.mult(m);
 				stack[stack.length - 1] = sm;
@@ -140,7 +140,7 @@ function addScreenPositionFunction(p5Instance) {
 			if (context == R_2D) {
 				let stack = p._renderer.matrixStack;
 				let m = last(stack);
-				let sm = new p5.Matrix();
+				let sm = new p.constructor.Matrix();
 				sm.mat4[0] = args[0];
 				sm.mat4[1] = args[1];
 				sm.mat4[4] = args[2];
@@ -176,7 +176,7 @@ function addScreenPositionFunction(p5Instance) {
 
 
 	p.screenPosition = function(x, y, z) {
-		if (x instanceof p5.Vector) {
+		if (x instanceof p.constructor.Vector) {
 			let v = x;
 			x = v.x;
 			y = v.y;
@@ -236,7 +236,7 @@ function addScreenPositionFunction(p5Instance) {
 	/* Multiply a 4x4 homogeneous matrix by a Vector4 considered as point
 	 * (ie, subject to translation). */
 	function multMatrixVector(m, v) {
-		if (!(m instanceof p5.Matrix) || !(v instanceof p5.Vector)) {
+		if (!(m instanceof p.constructor.Matrix) || !(v instanceof p.constructor.Vector)) {
 			print('multMatrixVector : Invalid arguments');
 			return;
 		}
