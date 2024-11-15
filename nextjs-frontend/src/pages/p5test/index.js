@@ -3,12 +3,12 @@ import dynamic from "next/dynamic";
 import * as THREE from "three";
 import { ConvexGeometry } from "three/examples/jsm/geometries/ConvexGeometry.js";
 
-
 import { useState, useEffect } from "react";
 
 import { NextReactP5Wrapper } from "@p5-wrapper/next";
 
 import Planet from "./Planet";
+import SolarSystem from "./SolarSystem";
 
 const P5Test = () => {
   let papertexture;
@@ -40,20 +40,13 @@ const P5Test = () => {
 
     let planetData = [];
 
+    let solarSystem = new SolarSystem();
+
     p5.preload = async () => {
       img = p5.loadImage("/images/floatingShadow.png");
 
       // Fetch data for the second planet
-      try {
-        const response = await fetch("http://localhost:3010/api/data");
-        if (response.ok) {
-          planetData = await response.json();
-        } else {
-          console.error("Failed to fetch planet data");
-        }
-      } catch (error) {
-        console.error("Error fetching planet data:", error);
-      }
+      planetData = await fetchData("http://localhost:3010/api/data");
     };
 
     p5.setup = () => {
@@ -62,32 +55,31 @@ const P5Test = () => {
 
       centralPoint = p5.createVector(0, 0, 0);
 
-      // planets.push(
-      //   new Planet(p5, {
-      //     mode: "ring",
-      //     distance: 100,
-      //     centralPoint: p5.createVector(0, 0, 0),
-      //     data: planetData,
-      //     rotationAngles: { angleX: 45, angleY: 0, angleZ: 0 },
-      //     orbitRadii: { rx: 200, ry: 100 }
-      //   }),
-      
-      // );
+      solarSystem.addPlanet(
+        new Planet(p5, {
+          mode: "ring",
+          distance: 100,
+          centralPoint: p5.createVector(0, 0, 0),
+          data: planetData,
+          rotationAngles: { angleX: 45, angleY: 0, angleZ: 0 },
+          orbitRadii: { rx: 200, ry: 100 },
+        })
+      );
 
-      // planets.push(
-      //   new Planet(p5, {
-      //     mode: "displacement",
-      //     distance: 100,
-      //     centralPoint: p5.createVector(-400, 0, 0),
-      //     data: planetData,
-      //   })
-      // );
+      solarSystem.addPlanet(
+        new Planet(p5, {
+          mode: "displacement",
+          distance: 100,
+          centralPoint: p5.createVector(-400, 0, 0),
+          data: planetData,
+        })
+      );
 
-      planets.push(
+      solarSystem.addPlanet(
         new Planet(p5, {
           mode: "line",
           distance: 100,
-          centralPoint: p5.createVector(0, 0, 0),
+          centralPoint: p5.createVector(400, 0, 0),
           data: planetData,
           camera: camera,
         })
@@ -103,7 +95,7 @@ const P5Test = () => {
       p5.ambientLight(150);
       p5.directionalLight(255, 255, 255, 1, 1, -1);
 
-      planets.forEach((planet) => {
+      solarSystem.getPlanets().forEach((planet) => {
         planet.draw();
         if (img) {
           p5.push();
@@ -117,6 +109,26 @@ const P5Test = () => {
         }
       });
     };
+
+    async function fetchData(url) {
+      try {
+        const response = await fetch(url);
+        if (response.ok) {
+          const d = await response.json();
+          if (d) {
+            return d;
+          } else {
+            return [];
+          }
+        } else {
+          console.error("Failed to fetch planet data");
+          return [];
+        }
+      } catch (error) {
+        console.error("Error fetching planet data:", error);
+        return [];
+      }
+    }
 
     //// tests
 
