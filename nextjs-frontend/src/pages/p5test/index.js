@@ -8,7 +8,7 @@ import { useState } from "react";
 
 import { NextReactP5Wrapper } from "@p5-wrapper/next";
 
-import Orbit from "./Orbit";
+import Planet from "./Planet";
 
 const P5Test = () => {
   let papertexture;
@@ -23,7 +23,7 @@ const P5Test = () => {
     let camera;
 
 
-    let testOrbit 
+    let testPlanet 
 
     p5.preload = () => {
       console.log("asd");
@@ -36,7 +36,7 @@ const P5Test = () => {
 
       centralPoint = p5.createVector(0, 0, 0);
 
-      testOrbit =  new Orbit(p5, {
+      testPlanet =  new Planet(p5, {
         distance: 100,
         centralPoint,
         data: [
@@ -45,8 +45,8 @@ const P5Test = () => {
         ],
       });
 
-      points = testOrbit.getPoints();
-      displacedPoints = testOrbit.getDisplacedPoints();
+      points = testPlanet.getPoints();
+      displacedPoints = testPlanet.getDisplacedPoints();
 
       camera = p5.createCamera();
     };
@@ -140,7 +140,7 @@ const P5Test = () => {
       }
 
 
-      testOrbit.draw();
+      testPlanet.draw();
 
 
     };

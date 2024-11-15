@@ -1,7 +1,7 @@
 import convexHull from "convex-hull";
 
 
-class Orbit {
+class Planet {
     constructor(p5, { distance, centralPoint, data }) {
       this.p5 = p5;
       this.distance = distance;
@@ -151,4 +151,4 @@ class Orbit {
     }
   }
 
-  export default Orbit;
+  export default Planet;
