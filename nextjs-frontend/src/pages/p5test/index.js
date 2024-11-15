@@ -4,7 +4,7 @@ import * as THREE from "three";
 import { ConvexGeometry } from "three/examples/jsm/geometries/ConvexGeometry.js";
 
 import { addScreenPositionFunction } from "./screenPosition";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 import { NextReactP5Wrapper } from "@p5-wrapper/next";
 
@@ -13,45 +13,90 @@ import Planet from "./Planet";
 const P5Test = () => {
   let papertexture;
 
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    // Clean up the event listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   // const [img, setImg] = useState();
 
   function sketch(p5) {
     let img;
-    let displacedPoints = [];
-    let points = [];
+
     let centralPoint = { x: 0, y: 0, z: 0 };
     let camera;
 
+    let planets = [];
 
-    let testPlanet 
+    let planetData = [];
 
-    p5.preload = () => {
-      console.log("asd");
+    p5.preload = async () => {
       img = p5.loadImage("/images/floatingShadow.png");
+
+      // Fetch data for the second planet
+      try {
+        const response = await fetch("http://localhost:3010/api/data");
+        if (response.ok) {
+          planetData = await response.json();
+        } else {
+          console.error("Failed to fetch planet data");
+        }
+      } catch (error) {
+        console.error("Error fetching planet data:", error);
+      }
     };
 
     p5.setup = () => {
-      p5.createCanvas(750, 950, p5.WEBGL);
+      p5.createCanvas(windowWidth, 950, p5.WEBGL);
       addScreenPositionFunction(p5);
 
       centralPoint = p5.createVector(0, 0, 0);
 
-      testPlanet =  new Planet(p5, {
-        distance: 100,
-        centralPoint,
-        data: [
-          1, 14, 4, 8, 3, 9, 9, 12, 7, 11, 5, 5, 13, 11, 4, 10, 16, 9, 18, 7, 7, 9, 11, 3, 8, 5, 9, 6, 12, 10, 7, 14, 2, 9, 4, 2, 6, 6, 3,
-          3, 11, 5, 7, 6, 5, 6, 2, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 57,
-        ],
-      });
+      // planets.push(
+      //   new Planet(p5, {
+      //     mode: "displacement",
+      //     distance: 100,
+      //     centralPoint: p5.createVector(0, 0, 0),
+      //     data: [
+      //       1, 14, 4, 8, 3, 9, 9, 12, 7, 11, 5, 5, 13, 11, 4, 10, 16, 9, 18, 7, 7, 9, 11, 3, 8, 5, 9, 6, 12, 10, 7, 14, 2, 9, 4, 2, 6, 6, 3,
+      //       3, 11, 5, 7, 6, 5, 6, 2, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 57,
+      //     ],
+      //   })
+      // );
 
-      points = testPlanet.getPoints();
-      displacedPoints = testPlanet.getDisplacedPoints();
+      // planets.push(
+      //   new Planet(p5, {
+      //     mode: "displacement",
+      //     distance: 100,
+      //     centralPoint: p5.createVector(0, 0, 500),
+      //     data: [
+      //       1, 14, 4, 8, 3, 9, 9, 12, 7, 11, 5, 5, 13, 11, 4, 10, 16, 9, 18, 7, 7, 9, 11, 3, 8, 5, 9, 6, 12, 10, 7, 14, 2, 9, 4, 2, 6, 6, 3,
+      //       3, 11, 5, 7, 6, 5, 6, 2, 0, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 57,
+      //     ],
+      //   })
+      // );
+
+      planets.push(
+        new Planet(p5, {
+          mode: "line",
+          distance: 100,
+          centralPoint: p5.createVector(0, 0, 0),
+          data: planetData,
+        })
+      );
 
       camera = p5.createCamera();
     };
-
-    
 
     p5.draw = () => {
       p5.background(236, 239, 241);
@@ -60,8 +105,24 @@ const P5Test = () => {
       p5.ambientLight(150);
       p5.directionalLight(255, 255, 255, 1, 1, -1);
 
-     //---------
+      planets.forEach((planet) => {
+        planet.draw();
+        if (img) {
+          p5.push();
+          p5.noStroke();
+          p5.noLights();
+          p5.translate(planet.getCentralPoint().x, planet.getCentralPoint().y + planet.getDistance() * 2, planet.getCentralPoint().z);
+          p5.rotateX(p5.HALF_PI);
+          p5.texture(img);
+          p5.plane((planet.getDistance() * planet.getAmountOfPoints()) / 20, (planet.getDistance() * planet.getAmountOfPoints()) / 20);
+          p5.pop();
+        }
+      });
+    };
 
+    //// tests
+
+    function testMouseHover() {
       let closestPoint = null;
       let minDist = Infinity;
       let minDistCamera = Infinity;
@@ -138,12 +199,7 @@ const P5Test = () => {
         p5.sphere(3);
         p5.pop();
       }
-
-
-      testPlanet.draw();
-
-
-    };
+    }
   }
 
   return <NextReactP5Wrapper sketch={sketch} />;
