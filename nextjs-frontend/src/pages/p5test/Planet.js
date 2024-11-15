@@ -1,12 +1,24 @@
 import convexHull from "convex-hull";
 
 class Planet {
-  constructor(p5, { distance, centralPoint, data, mode = "displacment" , displacementDistance = 5, rotationAngles = { angleX: 0, angleY: 0, angleZ: 0 } }) {
+  constructor(
+    p5,
+    {
+      distance,
+      centralPoint,
+      data,
+      mode = "displacment",
+      displacementDistance = 5,
+      rotationAngles = { angleX: 0, angleY: 0, angleZ: 0 },
+      orbitRadii = { rx: distance, ry: distance },
+    }
+  ) {
     this.p5 = p5;
     this.distance = distance;
     this.n = data.length;
     this.centralPoint = centralPoint;
     this.mode = mode;
+    this.orbitRadii = orbitRadii;
     this.points = this.create3dOrbit({ distance, n: this.n, centralPoint });
     this.rotationAngles = {
       angleX: this.p5.radians(rotationAngles.angleX),
@@ -15,7 +27,7 @@ class Planet {
     };
 
     this.pointsHull = convexHull(this.points);
-    this.displacementDistance = displacementDistance
+    this.displacementDistance = displacementDistance;
 
     this.subpoints = [];
 
@@ -28,7 +40,7 @@ class Planet {
         this.displacedPoints = this.createDisplacedPoints({ _points: this.points, distances: data });
         this.points.forEach((point, i) => {
           let p = p5.createVector(point[0], point[1], point[2]);
-          let n = data[i].projects.length;
+          let n = data[i].children.length;
           let direction = p5.constructor.Vector.sub(p, this.centralPoint);
           let unitDirection = direction.normalize();
           let points = [];
@@ -41,39 +53,27 @@ class Planet {
       case "ring":
         this.generateRingSubpoints();
         console.log(this.subpoints);
-      break;
+        break;
       default:
     }
   }
 
   generateRingSubpoints() {
-    let angleX = this.rotationAngles.angleX;
-    let angleY = this.rotationAngles.angleY;
-    let angleZ = this.rotationAngles.angleZ;
+    let { angleX, angleY, angleZ } = this.rotationAngles;
+    let { rx, ry } = this.orbitRadii;
 
     for (let i = 0; i < this.n; i++) {
       let theta = (2 * this.p5.PI * i) / this.n;
-
-      // Punktposition in der lokalen Orbits-Ebene vor der Rotation
-      let x = this.distance * this.p5.cos(theta);
-      let y = this.distance * this.p5.sin(theta);
+      let x = rx * this.p5.cos(theta);
+      let y = ry * this.p5.sin(theta);
       let z = 0;
-
-      // Erstellen eines Vektors für den Punkt
       let point = this.p5.createVector(x, y, z);
-
-      // Rotieren des Punkts um die X-, Y- und Z-Achse
       point = this.rotateVector(point, angleX, angleY, angleZ);
-
-      // Verschieben des Punkts zum Zentralpunkt
       point.add(this.centralPoint);
-
-      // Hinzufügen des Punkts zu subpoints
       this.subpoints.push(point);
     }
   }
 
-  // Methode zur Sicherstellung, dass ein Objekt ein p5.Vector ist
   ensureVector(point) {
     if (point instanceof this.p5.constructor.Vector) {
       return point;
@@ -84,19 +84,14 @@ class Planet {
     }
   }
 
-  // Methode zum Rotieren eines Vektors um gegebene Winkel
   rotateVector(v, angleX, angleY, angleZ) {
     let rotated = v.copy();
-    // Rotation um die X-Achse
     rotated = this.rotateAroundX(rotated, angleX);
-    // Rotation um die Y-Achse
     rotated = this.rotateAroundY(rotated, angleY);
-    // Rotation um die Z-Achse
     rotated = this.rotateAroundZ(rotated, angleZ);
     return rotated;
   }
 
-  // Rotationsfunktionen um jede Achse
   rotateAroundX(v, angle) {
     let cosA = this.p5.cos(angle);
     let sinA = this.p5.sin(angle);
@@ -119,6 +114,39 @@ class Planet {
     let x = v.x * cosA - v.y * sinA;
     let y = v.x * sinA + v.y * cosA;
     return this.p5.createVector(x, y, v.z);
+  }
+
+  drawOrbitEllipse() {
+    let { angleX, angleY, angleZ } = this.rotationAngles;
+    let { rx, ry } = this.orbitRadii;
+    let p5 = this.p5;
+    let centralPoint = this.centralPoint;
+
+    let numSegments = 100;
+
+    p5.push();
+    p5.noFill();
+    p5.stroke(0, 0, 255);
+    p5.strokeWeight(0.1);
+
+    p5.beginShape();
+    for (let i = 0; i <= numSegments; i++) {
+      let theta = (2 * p5.PI * i) / numSegments;
+
+      let x = rx * p5.cos(theta);
+      let y = ry * p5.sin(theta);
+      let z = 0;
+
+      let point = p5.createVector(x, y, z);
+
+      point = this.rotateVector(point, angleX, angleY, angleZ);
+
+      point.add(centralPoint);
+
+      p5.vertex(point.x, point.y, point.z);
+    }
+    p5.endShape();
+    p5.pop();
   }
 
   create3dOrbit({ distance, n, centralPoint }) {
@@ -208,9 +236,6 @@ class Planet {
     this.p5.stroke(0, 0, 0);
     this.p5.pop();
 
-    
-  
-
     switch (this.mode) {
       case "displacement":
         this.points.forEach((p, i) => {
@@ -258,6 +283,8 @@ class Planet {
         break;
 
       case "ring":
+        this.drawOrbitEllipse();
+
         this.subpoints.forEach((p, i) => {
           this.p5.push();
           this.p5.fill(0, 0, 255);
