@@ -1,12 +1,12 @@
 import convexHull from "convex-hull";
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 import { mat4, vec4 } from "gl-matrix";
 
 class Planet {
   constructor(
     p5,
     {
-      id = this.generatedId,
+      id = this.generatedId(),
       distance,
       centralPoint,
       data,
@@ -22,6 +22,7 @@ class Planet {
       drawDisplacedHull = false,
     }
   ) {
+    this.id = id;
     this.p5 = p5;
     this.distance = distance;
     this.n = data.length;
@@ -32,14 +33,14 @@ class Planet {
     this.points.forEach((point, i) => {
       this.points[i].id = this.generatedId();
     });
-   // console.log(this.points);
+    // console.log(this.points);
     this.rotationAngles = {
       angleX: this.p5.radians(rotationAngles.angleX),
       angleY: this.p5.radians(rotationAngles.angleY),
       angleZ: this.p5.radians(rotationAngles.angleZ),
     };
 
-    console.log(this.points)
+    console.log(this.points);
     this.pointsHull = convexHull(this.points.map((p) => [p.x, p.y, p.z]));
     this.displacementDistance = displacementDistance;
     this.camera = camera;
@@ -78,13 +79,18 @@ class Planet {
         break;
       default:
     }
+    if (this.displacedPoints) {
+      this.displacedPoints.forEach((point, i) => {
+        this.displacedPoints[i].id = this.generatedId();
+      });
+    }
     this.subpoints.forEach((point, i) => {
       this.subpoints[i].id = this.generatedId();
     });
   }
 
-  generatedId () {
-    return uuidv4()
+  generatedId() {
+    return uuidv4();
   }
 
   generateRingSubpoints() {
@@ -186,22 +192,14 @@ class Planet {
 
   createDisplacedPoints({ _points, distances }) {
     const newPoints = _points.map((point, i) => {
-      const direction = this.p5.createVector(
-        point.x - this.centralPoint.x,
-        point.y - this.centralPoint.y,
-        point.z - this.centralPoint.z
-      );
+      const direction = this.p5.createVector(point.x - this.centralPoint.x, point.y - this.centralPoint.y, point.z - this.centralPoint.z);
 
       direction.normalize();
 
       const extensionLength = (distances[i] ? distances[i] * 3 : 1) || 1;
       const extendedDirection = direction.mult(extensionLength);
 
-      const newEndPoint = this.p5.createVector(
-        point.x + extendedDirection.x,
-        point.y + extendedDirection.y,
-        point.z + extendedDirection.z
-      );
+      const newEndPoint = this.p5.createVector(point.x + extendedDirection.x, point.y + extendedDirection.y, point.z + extendedDirection.z);
 
       return this.p5.createVector(newEndPoint.x, newEndPoint.y, newEndPoint.z);
     });
@@ -211,7 +209,7 @@ class Planet {
 
   drawTriangles({ p, h, drawHull }) {
     const hull = h ? h : convexHull(p);
-    
+
     if (drawHull) {
       hull.forEach((face, i) => {
         const [a, b, c] = face;
@@ -503,6 +501,52 @@ class Planet {
 
   getId() {
     return this.id;
+  }
+
+  getPointById(id) {
+    let found;
+
+    if (this.id === id) {
+      found = this.p5.createVector(this.centralPoint.x, this.centralPoint.y, this.centralPoint.z);
+      found.id = this.id;
+    }
+
+    if (this.points) {
+      found = this.points.find((point) => point.id === id);
+    }
+    if (!found && this.displacedPoints) {
+      found = this.displacedPoints.find((point) => point.id === id);
+    }
+    if (!found && this.subpoints) {
+      found = this.subpoints.find((point) => point.id === id);
+    }
+
+    return found;
+  }
+
+  devGetAllIds() {
+    let ids = [];
+
+    ids.push(this.id);
+
+    if (this.points) {
+      this.points.forEach((point) => {
+        ids.push(point.id);
+      });
+    }
+
+    if (this.displacedPoints) {
+      this.displacedPoints.forEach((point) => {
+        ids.push(point.id);
+      });
+    }
+
+    if (this.subpoints) {
+      this.subpoints.forEach((point) => {
+        ids.push(point.id);
+      });
+    }
+    return ids;
   }
 }
 

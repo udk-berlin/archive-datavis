@@ -1,11 +1,26 @@
 class SolarSystem {
-  constructor() {
+  constructor(p5) {
     this.planets = [];
-    this.connections = []
+    this.connections = [];
+    this.p5 = p5;
+  }
+
+  drawConnections() {
+    this.connections.forEach((connection) => {
+        console.log('asdasd')
+        this.p5.stroke(0, 250, 0);
+        this.p5.beginShape();
+        connection.forEach((point) => {
+            this.p5.vertex(point.x, point.y, point.z);
+        });
+        this.p5.endShape(this.p5.CLOSE);
+    });
   }
 
   draw() {
     this.planets.forEach((planet) => planet.draw());
+
+    this.drawConnections();
   }
 
   async addPlanet(planet, dataUrl) {
@@ -43,6 +58,25 @@ class SolarSystem {
 
   clearPlanets() {
     this.planets = [];
+  }
+
+  devGetAllIds() {
+    return this.planets.map((p) => p.devGetAllIds());
+  }
+
+
+
+  addConnection(connection) {
+    const points = connection.map((id) => {
+        let found
+        this.planets.forEach((planet) => {
+            if(!found ) {
+                found = planet.getPointById(id);
+            }
+        });
+        return found;
+    });
+    this.connections.push(points);
   }
 }
 

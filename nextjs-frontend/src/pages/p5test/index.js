@@ -40,7 +40,7 @@ const P5Test = () => {
 
     let planetData = [];
 
-    let solarSystem = new SolarSystem();
+    let solarSystem
 
     p5.preload = async () => {
       img = p5.loadImage("/images/floatingShadow.png");
@@ -54,6 +54,9 @@ const P5Test = () => {
       // addScreenPositionFunction(p5);
 
       centralPoint = p5.createVector(0, 0, 0);
+
+
+      solarSystem = new SolarSystem(p5);
 
       solarSystem.addPlanet(
         new Planet(p5, {
@@ -86,6 +89,13 @@ const P5Test = () => {
       );
 
       camera = p5.createCamera();
+
+
+
+
+      const ids = solarSystem.devGetAllIds();
+
+      solarSystem.addConnection([ids[2][15], ids[1][10]]);
     };
 
     p5.draw = () => {
@@ -108,6 +118,8 @@ const P5Test = () => {
           p5.pop();
         }
       });
+
+      solarSystem.drawConnections();
     };
 
     async function fetchData(url) {
