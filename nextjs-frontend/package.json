@@ -50,6 +50,7 @@
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.170.0",
     "use-immer": "^0.10.0",
+    "uuid": "^11.0.3",
     "vaul": "^0.9.9"
   },
   "devDependencies": {

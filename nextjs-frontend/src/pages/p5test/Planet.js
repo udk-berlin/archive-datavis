@@ -1,12 +1,12 @@
 import convexHull from "convex-hull";
-import crypto from "crypto";
+import { v4 as uuidv4 } from 'uuid';
 import { mat4, vec4 } from "gl-matrix";
 
 class Planet {
   constructor(
     p5,
     {
-      id = crypto.randomBytes(16).toString("hex"),
+      id = this.generatedId,
       distance,
       centralPoint,
       data,
@@ -18,6 +18,8 @@ class Planet {
       showOrbit = true,
       showPlanet = true,
       mouseHover = true,
+      drawHull = false,
+      drawDisplacedHull = false,
     }
   ) {
     this.p5 = p5;
@@ -27,13 +29,18 @@ class Planet {
     this.mode = mode;
     this.orbitRadii = orbitRadii;
     this.points = this.create3dOrbit({ distance, n: this.n, centralPoint });
+    this.points.forEach((point, i) => {
+      this.points[i].id = this.generatedId();
+    });
+   // console.log(this.points);
     this.rotationAngles = {
       angleX: this.p5.radians(rotationAngles.angleX),
       angleY: this.p5.radians(rotationAngles.angleY),
       angleZ: this.p5.radians(rotationAngles.angleZ),
     };
 
-    this.pointsHull = convexHull(this.points);
+    console.log(this.points)
+    this.pointsHull = convexHull(this.points.map((p) => [p.x, p.y, p.z]));
     this.displacementDistance = displacementDistance;
     this.camera = camera;
 
@@ -46,20 +53,20 @@ class Planet {
       showOrbit,
       showPlanet,
       mouseHover,
+      drawHull,
+      drawDisplacedHull,
     };
 
     switch (this.mode) {
       case "displacement":
         this.displacedPoints = this.createDisplacedPoints({ _points: this.points, distances: data.map((d) => d.children.length) });
-        this.displacedPointsHull = convexHull(this.displacedPoints);
+        this.displacedPointsHull = convexHull(this.displacedPoints.map((p) => [p.x, p.y, p.z]));
         break;
       case "line":
-        this.points.forEach((point, i) => {
-          let p = p5.createVector(point[0], point[1], point[2]);
+        this.points.forEach((p, i) => {
           let n = data[i].children.length;
           let direction = p5.constructor.Vector.sub(p, this.centralPoint);
           let unitDirection = direction.normalize();
-          let points = [];
           for (let i = 1; i <= n; i++) {
             let newPoint = p5.constructor.Vector.add(p, p5.constructor.Vector.mult(unitDirection, this.displacementDistance * i));
             this.subpoints.push(newPoint);
@@ -71,6 +78,13 @@ class Planet {
         break;
       default:
     }
+    this.subpoints.forEach((point, i) => {
+      this.subpoints[i].id = this.generatedId();
+    });
+  }
+
+  generatedId () {
+    return uuidv4()
   }
 
   generateRingSubpoints() {
@@ -86,16 +100,6 @@ class Planet {
       point = this.rotateVector(point, angleX, angleY, angleZ);
       point.add(this.centralPoint);
       this.subpoints.push(point);
-    }
-  }
-
-  ensureVector(point) {
-    if (point instanceof this.p5.constructor.Vector) {
-      return point;
-    } else if (Array.isArray(point) && point.length === 3) {
-      return this.p5.createVector(point[0], point[1], point[2]);
-    } else {
-      throw new Error("not a 3d vector");
     }
   }
 
@@ -174,7 +178,7 @@ class Planet {
       let y = this.centralPoint.y + distance * this.p5.sin(theta) * this.p5.sin(phi);
       let z = this.centralPoint.z + distance * this.p5.cos(theta);
 
-      _points.push([x, y, z]);
+      _points.push(this.p5.createVector(x, y, z));
     }
 
     return _points;
@@ -183,9 +187,9 @@ class Planet {
   createDisplacedPoints({ _points, distances }) {
     const newPoints = _points.map((point, i) => {
       const direction = this.p5.createVector(
-        point[0] - this.centralPoint.x,
-        point[1] - this.centralPoint.y,
-        point[2] - this.centralPoint.z
+        point.x - this.centralPoint.x,
+        point.y - this.centralPoint.y,
+        point.z - this.centralPoint.z
       );
 
       direction.normalize();
@@ -194,12 +198,12 @@ class Planet {
       const extendedDirection = direction.mult(extensionLength);
 
       const newEndPoint = this.p5.createVector(
-        point[0] + extendedDirection.x,
-        point[1] + extendedDirection.y,
-        point[2] + extendedDirection.z
+        point.x + extendedDirection.x,
+        point.y + extendedDirection.y,
+        point.z + extendedDirection.z
       );
 
-      return [newEndPoint.x, newEndPoint.y, newEndPoint.z];
+      return this.p5.createVector(newEndPoint.x, newEndPoint.y, newEndPoint.z);
     });
 
     return newPoints;
@@ -207,14 +211,15 @@ class Planet {
 
   drawTriangles({ p, h, drawHull }) {
     const hull = h ? h : convexHull(p);
+    
     if (drawHull) {
       hull.forEach((face, i) => {
         const [a, b, c] = face;
 
-        this.p5.beginShape(p5.TRIANGLES);
-        this.p5.vertex(p[a][0], p[a][1], p[a][2]);
-        this.p5.vertex(p[b][0], p[b][1], p[b][2]);
-        this.p5.vertex(p[c][0], p[c][1], p[c][2]);
+        this.p5.beginShape(this.p5.constructor.TRIANGLES);
+        this.p5.vertex(p[a].x, p[a].y, p[a].z);
+        this.p5.vertex(p[b].x, p[b].y, p[b].z);
+        this.p5.vertex(p[c].x, p[c].y, p[c].z);
         this.p5.endShape();
       });
     }
@@ -364,11 +369,14 @@ class Planet {
   }
 
   draw() {
-    this.drawTriangles({ p: this.points, h: this.pointsHull, drawHull: false });
+    this.drawTriangles({ p: this.points, h: this.pointsHull, drawHull: this.options.drawHull });
 
     switch (this.mode) {
       case "displacement":
-        this.drawTriangles({ p: this.displacedPoints, h: this.displacedPointsHull, drawHull: false });
+        this.p5.stroke(235);
+        this.p5.strokeWeight(1);
+        this.drawTriangles({ p: this.displacedPoints, h: this.displacedPointsHull, drawHull: this.options.drawDisplacedHull });
+        this.p5.noStroke();
         break;
       default:
     }
@@ -386,15 +394,15 @@ class Planet {
     switch (this.mode) {
       case "displacement":
         this.points.forEach((p) => {
-          allPoints.push(this.p5.createVector(p[0], p[1], p[2]));
+          allPoints.push(p);
         });
         this.displacedPoints.forEach((p) => {
-          allPoints.push(this.p5.createVector(p[0], p[1], p[2]));
+          allPoints.push(p);
         });
         break;
       case "line":
         this.points.forEach((p) => {
-          allPoints.push(this.p5.createVector(p[0], p[1], p[2]));
+          allPoints.push(p);
         });
         allPoints = allPoints.concat(this.subpoints);
         break;
@@ -411,7 +419,7 @@ class Planet {
       case "displacement":
         this.points.forEach((p, i) => {
           this.p5.push();
-          this.p5.translate(p[0], p[1], p[2]);
+          this.p5.translate(p.x, p.y, p.z);
           this.p5.fill(0, 0, 255);
           this.p5.sphere(1);
           this.p5.pop();
@@ -420,20 +428,20 @@ class Planet {
         this.displacedPoints.forEach((p, i) => {
           this.p5.push();
           this.p5.fill(0, 0, 255);
-          this.p5.translate(p[0], p[1], p[2]);
+          this.p5.translate(p.x, p.y, p.z);
           this.p5.sphere(1);
           this.p5.pop();
         });
 
         this.points.forEach((p, i) => {
           this.p5.stroke(255, 0, 0);
-          this.p5.line(p[0], p[1], p[2], this.displacedPoints[i][0], this.displacedPoints[i][1], this.displacedPoints[i][2]);
+          this.p5.line(p.x, p.y, p.z, this.displacedPoints[i].x, this.displacedPoints[i].y, this.displacedPoints[i].z);
         });
         break;
       case "line":
         this.points.forEach((p, i) => {
           this.p5.push();
-          this.p5.translate(p[0], p[1], p[2]);
+          this.p5.translate(p.x, p.y, p.z);
           this.p5.fill(0, 0, 255);
           this.p5.sphere(1);
           this.p5.pop();
