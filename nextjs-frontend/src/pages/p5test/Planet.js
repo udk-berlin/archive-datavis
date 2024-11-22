@@ -1,6 +1,6 @@
 import convexHull from "convex-hull";
 import { v4 as uuidv4 } from "uuid";
-import { mat4, vec4 } from "gl-matrix";
+import { mat4, vec4, vec3 } from "gl-matrix";
 
 class Planet {
   constructor(
@@ -21,7 +21,7 @@ class Planet {
       drawHull = false,
       drawDisplacedHull = false,
       rotationSpeed = 0.1,
-      selfRotation = true,
+      selfRotation = false,
     }
   ) {
     this.id = id;
@@ -30,10 +30,12 @@ class Planet {
     this.n = data.length;
     this.centralPoint = centralPoint;
     this.mode = mode;
+    this.activeIds = [];
+    this.hoverId = null;
     this.orbitRadii = orbitRadii;
     this.points = this.create3dOrbit({ distance, n: this.n, centralPoint });
     this.points.forEach((point, i) => {
-      this.points[i].id = this.generatedId();
+      this.points[i].id = data[i].id ? data[i].id : this.generatedId();
     });
     // console.log(this.points);
     this.rotationAngles = {
@@ -86,7 +88,7 @@ class Planet {
     }
     if (this.displacedPoints) {
       this.displacedPoints.forEach((point, i) => {
-        this.displacedPoints[i].id = this.generatedId();
+        this.displacedPoints[i].id = this?.points[i]?.id ? this.points[i].id : this.generatedId();
       });
     }
     this.subpoints.forEach((point, i) => {
@@ -378,17 +380,19 @@ class Planet {
   }
 
   draw() {
+
+
+    this.drawTriangles({ p: this.points, h: this.pointsHull, drawHull: this.options.drawHull });
+
     if (this.selfRotation) {
       this.updateRotation();
       this.p5.push();
       this.p5.translate(this.centralPoint.x, this.centralPoint.y, this.centralPoint.z);
       //this.p5.rotateX(this.rotationAngles.angleX);
-      this.p5.rotateY(this.rotationAngles.angleY);
+      this.p5.rotateY(this.rotationAngles.angleY); 
       //this.p5.rotateZ(this.rotationAngles.angleZ);
       this.p5.translate(-this.centralPoint.x, -this.centralPoint.y, -this.centralPoint.z);
     }
-
-    this.drawTriangles({ p: this.points, h: this.pointsHull, drawHull: this.options.drawHull });
 
     switch (this.mode) {
       case "displacement":
@@ -445,11 +449,44 @@ class Planet {
     this.p5.noStroke();
     switch (this.mode) {
       case "displacement":
+        this.p5.strokeWeight(.5);
         this.displacedPoints.forEach((p, i) => {
           this.p5.push();
-          this.p5.fill(0, 0, 0);
           this.p5.translate(p.x, p.y, p.z);
-          this.p5.sphere(3);
+
+       
+          let cam = this.p5._renderer._curCamera;
+
+
+          let dir = this.p5.createVector(cam.eyeX - p.x, cam.eyeY - p.y, cam.eyeZ - p.z);
+
+
+          let theta = Math.atan2(dir.x, dir.z);
+          let phi = Math.acos(dir.y / dir.mag());
+
+
+          this.p5.rotateY(theta);
+          this.p5.rotateX(phi);
+
+          // Set stroke settings
+          if (this.activeIds.includes(p.id)) {
+            this.p5.stroke(255, 0, 255);
+            this.p5.strokeWeight(1);
+            this.p5.fill(255, 0, 255);
+          } else {
+            this.p5.stroke(0, 0, 0);
+            this.p5.strokeWeight(.75);
+            this.p5.fill(0, 0, 0);
+          }
+
+          // this.p5.textAlign(this.p5.CENTER, this.p5.CENTER);
+          // this.p5.textSize(12); // Adjust the size as needed
+          // this.p5.text('x', 0, 0);
+
+          // Draw the cross
+          this.p5.line(-3, 0, 0, 3, 0, 0); // Horizontal line
+          this.p5.line(0, -3, -3, 0, 0, 3); // Vertical line
+
           this.p5.pop();
         });
         break;
@@ -485,18 +522,35 @@ class Planet {
       default:
     }
 
+    this.hoverId = null;
     if (this.options.mouseHover) {
       let hoveredSphere = this.checkRaySphereIntersections(allPoints, { hitBox: 2 });
+      this.hoverId = hoveredSphere?.id;
       if (hoveredSphere) {
         this.p5.push();
         this.p5.fill(255, 0, 0);
         this.p5.translate(hoveredSphere.x, hoveredSphere.y, hoveredSphere.z);
-        this.p5.sphere(5);
+        this.p5.sphere(3);
         this.p5.pop();
       }
     }
 
     if (this.selfRotation) this.p5.pop();
+  }
+
+  getActiveIds() {
+    return this.activeIds;
+  }
+  setIdActive(aId) {
+    if (!this.activeIds.includes(aId)) {
+      this.activeIds.push(aId);
+    }
+  }
+  setActiveIds(aIds) {
+    this.activeIds = aIds;
+  }
+  getHoverId() {
+    return this.hoverId;
   }
 
   getPoints() {
@@ -530,17 +584,66 @@ class Planet {
       found.id = this.id;
     }
 
-    if (this.points) {
-      found = this.points.find((point) => point.id === id);
-    }
+
     if (!found && this.displacedPoints) {
       found = this.displacedPoints.find((point) => point.id === id);
+    }
+    if (!found &&  this.points) {
+      found = this.points.find((point) => point.id === id);
     }
     if (!found && this.subpoints) {
       found = this.subpoints.find((point) => point.id === id);
     }
 
     return found;
+  }
+
+  getRotatedPointById(id) {
+    // Find the point by id
+    const point = this.getPointById(id);
+    if (!point || point.x == null || point.y == null || point.z == null) {
+      console.error('Point not found or invalid:', point);
+      return null;
+    }
+  
+    // Convert point coordinates to numbers
+    const x = Number(point.x);
+    const y = Number(point.y);
+    const z = Number(point.z);
+  
+    if (isNaN(x) || isNaN(y) || isNaN(z)) {
+      console.error('Point coordinates are NaN:', { x, y, z });
+      return null;
+    }
+  
+    // Create a vec3 from the point coordinates
+    const position = vec3.fromValues(x, y, z);
+  
+    // Get rotation angles in radians
+    const toRadians = (degrees) => degrees * (Math.PI / 180);
+    const angleX = toRadians(this.rotationAngles.x || 0);
+    const angleY = toRadians(this.rotationAngles.y || 0);
+    const angleZ = toRadians(this.rotationAngles.z || 0);
+  
+    if (isNaN(angleX) || isNaN(angleY) || isNaN(angleZ)) {
+      console.error('Rotation angles are NaN:', this.rotationAngles);
+      return null;
+    }
+  
+    // Create a rotation matrix
+    const rotationMatrix = mat4.create();
+    mat4.rotateX(rotationMatrix, rotationMatrix, angleX);
+    mat4.rotateY(rotationMatrix, rotationMatrix, angleY);
+    mat4.rotateZ(rotationMatrix, rotationMatrix, angleZ);
+  
+    // Apply the rotation to the position
+    vec3.transformMat4(position, position, rotationMatrix);
+  
+    // Return the rotated position
+    const ret=  this.p5.createVector(position[0], position[1], position[2])
+    ret.id = id
+
+    return ret
   }
 
   devGetAllIds() {
