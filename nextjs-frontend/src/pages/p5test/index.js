@@ -65,7 +65,9 @@ const P5Test = () => {
     };
 
     p5.setup = () => {
-      p5.createCanvas((windowWidth * 5) / 7, 950, p5.WEBGL);
+
+      const parent = document.querySelector('main')
+      p5.createCanvas((windowWidth * 5) / 7, parent.offsetHeight, p5.WEBGL);
       // addScreenPositionFunction(p5);
 
       centralPoint = p5.createVector(0, 0, 0);
