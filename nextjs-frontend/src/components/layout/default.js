@@ -41,7 +41,7 @@ const Layout = ({ children }) => {
         <HeaderNav />
 
       <main
-        className="flex-grow overflow-x-hidden mt-12"
+        className="flex-grow overflow-x-hidden"
         style={{ height: mainHeight > 0 ? `${mainHeight}px` : "auto" }}
       >
         {children}

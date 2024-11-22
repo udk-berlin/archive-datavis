@@ -65,7 +65,7 @@ const HeaderNav = () => {
         />
          */}
 
-        <RiLogoutBoxRLine className="mr-6 w-5" />
+        {/* <RiLogoutBoxRLine className="mr-4 w-5" /> */}
 
         <Button
           variant="ghost"
