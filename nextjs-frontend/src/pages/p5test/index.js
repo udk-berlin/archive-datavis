@@ -234,7 +234,7 @@ const P5Test = () => {
   return (
     <div className="flex mr-12">
       <NextReactP5Wrapper sketch={sketch} />
-      <div className=" pl-12 flex-grow border-l border-muted">
+      <div className=" pl-12 flex-grow border-l-[2px] border-white">
         <div className="relative">
           <span className="absolute inset-y-0 left-3 flex items-center text-gray-500">
             <RiSearchLine className="w-5 h-5" />

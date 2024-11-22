@@ -36,10 +36,10 @@ const Layout = ({ children }) => {
   }, []);
 
   return (
-    <div className="flex flex-col h-screen mx-auto pt-6">
-      <header>
+    <div className="flex flex-col h-screen mx-auto">
+
         <HeaderNav />
-      </header>
+
       <main
         className="flex-grow overflow-x-hidden mt-12"
         style={{ height: mainHeight > 0 ? `${mainHeight}px` : "auto" }}
