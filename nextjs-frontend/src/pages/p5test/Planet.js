@@ -20,6 +20,8 @@ class Planet {
       mouseHover = true,
       drawHull = false,
       drawDisplacedHull = false,
+      rotationSpeed = 0.1,
+      selfRotation = true,
     }
   ) {
     this.id = id;
@@ -36,9 +38,10 @@ class Planet {
     // console.log(this.points);
     this.rotationAngles = {
       angleX: this.p5.radians(rotationAngles.angleX),
-      angleY: this.p5.radians(rotationAngles.angleY),
+      angleY: this.p5.radians(this.p5.random(0, 360)),
       angleZ: this.p5.radians(rotationAngles.angleZ),
     };
+    this.selfRotation = selfRotation;
 
     console.log(this.points);
     this.pointsHull = convexHull(this.points.map((p) => [p.x, p.y, p.z]));
@@ -57,6 +60,8 @@ class Planet {
       drawHull,
       drawDisplacedHull,
     };
+
+    this.rotationSpeed = rotationSpeed;
 
     switch (this.mode) {
       case "displacement":
@@ -366,7 +371,23 @@ class Planet {
     }
   }
 
+  updateRotation() {
+    this.rotationAngles.angleX += this.p5.radians(this.rotationSpeed);
+    this.rotationAngles.angleY -= this.p5.radians(this.rotationSpeed);
+    this.rotationAngles.angleZ += this.p5.radians(this.rotationSpeed);
+  }
+
   draw() {
+    if (this.selfRotation) {
+      this.updateRotation();
+      this.p5.push();
+      this.p5.translate(this.centralPoint.x, this.centralPoint.y, this.centralPoint.z);
+      //this.p5.rotateX(this.rotationAngles.angleX);
+      this.p5.rotateY(this.rotationAngles.angleY);
+      //this.p5.rotateZ(this.rotationAngles.angleZ);
+      this.p5.translate(-this.centralPoint.x, -this.centralPoint.y, -this.centralPoint.z);
+    }
+
     this.drawTriangles({ p: this.points, h: this.pointsHull, drawHull: this.options.drawHull });
 
     switch (this.mode) {
@@ -379,32 +400,41 @@ class Planet {
       default:
     }
 
-    if (!this.options.showPlanet) return;
-    this.p5.push();
-    this.p5.fill(255, 0, 0);
-    this.p5.translate(this.centralPoint.x, this.centralPoint.y, this.centralPoint.z);
-    this.p5.sphere(1);
-    this.p5.pop();
+    if (!this.options.showPlanet) {
+      if (this.selfRotation) this.p5.pop();
+      return;
+    }
 
     // this.drawMousePointOnPlane(this.p5._renderer._curCamera);
-    if (!this.options.showOrbit) return;
+    if (!this.options.showOrbit) {
+      if (this.selfRotation) this.p5.pop();
+      return;
+    }
+
     let allPoints = [];
     switch (this.mode) {
       case "displacement":
-        this.points.forEach((p) => {
-          allPoints.push(p);
-        });
         this.displacedPoints.forEach((p) => {
           allPoints.push(p);
         });
         break;
       case "line":
+        this.p5.push();
+        this.p5.fill(255, 0, 0);
+        this.p5.translate(this.centralPoint.x, this.centralPoint.y, this.centralPoint.z);
+        this.p5.sphere(1);
+        this.p5.pop();
         this.points.forEach((p) => {
           allPoints.push(p);
         });
         allPoints = allPoints.concat(this.subpoints);
         break;
       case "ring":
+        this.p5.push();
+        this.p5.fill(255, 0, 0);
+        this.p5.translate(this.centralPoint.x, this.centralPoint.y, this.centralPoint.z);
+        this.p5.sphere(1);
+        this.p5.pop();
         allPoints = allPoints.concat(this.subpoints);
         break;
       default:
@@ -415,25 +445,12 @@ class Planet {
     this.p5.noStroke();
     switch (this.mode) {
       case "displacement":
-        this.points.forEach((p, i) => {
-          this.p5.push();
-          this.p5.translate(p.x, p.y, p.z);
-          this.p5.fill(0, 0, 255);
-          this.p5.sphere(1);
-          this.p5.pop();
-        });
-
         this.displacedPoints.forEach((p, i) => {
           this.p5.push();
-          this.p5.fill(0, 0, 255);
+          this.p5.fill(0, 0, 0);
           this.p5.translate(p.x, p.y, p.z);
-          this.p5.sphere(1);
+          this.p5.sphere(3);
           this.p5.pop();
-        });
-
-        this.points.forEach((p, i) => {
-          this.p5.stroke(255, 0, 0);
-          this.p5.line(p.x, p.y, p.z, this.displacedPoints[i].x, this.displacedPoints[i].y, this.displacedPoints[i].z);
         });
         break;
       case "line":
@@ -474,10 +491,12 @@ class Planet {
         this.p5.push();
         this.p5.fill(255, 0, 0);
         this.p5.translate(hoveredSphere.x, hoveredSphere.y, hoveredSphere.z);
-        this.p5.sphere(2);
+        this.p5.sphere(5);
         this.p5.pop();
       }
     }
+
+    if (this.selfRotation) this.p5.pop();
   }
 
   getPoints() {
