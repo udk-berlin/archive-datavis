@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 
 import { useTranslation } from "react-i18next";
 
+import { Button } from "@/components/ui/button";
+
 import { Input } from "@/components/ui/input";
 
 import { useState } from "react";
@@ -19,7 +21,7 @@ const HeaderNav = () => {
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
-    <header className="flex items-center px-12">
+    <header className=" bg-white flex items-center px-12 h-12">
       <h1 className="mr-10">
         <Link href="/">Digitale Klasse Archive</Link>
       </h1>
@@ -36,6 +38,11 @@ const HeaderNav = () => {
             </Link>
           </li>
           <li>
+            <Link href="/library" className={currentPath === "/library" ? "!underline" : ""}>
+              {t("Library")}
+            </Link>
+          </li>
+          <li>
             <Link href="/contribute" className={currentPath === "/datanetwork" ? "!underline" : ""}>
               {t("Contribute")}
             </Link>
@@ -48,7 +55,7 @@ const HeaderNav = () => {
         </ul>
       </nav>
       <div className="flex items-center">
-        <Input placeholder={"Search"} className={`  mr-4 border-0 ${searchOpen ? 'border-b-2' : 'border-b-0'}  ${searchOpen ? 'opacity-100' : 'opacity-0'}`} />
+        {/* <Input placeholder={"Search"} className={`  mr-4 border-0 ${searchOpen ? 'border-b-2' : 'border-b-0'}  ${searchOpen ? 'opacity-100' : 'opacity-0'}`} />
 
         <RiSearchLine
           className="mr-6 w-7"
@@ -56,22 +63,23 @@ const HeaderNav = () => {
             setSearchOpen(!searchOpen);
           }}
         />
-        <RiLogoutBoxRLine className="mr-6 w-7" />
+         */}
 
-        <Select
-          className="ml-auto"
-          onValueChange={(e) => {
-            i18n.changeLanguage(e);
+        {/* <RiLogoutBoxRLine className="mr-4 w-5" /> */}
+
+        <Button
+          variant="ghost"
+          className="hover:bg-transparent hover:text-[rgb(0,0,255)] text-right pr-0"
+          onClick={() => {
+            if (i18n.language === "de") {
+              i18n.changeLanguage("en");
+            } else if (i18n.language === "en") {
+              i18n.changeLanguage("de");
+            }
           }}
         >
-          <SelectTrigger className="w-auto border-none m-0 p-0 text-md" icon={false}>
-            <SelectValue placeholder={i18n.language} />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="en">en</SelectItem>
-            <SelectItem value="de">de</SelectItem>
-          </SelectContent>
-        </Select>
+          {i18n.language === "de" ? "EN" : "DE"}
+        </Button>
       </div>
     </header>
   );

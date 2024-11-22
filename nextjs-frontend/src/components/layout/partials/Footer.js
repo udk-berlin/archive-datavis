@@ -1,33 +1,35 @@
 import Link from "next/link";
 
-import { useTranslation } from 'react-i18next';
+import { useTranslation } from "react-i18next";
+
+import { RiQuestionLine } from "@remixicon/react";
 
 const Footer = () => {
-  const { t } = useTranslation('footer'); 
+  const { t } = useTranslation("footer");
   return (
-    <footer className=" bg-secondary py-8 flex justify-between px-12  ">
-      <section className=" text-muted ">
+    <footer className="bg-white h-12 flex justify-between items-center px-12">
+      <section>
         <ul className="flex space-x-12">
           <li>
-            <Link className="!text-popover font-normal" href="/imprint">{t('Contact')}</Link>
+            <Link className="font-normal text-xs" href="/imprint">
+              {t("Contact")}
+            </Link>
           </li>
           <li>
-            <Link className="!text-popover font-normal" href="/privacy">{t('Imprint')}</Link>
-          </li>
-          <li>
-            <Link className="!text-popover font-normal" href="/contact">{t('Report Content')}</Link>
-          </li>
-          <li>
-            <Link className="!text-popover font-normal" href="/abuse">{t('Privacy')}</Link>
+            <Link className="font-normal text-xs" href="/privacy">
+              {t("Imprint + Privacy")}
+            </Link>
           </li>
         </ul>
       </section>
-      <section className="max-w-xl text-secondary-forground mb-4">
-        <p className="!text-secondary-foreground">
-          {t('The Digitale Klasse Archive was created in the context of the \"labor for digital infastructure\" with generous support by inküle.')}
-          <br/>
-          {t('🄯 1990–2023 Digitale Klasse / UdK Berlin')}
-        </p>
+
+      <section>
+        <div className="flex flex-cols  items-center">
+          <Link className="font-normal text-xs" href="/imprint">
+            Report Content
+          </Link>
+          <RiQuestionLine className="ml-2 w-4" />
+        </div>
       </section>
     </footer>
   );

@@ -9,11 +9,11 @@ const Home = () => {
     <div className="grid grid-cols-12 gap-4">
       <section className="col-span-12 gap-4  grid grid-cols-12">
         <div className="col-span-5 mt-24 ">
-          <h3 className="text-2xl leading-[37px]">
+          <h3 className="text-2xl ">
             Welcome to the Digitale Klasse Archive:
             <br />a comprehensive repository of the pioneering work and legacy of the Digitale Klasse at the Berlin University of the Arts.
           </h3>
-          <p className="mt-4  w-3/4 leading-[25px]">
+          <p className="mt-2  w-3/4 leading-6">
             Founded by Joachim Sauter, the Digitale Klasse has been at the forefront of digital art and design education from 1990 to 2023.
             Explore our archive to discover something something projects, somethign else research, and the some impact of digital media on
             contemporary art and design.
@@ -22,16 +22,16 @@ const Home = () => {
 
         <div className="col-span-6 col-start-7">
           <ImageCollage
-            className={"w-full h-[550px]"}
+            className={"w-full h-[500px]"}
             images={[
               { src: "/images/hero.jpeg", alt: "hero", className: "right-0 top-0 w-4/5", aspectRatio: "3:2" },
-              { src: "/images/3N7A0080.jpeg", alt: "hero", className: "left-0 bottom-0 w-1/2" },
+              { src: "/images/3N7A0080.jpeg", alt: "hero", className: "left-0 bottom-0 w-2/5" },
             ]}
           />
         </div>
       </section>
 
-      <section className="mt-48 col-span-12 gap-4  grid grid-cols-12">
+      <section className="mt-24 col-span-12 gap-4  grid grid-cols-12">
         <div className="col-span-6 ">
           <ImageCollage
             className={"w-full h-[550px]"}
@@ -43,7 +43,7 @@ const Home = () => {
         </div>
 
         <div className="col-span-5 col-start-8 mt-24 w-3/4">
-          <h3 className="text-2xl font-normal">Physical archive</h3>
+          <h3 className="text-2xl ">Physical archive</h3>
           <p className="text-muted mt-4">
             Text about the archive itself, its medias etc.Text about the archive itself, its medias etc.Text about the archive itself, its
             medias etc.Text about the archive itself, its medias etc.Text about the archive itself, its medias etc.
@@ -53,7 +53,7 @@ const Home = () => {
 
       <section className="mt-48 col-span-12  gap-4  grid grid-cols-12">
         <div className="col-span-4 col-start-2 mt-24 w-full">
-          <h3 className="text-2xl font-normal">data network</h3>
+          <h3 className="text-2xl ">data network</h3>
           <p className="text-muted mt-4">
             Text about the archive itself, its medias etc.Text about the archive itself, its medias etc.Text about the archive itself, its
             medias etc.Text about the archive itself, its medias etc.Text about the archive itself, its medias etc.
@@ -84,7 +84,7 @@ const Home = () => {
         </div>
 
         <div className="col-span-4 col-start-8 mt-24  w-full">
-          <h3 className="text-2xl font-normal">Perspectives</h3>
+          <h3 className="text-2xl ">Perspectives</h3>
           <p className="text-muted mt-4">
             Text about the archive itself, its medias etc.Text about the archive itself, its medias etc.Text about the archive itself, its
             medias etc.Text about the archive itself, its medias etc.Text about the archive itself, its medias etc.
@@ -94,7 +94,7 @@ const Home = () => {
 
       <section className="mt-48 col-span-12 gap-4 grid grid-cols-12">
       <div className="col-span-3 col-start-2 ">
-          <h3 className="text-2xl font-normal">Contribute</h3>
+          <h3 className="text-2xl ">Contribute</h3>
           <p className="text-muted mt-4">
             Text about the archive itself, its medias etc.Text about the archive itself, its medias etc.Text about the archive itself, its
             medias etc.Text about the archive itself, its medias etc.Text about the archive itself, its medias etc.
