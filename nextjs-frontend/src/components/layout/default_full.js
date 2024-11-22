@@ -12,9 +12,9 @@ const Layout = ({ children }) => {
   const currentUrl = router.asPath;
 
   return (
-    <div className="flex flex-col h-screen mx-auto  mt-6">
+    <div className="flex flex-col min-h-screen mx-auto  mt-6">
       <HeaderNav />
-      <main className="flex-grow overflow-x-hidden mt-12">{children}</main>
+      <main className="flex-grow overflow-x-hidden mt-12 px-0 pb-24">{children}</main>
       <Footer className="" />
     </div>
   );

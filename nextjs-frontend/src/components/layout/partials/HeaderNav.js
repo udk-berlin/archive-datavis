@@ -36,6 +36,11 @@ const HeaderNav = () => {
             </Link>
           </li>
           <li>
+            <Link href="/library" className={currentPath === "/library" ? "!underline" : ""}>
+              {t("Library")}
+            </Link>
+          </li>
+          <li>
             <Link href="/contribute" className={currentPath === "/datanetwork" ? "!underline" : ""}>
               {t("Contribute")}
             </Link>
@@ -48,7 +53,7 @@ const HeaderNav = () => {
         </ul>
       </nav>
       <div className="flex items-center">
-        <Input placeholder={"Search"} className={`  mr-4 border-0 ${searchOpen ? 'border-b-2' : 'border-b-0'}  ${searchOpen ? 'opacity-100' : 'opacity-0'}`} />
+        {/* <Input placeholder={"Search"} className={`  mr-4 border-0 ${searchOpen ? 'border-b-2' : 'border-b-0'}  ${searchOpen ? 'opacity-100' : 'opacity-0'}`} />
 
         <RiSearchLine
           className="mr-6 w-7"
@@ -56,7 +61,9 @@ const HeaderNav = () => {
             setSearchOpen(!searchOpen);
           }}
         />
-        <RiLogoutBoxRLine className="mr-6 w-7" />
+         */}
+
+<RiLogoutBoxRLine className="mr-6 w-7" />
 
         <Select
           className="ml-auto"
