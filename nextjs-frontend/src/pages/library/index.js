@@ -8,12 +8,10 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { NextReactP5Wrapper } from "@p5-wrapper/next";
 
 
-import { Input } from "@/components/ui/input";
 
-import { RiSearchLine, RiQuestionLine } from "@remixicon/react";
-import { Slider } from "@/components/ui/slider";
 
 import * as p5code from "./sketch";
+import SidePanel from "./SidePanel";
 
 const Library = () => {
   let papertexture;
@@ -43,20 +41,14 @@ const Library = () => {
 
 
   return (
-    <div className="flex mr-12">
+    <div className="flex mr-12 h-screen">
+    <div className="flex-grow h-full">
       <NextReactP5Wrapper sketch={sketch} windowWidth={windowWidth} setFocusedId={setFocusedId} />
-      <div className=" pl-12 flex-grow border-l-[3px] border-white  pt-12">
-        <div className="relative">
-          <span className="absolute inset-y-0 left-3 flex items-center text-gray-500">
-            <RiSearchLine className="w-5 h-5" />
-          </span>
-          <Input type="text" placeholder="Search..." className="pl-10 h-12 rounded-none " />
-         
-          <br />
-          {focusedId}
-        </div>
-      </div>
     </div>
+    <div className="w-1/3 h-full overflow-y-auto no-scrollbar">
+      <SidePanel focusedId={focusedId} setFocusedId={setFocusedId} className={"pb-36"} />
+    </div>
+  </div>
   );
 };
 

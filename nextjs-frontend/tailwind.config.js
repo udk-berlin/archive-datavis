@@ -83,6 +83,15 @@ module.exports = {
         ".text-white-important": {
           color: "white !important",
         },
+        '.no-scrollbar': {
+          /* Hide scrollbar for WebKit browsers */
+          '-webkit-overflow-scrolling': 'touch',
+          'scrollbar-width': 'none', /* Firefox */
+          '-ms-overflow-style': 'none', /* IE and Edge */
+        },
+        '.no-scrollbar::-webkit-scrollbar': {
+          display: 'none', /* Safari and Chrome */
+        },
       });
     },
   ],

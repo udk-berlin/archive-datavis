@@ -113,10 +113,7 @@ export function sketch  (p5)  {
 
       const ids = solarSystem.devGetAllIds();
 
-      solarSystem.addConnection(["deb2f2ea-8003-4962-8130-9324ba8d55b5", "a9074c12-ed0d-42a4-886e-45bd81d4749e"]);
-      solarSystem.addEllipse({ id: "deb2f2ea-8003-4962-8130-9324ba8d55b5" }, { id: "a9074c12-ed0d-42a4-886e-45bd81d4749e" });
-      solarSystem.addEllipse({ id: "deb2f2ea-8003-4962-8130-9324ba8d55b5" }, { id: "0a03c9c6-5a44-4f97-a4a3-ae6e59c3ebdb" });
-      solarSystem.addEllipse({ id: "deb2f2ea-8003-4962-8130-9324ba8d55b5" }, { id: "0dc9706f-fc15-493a-b83b-2d9e58017c9e" });
+
       //  solarSystem.addEllipse({id:"deb2f2ea-8003-4962-8130-9324ba8d55b5" }, { planetId: "semestersB", id: "0a03c9c6-5a44-4f97-a4a3-ae6e59c3ebdb" })
 
       p5.textFont(font);
