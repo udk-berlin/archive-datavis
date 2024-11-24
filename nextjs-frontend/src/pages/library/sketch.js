@@ -168,10 +168,9 @@ export function sketch  (p5)  {
     };
 
     p5.mouseClicked = () => {
-      console.log("clicked");
       //solarSystem.setSingleIdActive()
       const newFocusedId = solarSystem.setClickedIdActive(planetData.entries);
-      updateFocusedId(newFocusedId);
+      if(newFocusedId ) updateFocusedId(newFocusedId);
     };
 
     async function fetchData(url) {

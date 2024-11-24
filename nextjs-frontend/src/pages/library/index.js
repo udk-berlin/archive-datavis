@@ -13,12 +13,12 @@ import { Input } from "@/components/ui/input";
 import { RiSearchLine, RiQuestionLine } from "@remixicon/react";
 import { Slider } from "@/components/ui/slider";
 
-import * as test from "./sketch";
+import * as p5code from "./sketch";
 
-const P5Test = () => {
+const Library = () => {
   let papertexture;
 
-  const sketch = useMemo(() => test.sketch, []);
+  const sketch = useMemo(() => p5code.sketch, []);
 
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -32,10 +32,7 @@ const P5Test = () => {
     const handleResize = () => {
       setWindowWidth(window.innerWidth);
     };
-
     window.addEventListener("resize", handleResize);
-
-    // Clean up the event listener on component unmount
     return () => {
       window.removeEventListener("resize", handleResize);
     };
@@ -63,4 +60,4 @@ const P5Test = () => {
   );
 };
 
-export default P5Test;
+export default Library;
