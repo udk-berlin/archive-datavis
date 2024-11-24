@@ -4,6 +4,7 @@ class SolarSystem {
     this.connections = [];
     this.ellipses = [];
     this.p5 = p5;
+    this.activeId = null;
   }
 
   drawConnections() {
@@ -188,7 +189,6 @@ class SolarSystem {
 
 
     data.authors.forEach((authorId) => {
-      console.log("abs",authorId)
       this.addEllipse({id:id}, {id:authorId});
     });
     data.semester.forEach((semesterId) => {
@@ -200,10 +200,12 @@ class SolarSystem {
 
   setClickedIdActive(data) {
     const id = this.setSingleIdActive()
+    this.activeId = id;
 
     if (id) {
       this.setConnectionsForId(id,data.find((entry) => entry.id === id));
     }
+    return id
   }
 
 
