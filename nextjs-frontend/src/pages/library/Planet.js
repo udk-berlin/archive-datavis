@@ -42,7 +42,7 @@ class Planet {
     // console.log(this.points);
     this.rotationAngles = {
       angleX: this.p5.radians(rotationAngles.angleX),
-      angleY: this.p5.radians(this.p5.random(0, 360)),
+      angleY: this.p5.radians(rotationAngles.angleY),
       angleZ: this.p5.radians(rotationAngles.angleZ),
     };
     this.selfRotation = selfRotation;
@@ -95,7 +95,6 @@ class Planet {
         this.displacedPoints[i].id = this?.points[i]?.id ? this.points[i].id : this.generatedId();
       });
     }
-   
   }
 
   generatedId() {
@@ -109,26 +108,24 @@ class Planet {
 
     // Generate points on a 2D plane
     for (let i = 0; i < rows; i++) {
-        for (let j = 0; j < planeColumns; j++) {
-            if (subpoints.length >= n) break;
-            const x = j * distance;
-            const y = i * distance;
-            const z = 0;
-            subpoints.push(p5.createVector(x, y, z));
-
-
-        }
+      for (let j = 0; j < planeColumns; j++) {
+        if (subpoints.length >= n) break;
+        const x = j * distance;
+        const y = i * distance;
+        const z = 0;
+        subpoints.push(p5.createVector(x, y, z));
+      }
     }
 
     // Center the points around the centerpoint
-    const centerX = (planeColumns - 1) * distance / 2;
-    const centerY = (rows - 1) * distance / 2;
+    const centerX = ((planeColumns - 1) * distance) / 2;
+    const centerY = ((rows - 1) * distance) / 2;
     for (let i = 0; i < subpoints.length; i++) {
-        subpoints[i].x -= centerX;
-        subpoints[i].y -= centerY;
-        subpoints[i].x += centralPoint.x;
-        subpoints[i].y += centralPoint.y;
-        subpoints[i].z += centralPoint.z;
+      subpoints[i].x -= centerX;
+      subpoints[i].y -= centerY;
+      subpoints[i].x += centralPoint.x;
+      subpoints[i].y += centralPoint.y;
+      subpoints[i].z += centralPoint.z;
     }
 
     // Rotate the points around the rotationAngles
@@ -140,32 +137,32 @@ class Planet {
     const sinZ = Math.sin(rotationAngles.angleZ);
 
     for (let i = 0; i < subpoints.length; i++) {
-        let { x, y, z } = subpoints[i];
+      let { x, y, z } = subpoints[i];
 
-        // Rotate around X axis
-        let y1 = y * cosX - z * sinX;
-        let z1 = y * sinX + z * cosX;
-        y = y1;
-        z = z1;
+      // Rotate around X axis
+      let y1 = y * cosX - z * sinX;
+      let z1 = y * sinX + z * cosX;
+      y = y1;
+      z = z1;
 
-        // Rotate around Y axis
-        let x1 = x * cosY + z * sinY;
-        z1 = -x * sinY + z * cosY;
-        x = x1;
-        z = z1;
+      // Rotate around Y axis
+      let x1 = x * cosY + z * sinY;
+      z1 = -x * sinY + z * cosY;
+      x = x1;
+      z = z1;
 
-        // Rotate around Z axis
-        x1 = x * cosZ - y * sinZ;
-        y1 = x * sinZ + y * cosZ;
-        x = x1;
-        y = y1;
+      // Rotate around Z axis
+      x1 = x * cosZ - y * sinZ;
+      y1 = x * sinZ + y * cosZ;
+      x = x1;
+      y = y1;
 
-        subpoints[i] = p5.createVector(x, y, z);
-        subpoints[i].id =  data && data[i].id ? data[i].id : this.generatedId()
+      subpoints[i] = p5.createVector(x, y, z);
+      subpoints[i].id = data && data[i].id ? data[i].id : this.generatedId();
     }
 
     return subpoints;
-}
+  }
 
   generateRingSubpoints(data) {
     let { angleX, angleY, angleZ } = this.rotationAngles;
@@ -179,7 +176,7 @@ class Planet {
       let point = this.p5.createVector(x, y, z);
       point = this.rotateVector(point, angleX, angleY, angleZ);
       point.add(this.centralPoint);
-      point.id =  data && data[i].id ? data[i].id : this.generatedId();
+      point.id = data && data[i].id ? data[i].id : this.generatedId();
       this.subpoints.push(point);
     }
   }
@@ -448,7 +445,7 @@ class Planet {
   }
 
   draw() {
-    this.p5.fill(255,255,255,150);
+    this.p5.fill(255, 255, 255, 150);
     this.drawTriangles({ p: this.points, h: this.pointsHull, drawHull: this.options.drawHull });
 
     if (this.selfRotation) {
@@ -508,7 +505,7 @@ class Planet {
         this.p5.pop();
         allPoints = allPoints.concat(this.subpoints);
         break;
-      case "plane": 
+      case "plane":
         this.p5.push();
         this.p5.fill(255, 0, 0);
         this.p5.translate(this.centralPoint.x, this.centralPoint.y, this.centralPoint.z);
@@ -562,7 +559,7 @@ class Planet {
         });
         break;
 
-      case "plane": 
+      case "plane":
         this.subpoints.forEach((p, i) => {
           this.p5.push();
           this.p5.fill(0, 0, 0);
@@ -570,7 +567,7 @@ class Planet {
           this.p5.sphere(2);
           this.p5.pop();
         });
-      break;
+        break;
       default:
     }
 
@@ -642,13 +639,12 @@ class Planet {
     if (!found && this.subpoints && this.mode === "ring") {
       found = this.subpoints.find((point) => point.id === id);
     }
-    if(!found && this.subpoints && this.mode === "plane") {
+    if (!found && this.subpoints && this.mode === "plane") {
       found = this.subpoints.find((point) => point.id === id);
     }
     if (!found && this.points) {
       found = this.points.find((point) => point.id === id);
     }
-   
 
     return found;
   }
