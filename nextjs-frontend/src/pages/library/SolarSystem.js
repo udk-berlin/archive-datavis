@@ -83,6 +83,7 @@ class SolarSystem {
     this.p5.push();
     this.p5.noFill();
     this.p5.stroke(255, 0, 255);
+    this.p5.strokeWeight(1.5);
     this.p5.beginShape();
     this.p5.vertex(p1.x, p1.y, p1.z);
     this.p5.quadraticVertex(

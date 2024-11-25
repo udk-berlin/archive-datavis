@@ -10,7 +10,7 @@ export function sketch  (p5)  {
 
     let planetData = [];
 
-    let galaxyRotation = false;
+    let galaxyRotation = true;
 
     let rotationSpeed = 0.05;
 
@@ -53,7 +53,7 @@ export function sketch  (p5)  {
       font = p5.loadFont("/fonts/inter/Inter-Regular.otf");
 
       // Fetch data for the second planet
-      planetData = await fetchData("http://localhost:3010/api/all");
+      planetData = await fetchData("http://192.168.1.101:3010/api/all");
 
       //planetData = await fetchData("http://192.168.1.101:3010/api/all");
     };
@@ -74,21 +74,38 @@ export function sketch  (p5)  {
 
       solarSystem.addPlanet(
         new Planet(p5, {
-          mode: "displacement",
+          mode: "ring",
           distance: planetData.authors.length,
           //centralPoint: p5.createVector(0, -100, 300),
-          centralPoint: p5.createVector(-1000, 0, 0),
+          centralPoint: p5.createVector(0, 0, 0),
+          rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
           data: planetData.authors,
+          distance: 500,
           id: "authors",
         })
       );
 
       solarSystem.addPlanet(
         new Planet(p5, {
-          mode: "displacement",
+          mode: "ring",
           distance: planetData.semesters.length,
           //centralPoint: p5.createVector(0, -100, 300),
-          centralPoint: p5.createVector(500, 500, 0),
+          centralPoint: p5.createVector(0, -500, 0),
+          rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
+          distance: 500,
+          data: planetData.semesters.slice(0, 64),
+          id: "semesters",
+        })
+      );
+
+      solarSystem.addPlanet(
+        new Planet(p5, {
+          mode: "ring",
+          distance: planetData.semesters.length,
+          //centralPoint: p5.createVector(0, -100, 300),
+          centralPoint: p5.createVector(0, 500, 0),
+          rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
+          distance: 500,
           data: planetData.semesters,
           id: "semesters",
         })
@@ -97,18 +114,22 @@ export function sketch  (p5)  {
 
       solarSystem.addPlanet(
         new Planet(p5, {
-          mode: "displacement",
-          distance: planetData.entries.length,
+          mode: "plane",
+          distance: planetData.entries.length*3,
           //centralPoint: p5.createVector(0, -100, 300),
           centralPoint: p5.createVector(0, 0, 0),
-          data: planetData.entries,
+          data: planetData.entries.concat(planetData.entries, planetData.entries),
+          distance: 20,
           rotationSpeed: 0.01,
           id: "entries",
+          drawHull: false,
+          planeColumns: 14,
         })
       );
 
 
       camera = p5.createCamera();
+      console.log(camera)
 
 
       const ids = solarSystem.devGetAllIds();
@@ -128,11 +149,19 @@ export function sketch  (p5)  {
     }
 
     p5.draw = () => {
+
+      const dummy = 1.0
+
+      camera?.ortho(
+        -p5.width * dummy, p5.width * dummy,
+        p5.height * dummy, -p5.height * dummy,
+        -500, 1500
+      );
       updateRotation();
 
       p5.background(236, 239, 241);
 
-      p5.orbitControl();
+      p5.orbitControl(1,1,0);
       p5.ambientLight(150);
       p5.directionalLight(255, 255, 255, 1, 1, -1);
 

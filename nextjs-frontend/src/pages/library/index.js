@@ -42,9 +42,9 @@ const Library = () => {
 
   return (
     <div className="flex mr-12 h-screen">
-    <div className="flex-grow h-full">
+  
       <NextReactP5Wrapper sketch={sketch} windowWidth={windowWidth} setFocusedId={setFocusedId} />
-    </div>
+    
     <div className="w-1/3 h-full overflow-y-auto no-scrollbar">
       <SidePanel focusedId={focusedId} setFocusedId={setFocusedId} className={"pb-36"} />
     </div>

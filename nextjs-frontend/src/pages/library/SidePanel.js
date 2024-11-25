@@ -11,11 +11,11 @@ import { cn } from "@/lib/utils";
 
 const SidePanel = ({ focusedId, setFocusedId, className }) => {
   const [focusedIdData, setFocusedIdData] = useState({});
-  const bucketUrl = "http://127.0.0.1:54321/storage/v1/object/public/";
+  const bucketUrl = "http://192.168.1.101:54321/storage/v1/object/public/";
 
   useEffect(() => {
     const fetchData = async (id) => {
-      const response = await fetch(`http://localhost:3010/api/project/${id}`);
+      const response = await fetch(`http://192.168.1.101:3010/api/project/${id}`);
       const data = await response.json();
       setFocusedIdData(data);
       return data;
@@ -34,7 +34,7 @@ const SidePanel = ({ focusedId, setFocusedId, className }) => {
 
   return (
     <div className={cn(
-        "pl-12 flex-grow  border-l-[3px]  border-white  pt-12 ",
+        "pl-12 flex-grow  border-l-[2px]  border-white  pt-12 ",
         className
       )} >
       <div className="relative">
