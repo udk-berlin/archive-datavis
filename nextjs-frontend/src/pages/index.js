@@ -6,7 +6,7 @@ import ImageCollage from "@/components/ui-compositions/ImageCollage";
 
 const Home = () => {
   return (
-    <div className="grid grid-cols-12 gap-4">
+    <div className="grid grid-cols-12 gap-4 px-12 mt-24">
       <section className="col-span-12 gap-4  grid grid-cols-12">
         <div className="col-span-5 mt-24 ">
           <h3 className="text-2xl ">

@@ -175,7 +175,8 @@ export function sketch(p5) {
    
 
 
-    p5.background(236, 239, 241);
+  
+   p5.background(236, 239, 241);
 
     p5.ambientLight(150);
     p5.directionalLight(255, 255, 255, 1, 1, -1);

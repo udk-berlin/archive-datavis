@@ -33,23 +33,24 @@ const SidePanel = ({ focusedId, setFocusedId, className }) => {
   }, [focusedIdData]);
 
   return (
-    <div className={cn(
-        "pl-12 flex-grow  border-l-[2px]  border-white  pt-12 ",
-        className
-      )} >
-      <div className="relative">
-        <span className="absolute inset-y-0 left-3 flex items-center text-gray-500">
-          <RiSearchLine className="w-5 h-5" />
-        </span>
-        <Input type="text" placeholder="Search..." className="pl-10 h-12 rounded-none " />
+    <div className={cn("pl-12 flex-grow border-l-2 border-white pr-12", className)}>
+      <div className="sticky top-0 bg-background pt-12 mb-6 pb-6 z-10">
+        <div className="relative">
+          <span className="absolute inset-y-0 left-3 flex items-center text-gray-500">
+            <RiSearchLine className="w-5 h-5" />
+          </span>
+          <Input type="text" placeholder="Search..." className="pl-10 h-12 rounded-none" />
+        </div>
+      </div>
 
+      <div className="flex-1 overflow-y-auto ">
         {focusedIdData && (
-          <div className="mt-12">
+          <div>
             <h2 className="text-xl mb-2">{focusedIdData.name}</h2>
             <div>
-              {focusedIdData.authors && (
-                <div>
-                  <ul className="flex gap-4 mb-4">
+              <ul className="flex gap-4 mb-4">
+                {focusedIdData.authors && (
+                  <>
                     {focusedIdData.authors.map((author, i) => (
                       <li key={i}>
                         <Badge className="rounded-none bg-white text-black px-3 py-2">
@@ -57,31 +58,29 @@ const SidePanel = ({ focusedId, setFocusedId, className }) => {
                         </Badge>
                       </li>
                     ))}
-                    {focusedIdData.semester && (
-                      <>
-                        {focusedIdData.semester.map((semester, i) => (
-                          <>
-                            <Fragment key={i}>
-                              <li>
-                                <Badge className="rounded-none bg-white text-black px-3 py-2">{semester.name}</Badge>
-                              </li>
-                              <li>
-                                <Badge className="rounded-none bg-white text-black px-3 py-2">
-                                  {semester.term} {semester.year}
-                                </Badge>
-                              </li>
-                            </Fragment>
-                          </>
-                        ))}
-                      </>
-                    )}
-                  </ul>
-                </div>
-              )}
+                  </>
+                )}
+                {focusedIdData.semester && (
+                  <>
+                    {focusedIdData.semester.map((semester, i) => (
+                      <Fragment key={i}>
+                        <li>
+                          <Badge className="rounded-none bg-white text-black px-3 py-2">{semester.name}</Badge>
+                        </li>
+                        <li>
+                          <Badge className="rounded-none bg-white text-black px-3 py-2">
+                            {semester.term} {semester.year}
+                          </Badge>
+                        </li>
+                      </Fragment>
+                    ))}
+                  </>
+                )}
+              </ul>
             </div>
             {focusedIdData.thumbnail && <img src={`${bucketUrl}${focusedIdData.thumbnail}`}></img>}
 
-            {focusedIdData.abstract && <p className="mt-4 text-xl">{focusedIdData.abstract}</p>}
+            {focusedIdData.abstract && <p className="mt-4 leading-5 mb-12">{focusedIdData.abstract}</p>}
           </div>
         )}
       </div>
