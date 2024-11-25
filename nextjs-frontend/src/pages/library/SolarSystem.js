@@ -67,7 +67,7 @@ class SolarSystem {
     let direction = this.p5.constructor.Vector.sub(p2, p1).normalize();
   
     // Define the up vector
-    let up = this.p5.createVector(0, 1, 0);
+    let up = this.p5.createVector(0, -1, 0);
   
     // Project the up vector onto the plane perpendicular to the direction vector
     let projection = this.p5.constructor.Vector.mult(direction, direction.dot(up));

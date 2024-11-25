@@ -17,6 +17,8 @@ export function sketch(p5) {
 
   let rotationSpeed = 0.05;
 
+  let introAnimationFinished = false;
+
   let rotationAngles = {
     angleX: p5.radians(0),
     angleY: p5.radians(0),
@@ -46,10 +48,7 @@ export function sketch(p5) {
     if (props.setFocusedId) {
       updateFocusedId = props.setFocusedId;
     }
-    // if(props.sFId){
-    //   console.log('setFId',props.sFId)
-    //   updateFocusedId = props.sFId
-    // }
+
   };
 
   p5.preload = async () => {
@@ -57,18 +56,18 @@ export function sketch(p5) {
 
     font = p5.loadFont("/fonts/inter/Inter-Regular.otf");
 
-    // Fetch data for the second planet
+   
     planetData = await fetchData("http://192.168.1.101:3010/api/all");
 
-    //planetData = await fetchData("http://192.168.1.101:3010/api/all");
   };
 
   p5.setup = async () => {
     const parent = document.querySelector("main");
     p5.createCanvas((windowWidth * 5) / 7, parent.offsetHeight, p5.WEBGL);
-    // addScreenPositionFunction(p5);
+
 
     const scale = 1.5
+    const defaultScale = 1.5
   
 
     cam = p5.createCamera();
@@ -80,7 +79,7 @@ export function sketch(p5) {
     cameraStartView.lookAt(0, 0, 0);
   
     cameraDefaultView = p5.createCamera();
-    cameraDefaultView.ortho(-p5.width / scale*2, p5.width / scale*2, -p5.height / scale*2, p5.height / scale*2, 0.1, 3000);
+    cameraDefaultView.ortho(-p5.width / scale*defaultScale, p5.width / scale*defaultScale, -p5.height / scale*defaultScale, p5.height / scale*defaultScale, 0.1, 3000);
     cameraDefaultView.setPosition(925, 1350,1040);
     cameraDefaultView.lookAt(0, 0, 0);
 
@@ -93,7 +92,6 @@ export function sketch(p5) {
       new Planet(p5, {
         mode: "ring",
         distance: planetData.authors.length,
-        //centralPoint: p5.createVector(0, -100, 300),
         centralPoint: p5.createVector(0, 0, 0),
         rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
         data: planetData.authors,
@@ -106,7 +104,6 @@ export function sketch(p5) {
       new Planet(p5, {
         mode: "ring",
         distance: planetData.semesters.length,
-        //centralPoint: p5.createVector(0, -100, 300),
         centralPoint: p5.createVector(0, -500, 0),
         rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
         distance: 500,
@@ -119,7 +116,6 @@ export function sketch(p5) {
       new Planet(p5, {
         mode: "ring",
         distance: planetData.semesters.length,
-        //centralPoint: p5.createVector(0, -100, 300),
         centralPoint: p5.createVector(0, 500, 0),
         rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
         distance: 500,
@@ -132,7 +128,6 @@ export function sketch(p5) {
       new Planet(p5, {
         mode: "plane",
         distance: planetData.entries.length * 3,
-        //centralPoint: p5.createVector(0, -100, 300),
         centralPoint: p5.createVector(0, 0, 0),
         data: planetData.entries.concat(planetData.entries, planetData.entries),
         distance: 20,
@@ -161,30 +156,32 @@ export function sketch(p5) {
   p5.draw = () => {
 
 
+    if(!introAnimationFinished) {
+  
     if (amt < 1) {
       if (p5.millis() > 100) {
-      amt += 0.005; // Adjust interpolation speed
+      amt += 0.005; 
       }
       cam.slerp(cameraStartView, cameraDefaultView, easingFunctions.easeOutCubic(amt));
       p5.setCamera(cam);
     } else {
-      p5.setCamera(cameraDefaultView);
-    }
+      p5.setCamera(cam);
+      introAnimationFinished = true;
+    } 
+  } else {
+    p5.orbitControl(1, 1, 1);
+  }
 
-   // p5.setCamera(cameraStartView);
+   
 
-    // camera?.move(0, 1, 0);
-
-    //
-    updateRotation();
 
     p5.background(236, 239, 241);
-    console.log(p5._renderer._curCamera.eyeX, p5._renderer._curCamera.eyeY, p5._renderer._curCamera.eyeZ);
-     p5.orbitControl(1, 1, 0);
+
     p5.ambientLight(150);
     p5.directionalLight(255, 255, 255, 1, 1, -1);
 
-    if (galaxyRotation) {
+    if (galaxyRotation && p5.millis() > 2000) {
+      updateRotation();
       p5.push();
       p5.translate(0, 0, 0);
       p5.rotateY(rotationAngles.angleY);
@@ -209,11 +206,13 @@ export function sketch(p5) {
 
     //  solarSystem.drawConnections();
     solarSystem.drawEllipses();
-    if (galaxyRotation) p5.pop();
+    if (galaxyRotation && p5.millis() > 2000) p5.pop();
   };
 
   p5.mouseClicked = () => {
     //solarSystem.setSingleIdActive()
+    galaxyRotation = false
+    introAnimationFinished = true;
     const newFocusedId = solarSystem.setClickedIdActive(planetData.entries);
     if (newFocusedId) updateFocusedId(newFocusedId);
   };

@@ -106,7 +106,6 @@ class Planet {
 
     const rows = Math.ceil(n / planeColumns);
 
-    // Generate points on a 2D plane
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < planeColumns; j++) {
         if (subpoints.length >= n) break;
@@ -117,7 +116,6 @@ class Planet {
       }
     }
 
-    // Center the points around the centerpoint
     const centerX = ((planeColumns - 1) * distance) / 2;
     const centerY = ((rows - 1) * distance) / 2;
     for (let i = 0; i < subpoints.length; i++) {
@@ -128,7 +126,6 @@ class Planet {
       subpoints[i].z += centralPoint.z;
     }
 
-    // Rotate the points around the rotationAngles
     const cosX = Math.cos(rotationAngles.angleX);
     const sinX = Math.sin(rotationAngles.angleX);
     const cosY = Math.cos(rotationAngles.angleY);
@@ -139,19 +136,16 @@ class Planet {
     for (let i = 0; i < subpoints.length; i++) {
       let { x, y, z } = subpoints[i];
 
-      // Rotate around X axis
       let y1 = y * cosX - z * sinX;
       let z1 = y * sinX + z * cosX;
       y = y1;
       z = z1;
 
-      // Rotate around Y axis
       let x1 = x * cosY + z * sinY;
       z1 = -x * sinY + z * cosY;
       x = x1;
       z = z1;
 
-      // Rotate around Z axis
       x1 = x * cosZ - y * sinZ;
       y1 = x * sinZ + y * cosZ;
       x = x1;
@@ -552,9 +546,15 @@ class Planet {
 
         this.subpoints.forEach((p, i) => {
           this.p5.push();
-          this.p5.fill(0, 0, 0);
           this.p5.translate(p.x, p.y, p.z);
-          this.p5.sphere(2);
+          if(this.activeIds.includes(p.id)) {
+            this.p5.fill(255, 0, 255);
+            this.p5.sphere(6);
+          
+          } else {
+            this.p5.fill(0, 0, 0);
+            this.p5.sphere(2);
+          }
           this.p5.pop();
         });
         break;
@@ -562,9 +562,18 @@ class Planet {
       case "plane":
         this.subpoints.forEach((p, i) => {
           this.p5.push();
-          this.p5.fill(0, 0, 0);
+     
           this.p5.translate(p.x, p.y, p.z);
-          this.p5.sphere(2);
+          if(this.activeIds.includes(p.id)) {
+            this.p5.fill(255, 0, 255);
+            this.p5.sphere(6);
+          
+          } else {
+            this.p5.fill(0, 0, 0);
+            this.p5.sphere(2);
+
+          }
+          
           this.p5.pop();
         });
         break;
