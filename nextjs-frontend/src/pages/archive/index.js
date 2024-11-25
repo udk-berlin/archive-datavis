@@ -1,29 +1,51 @@
-import { Separator } from "@/components/ui/separator";
+import dynamic from "next/dynamic";
+
+import * as THREE from "three";
+import { ConvexGeometry } from "three/examples/jsm/geometries/ConvexGeometry.js";
+
+import { useState, useEffect, useRef, useCallback, useMemo } from "react";
+
+import { NextReactP5Wrapper } from "@p5-wrapper/next";
+import { Button } from "@/components/ui/button";
+
+import * as p5code from "./sketch";
+import SidePanel from "./SidePanel";
 
 const ArchivePage = () => {
-  return (
-    <div className="mb-24">
-      <img src="/images/3N7A9979.jpeg" alt="3N7A9979" />
+  let papertexture;
 
-      <Separator className="mt-12 mb-4" />
-      <h2>the physical archive</h2>
-      <div>
-        Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-        erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus
-        est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut
-        labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd
-        gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-        nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo
-        dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Duis autem vel eum iriure
-        dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at vero eros et accumsan
-        et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla facilisi. Lorem ipsum dolor
-        sit amet, consectetuer adipiscing elit, sed diam nonummy nibh euismod tincidunt ut laoreet dolore magna aliquam erat volutpat. Ut
-        wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis nisl ut aliquip ex ea commodo consequat. Duis
-        autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat, vel illum dolore eu feugiat nulla facilisis at
-        vero eros et accumsan et iusto odio dignissim qui blandit praesent luptatum zzril delenit augue duis dolore te feugait nulla
-        facilisi. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod mazim placerat facer
-      </div>
+  const sketch = useMemo(() => p5code.sketch, []);
+
+  const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+  const [focusedId, setFocusedId] = useState("");
+
+  useEffect(() => {
+    console.log("focusedId", focusedId);
+  }
+  , [focusedId]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // const [img, setImg] = useState();
+
+  return (
+    <div className="flex h-full">
+          {/* <div className="absolute left-0 top-0"> <Button onClick={() => setFocusedId("b874ceff-2abb-475b-a19c-9f2f3f82a8f4")}>Set focusedId</Button></div> */}
+    <NextReactP5Wrapper sketch={sketch} windowWidth={windowWidth} setFocusedId={setFocusedId} className="flex-1" />
+
+    <div className="w-1/3 h-full flex flex-col " >
+      <SidePanel focusedId={focusedId} setFocusedId={setFocusedId} className="flex-1 overflow-y-auto " />
     </div>
+  </div>
   );
 };
 

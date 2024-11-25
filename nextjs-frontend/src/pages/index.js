@@ -105,7 +105,7 @@ const Home = () => {
           <ImageCollage
             className={"w-full h-[550px]"}
             images={[
-              { src: "/images/3N7A9979.jpeg", alt: "hero", className: "left-20 top-0 w-4/5", aspectRatio: "3:2" },
+              { src: "/images/3N7A9977_edit.jpg", alt: "hero", className: "left-20 top-0 w-4/5", aspectRatio: "3:2" },
               { src: "/images/3N7A0079.jpeg", alt: "hero", className: "right-0 bottom-0 w-1/3" },
             ]}
           />
