@@ -9,7 +9,7 @@ import { RiFolder2Line, RiFile2Line } from "@remixicon/react";
 
 const fileviewtestPage = () => {
   const iniFileID = "c97f45df-d3b9-4c08-ac39-b9c16ddb56da";
-  const apiURL = "http://192.168.1.102:3010/api/filemetadata/";
+  const apiURL = "http://localhost:3010/api/filemetadata/";
 
   const [fileDatas, setFileDatas] = useState([{ id: "root", name: "root", children: [] }]);
   const [currentFileId, setCurrentFileId] = useImmer(iniFileID);

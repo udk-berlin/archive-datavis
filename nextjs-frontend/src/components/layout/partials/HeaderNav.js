@@ -1,5 +1,5 @@
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { RiLogoutBoxRLine, RiSearchLine } from "@remixicon/react";
+import { RiLogoutBoxRLine, RiSearchLine, RiMenuFill } from "@remixicon/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
@@ -9,9 +9,13 @@ import { Button } from "@/components/ui/button";
 
 import { Input } from "@/components/ui/input";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-const HeaderNav = () => {
+
+import { useSidebar } from "@/components/ui/sidebar";
+
+
+const HeaderNav = ({openSidebar, sidebarOpened}) => {
   const router = useRouter();
   const currentPath = router.pathname;
   const { t } = useTranslation("header");
@@ -20,12 +24,29 @@ const HeaderNav = () => {
   const [search, setSearch] = useState("");
   const [searchOpen, setSearchOpen] = useState(false);
 
+
+  const {
+    state,
+    open,
+    setOpen,
+    openMobile,
+    setOpenMobile,
+    isMobile,
+    toggleSidebar,
+  } = useSidebar()
+
+  useEffect(() => {
+    if(!isMobile) setOpen(false)
+  }, [isMobile])
+
+
+
   return (
-    <header className="bg-white flex items-center justify-between px-12 h-12">
+    <header className="bg-white flex items-center justify-between px-12 h-12 max-w-full overflow-x-hidden">
       <h1 className="">
         <Link href="/">Digitale Klasse Archive</Link>
       </h1>
-      <nav className="mx-auto pr-24">
+      <nav className="mx-auto pr-24 hidden xs:hidden md:hidden lg:block ">
         <ul className="flex space-x-24 items-center">
           <li>
             <Link href="/archive" className={currentPath === "/archive" ? "!underline" : ""}>
@@ -69,7 +90,7 @@ const HeaderNav = () => {
 
         <Button
           variant="ghost"
-          className="hover:bg-transparent hover:text-[rgb(0,0,255)] text-right pr-0"
+          className="hover:bg-transparent hover:text-[rgb(0,0,255)] text-right pr-0 hidden  xs:hidden md:hidden lg:block"
           onClick={() => {
             if (i18n.language === "de") {
               i18n.changeLanguage("en");
@@ -81,6 +102,12 @@ const HeaderNav = () => {
           {i18n.language === "de" ? "EN" : "DE"}
         </Button>
       </div>
+
+
+      <Button className="lg:hidden pr-0" variant="ghost" onClick={() => {setOpenMobile(true)}}>
+        <RiMenuFill className="w-7" />
+      </Button>
+     
     </header>
   );
 };
