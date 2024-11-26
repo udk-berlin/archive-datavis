@@ -200,13 +200,14 @@ class SolarSystem {
   setClickedIdActive(d) {
     const id = this.setSingleIdActive();
     this.activeId = id;
+    const focusedKeys = {};
 
     const planetId = this.getPointAndPlanetIdById(id)?.planetId;
     console.log(planetId, id);
 
     if (!planetId) {
       console.log("No planetId found for id", id);
-      return;
+      return {planetId: null, id: null, focusedKeys};
     }
 
     if (id) {
@@ -216,7 +217,11 @@ class SolarSystem {
         planetId
       );
     }
-    return id;
+
+    if(planetId === 'authors') {
+      focusedKeys.entries = this.getPlanet('entries').getActiveIds();
+    }
+    return {planetId, id, focusedKeys};
   }
 
   deactivateAllActiveIds() {

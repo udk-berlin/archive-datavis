@@ -18,13 +18,13 @@ const ArchivePage = () => {
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
-  const [focusedId, setFocusedId] = useState("");
+  const [focusedIds, setFocusedIds] = useState([]);
   const [focusedType, setFocusedType] = useState("");
 
   useEffect(() => {
-    console.log("focusedId", focusedId);
+    console.log("focusedIds", focusedIds);
   }
-  , [focusedId]);
+  , [focusedIds]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -38,10 +38,10 @@ const ArchivePage = () => {
 
   return (
     <div className="flex h-full">
-    <NextReactP5Wrapper sketch={sketch} windowWidth={windowWidth} setFocusedId={setFocusedId} className="flex-1" />
+    <NextReactP5Wrapper sketch={sketch} windowWidth={windowWidth} setFocusedIds={setFocusedIds} className="flex-1" />
 
     <div className="w-1/3 h-full flex flex-col " >
-      <SidePanel focusedId={focusedId} setFocusedId={setFocusedId} setFocusedType={setFocusedType} className="flex-1 overflow-y-auto " />
+      <SidePanel focusedIds={focusedIds} setFocusedIds={setFocusedIds} setFocusedType={setFocusedType} className="flex-1 overflow-y-auto " />
     </div>
   </div>
   );

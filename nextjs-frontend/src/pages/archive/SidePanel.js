@@ -9,30 +9,38 @@ import { Badge, badgeVariants } from "@/components/ui/badge";
 import { Link } from "next/link";
 import { cn } from "@/lib/utils";
 
-const SidePanel = ({ focusedId, setFocusedId, className }) => {
-  const [focusedIdData, setFocusedIdData] = useState({});
+const SidePanel = ({ focusedIds, setFocusedIds, className, cachedData }) => {
+  const [focusedIdsData, setFocusedIdsData] = useState([]);
   const bucketUrl = "http://192.168.1.102:54321/storage/v1/object/public/";
   // const bucketUrl = "http://localhost:54321/storage/v1/object/public/";
+
+  useEffect(() => {
+    if (focusedIdsData) {
+      console.log("sideP Data", focusedIdsData);
+    }
+  }, [focusedIdsData]);
+
 
   useEffect(() => {
     const fetchData = async (id) => {
       const response = await fetch(`http://192.168.1.102:3010/api/project/${id}`);
       // const response = await fetch(`http://localhost:3010/api/project/${id}`);
       const data = await response.json();
-      setFocusedIdData(data);
+
       return data;
     };
 
-    if (focusedId) {
-      fetchData(focusedId);
-    }
-  }, [focusedId, setFocusedIdData]);
+    const fetchDataofIds = async (ids) => {
+      const newData = [];
+      for await (const id of ids) {
+        newData.push(await fetchData(id));
 
-  useEffect(() => {
-    if (focusedIdData) {
-      console.log(focusedIdData);
-    }
-  }, [focusedIdData]);
+        
+      }
+      setFocusedIdsData(newData);
+    };
+    fetchDataofIds(focusedIds);
+  }, [focusedIds, setFocusedIdsData]);
 
   return (
     <div className={cn(" flex-grow border-l-2 border-white ", className)}>
@@ -52,14 +60,14 @@ const SidePanel = ({ focusedId, setFocusedId, className }) => {
       </div>
 
       <div className="flex-1 overflow-y-auto ">
-        {focusedIdData && (
+        {focusedIdsData && focusedIdsData.length === 1 && (
           <div>
-            <h2 className="text-xl mb-2">{focusedIdData.name}</h2>
+            <h2 className="text-xl mb-2">{focusedIdsData[0].name}</h2>
             <div>
               <ul className="flex gap-4 mb-4">
-                {focusedIdData.authors && (
+                {focusedIdsData[0].authors && (
                   <>
-                    {focusedIdData.authors.map((author, i) => (
+                    {focusedIdsData[0].authors.map((author, i) => (
                       <li key={i}>
                         <Badge className="rounded-none bg-white text-black px-3 py-2">
                           {author.firstName} {author.name}
@@ -68,9 +76,9 @@ const SidePanel = ({ focusedId, setFocusedId, className }) => {
                     ))}
                   </>
                 )}
-                {focusedIdData.semester && (
+                {focusedIdsData[0].semester && (
                   <>
-                    {focusedIdData.semester.map((semester, i) => (
+                    {focusedIdsData[0].semester.map((semester, i) => (
                       <Fragment key={i}>
                         <li>
                           <Badge className="rounded-none bg-white text-black px-3 py-2">{semester.name}</Badge>
@@ -86,9 +94,23 @@ const SidePanel = ({ focusedId, setFocusedId, className }) => {
                 )}
               </ul>
             </div>
-            {focusedIdData.thumbnail && <img src={`${bucketUrl}${focusedIdData.thumbnail}`}></img>}
+            {focusedIdsData[0].thumbnail && <img src={`${bucketUrl}${focusedIdsData[0].thumbnail}`}></img>}
 
-            {focusedIdData.abstract && <p className="mt-4 leading-5 mb-12">{focusedIdData.abstract}</p>}
+            {focusedIdsData[0].abstract && <p className="mt-4 leading-5 mb-12">{focusedIdsData[0].abstract}</p>}
+          </div>
+        )}
+        {focusedIdsData && focusedIdsData.length > 1 && (
+          <div>
+            <h2 className="text-xl mb-2">Author: name name</h2>
+            <div>
+              <ul className="flex gap-4 mb-4">
+                {focusedIdsData.map((project, i) => (
+                  <li key={i}>
+                    {project.name}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
         )}
       </div>

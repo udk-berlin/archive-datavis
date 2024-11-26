@@ -34,7 +34,7 @@ export function sketch(p5) {
 
   let windowWidth = 700;
 
-  let updateFocusedId = () => {};
+  let updateFocusedIds = () => {};
 
   p5.updateWithProps = (props) => {
     if (props.focusedId) {
@@ -45,8 +45,8 @@ export function sketch(p5) {
       windowWidth = props.windowWidth;
     }
 
-    if (props.setFocusedId) {
-      updateFocusedId = props.setFocusedId;
+    if (props.setFocusedIds) {
+      updateFocusedIds = props.setFocusedIds;
     }
   };
 
@@ -197,8 +197,14 @@ export function sketch(p5) {
     //solarSystem.setSingleIdActive()
     galaxyRotation = false;
     introAnimationFinished = true;
-    const newFocusedId = solarSystem.setClickedIdActive(planetData);
-    if (newFocusedId) updateFocusedId(newFocusedId);
+    const {id:newFocusedId, planetId, focusedKeys} = solarSystem.setClickedIdActive(planetData);
+    console.log('asdasd',newFocusedId, planetId);
+    if(planetId === 'entries' && newFocusedId) {
+      updateFocusedIds( [newFocusedId]);
+    } else if (planetId === 'authors' && newFocusedId) {
+      if(focusedKeys?.entries?.length > 0) updateFocusedIds( focusedKeys.entries);
+    }
+    //if (newFocusedId) updateFocusedIds( (prev) => [...prev, newFocusedId]);
   };
 
   async function fetchData(url) {
