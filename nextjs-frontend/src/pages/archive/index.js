@@ -37,7 +37,7 @@ const ArchivePage = () => {
   }, []);
 
   return (
-    <div className="flex h-full">
+    <div className="flex w-[100vw] h-full ">
     <NextReactP5Wrapper sketch={sketch} windowWidth={windowWidth} setFocusedIds={setFocusedIds} className="flex-1" />
 
     <div className="w-1/3 h-full flex flex-col " >
