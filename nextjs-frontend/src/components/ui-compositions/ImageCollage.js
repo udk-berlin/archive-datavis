@@ -4,11 +4,11 @@ import { cn } from "@/lib/utils"
 const ImageCollage = ({ images, className }) => {
 
   return (
-    <div className={cn("relative h-[500px] w-[500px]",className)}>
+    <div className={cn("relative h-[500px] w-[500px] ",className)}>
       {images.map((image, index) => (
         <div
           key={index}
-          className={cn("absolute transition-transform duration-100 ease-in w-[500px] ", image.className)}
+          className={cn("absolute transition-transform duration-100 ease-in  w-[500px] ", image.className)}
           style={{
            
 
