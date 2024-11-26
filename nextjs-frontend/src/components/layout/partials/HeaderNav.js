@@ -21,11 +21,11 @@ const HeaderNav = () => {
   const [searchOpen, setSearchOpen] = useState(false);
 
   return (
-    <header className=" bg-white flex items-center px-12 h-12">
-      <h1 className="mr-10">
+    <header className="bg-white flex items-center justify-between px-12 h-12">
+      <h1 className="">
         <Link href="/">Digitale Klasse Archive</Link>
       </h1>
-      <nav className="flex-grow ml-36 flex">
+      <nav className="mx-auto pr-24">
         <ul className="flex space-x-24 items-center">
           <li>
             <Link href="/archive" className={currentPath === "/archive" ? "!underline" : ""}>

@@ -12,6 +12,9 @@ module.exports = {
       },
     },
     extend: {
+      screens: {
+        '3xl': '2400px',
+      },
       width: {
         "6/7": "85.7142857%", // 6/7 of the full width
       },

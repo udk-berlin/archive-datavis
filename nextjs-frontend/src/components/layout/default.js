@@ -46,9 +46,9 @@ const Layout = ({ children }) => {
       >
         {children}
       </main>
-      <footer>
-        <Footer className="" />
-      </footer>
+
+        <Footer className="mt-auto" />
+
     </div>
   );
 };

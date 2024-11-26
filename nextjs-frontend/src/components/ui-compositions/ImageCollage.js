@@ -8,7 +8,7 @@ const ImageCollage = ({ images, className }) => {
       {images.map((image, index) => (
         <div
           key={index}
-          className={cn("absolute transition-transform duration-100 ease-in w-[500px] transform hover:scale-101 hover:z-10", image.className)}
+          className={cn("absolute transition-transform duration-100 ease-in w-[500px] ", image.className)}
           style={{
            
 

@@ -92,14 +92,10 @@ body {
   background-color: var(--color-background);
 }
 
-@supports (font-variation-settings: normal) {
-  body {
-    font-family: InterVariable, system-ui, -apple-system, "Segoe UI", Roboto,
-      "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif,
-      "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol",
-      "Noto Color Emoji";
-    font-optical-sizing: auto;
-  }
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 h1,
@@ -108,7 +104,7 @@ h3,
 h4,
 h5,
 h6 {
-  font-weight: 600;
+  font-weight: 700;
 }
 
 a:link {

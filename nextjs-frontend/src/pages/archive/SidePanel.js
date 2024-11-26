@@ -89,9 +89,10 @@ const SidePanel = ({ focusedIds, setFocusedIds, className, cachedData }) => {
                 </p>
               )}
               {focusedIdsData[0].abstract?.length > 500 && (
-                <Button variant="ghost" className="px-0">
-                  <RiExpandDiagonalFill className="w-5 h-5 text-black hover:text-popover-foreground" />
-                </Button>
+                <div className="flex items-center">
+                  <p className=" mt-2 underline font-bold">Read more</p>
+                  {/* <RiExpandDiagonalFill className="w-5 h-5 text-black hover:text-popover-foreground" /> */}
+                </div>
               )}
             </div>
           </div>
@@ -108,14 +109,14 @@ const SidePanel = ({ focusedIds, setFocusedIds, className, cachedData }) => {
               <ul className="w-full">
                 {focusedIdsData.map((project, i) => (
                   <li key={i} className="flex justify-between  mb-4">
-                  <div>
-                    <h4 className="p-0">{project.name}</h4>
-                    <h5 className="text-sm font-normal">{project?.allocation?.temporal?.year}</h5>
-                  </div>
-                  <div className="w-20 h-20">
-                    <img src={`${bucketUrl}${project.thumbnail}`} className="w-full h-full object-cover" />
-                  </div>
-                </li>
+                    <div>
+                      <h4 className="p-0">{project.name}</h4>
+                      <h5 className="text-sm font-normal">{project?.allocation?.temporal?.year}</h5>
+                    </div>
+                    <div className="w-20 h-20">
+                      <img src={`${bucketUrl}${project.thumbnail}`} className="w-full h-full object-cover" />
+                    </div>
+                  </li>
                 ))}
               </ul>
             </div>

@@ -3,11 +3,12 @@ import Link from "next/link";
 import { useTranslation } from "react-i18next";
 
 import { RiQuestionLine } from "@remixicon/react";
+import { cn } from "@/lib/utils";
 
-const Footer = () => {
+const Footer = ({className}) => {
   const { t } = useTranslation("footer");
   return (
-    <footer className="bg-white h-12 flex justify-between items-center px-12">
+    <footer className={cn("bg-white h-12 flex justify-between items-center px-12",className)}>
       <section>
         <ul className="flex space-x-12">
           <li>
