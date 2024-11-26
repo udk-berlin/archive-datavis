@@ -40,6 +40,10 @@ const SidePanel = ({ focusedIds, setFocusedIds, className, cachedData }) => {
     fetchDataofIds(focusedIds);
   }, [focusedIds, setFocusedIdsData]);
 
+  const stripUrl = (url) => {
+    return url.replace(/^http:\/\//, "").replace(/\/$/, "");
+  };
+
   return (
     <div className={cn("flex-grow border-l-2 border-white overflow-hidden", className)}>
       <div className="pl-3 pr-12 flex sticky items-center top-0 bg-secondary pt-2 pb-2 z-10">
@@ -54,7 +58,11 @@ const SidePanel = ({ focusedIds, setFocusedIds, className, cachedData }) => {
             className="pl-10 h-8 rounded-lg border-none bg-white w-full text-secondary-foreground focus-visible:ring-none focus-visible:outline-none focus-visible:text-black placeholder-secondary-foreground text-black"
           />
         </div>
-        <RiLink className={`w-5 h-5 ${focusedIdsData.length === 1 ? "hover:text-popover-foreground text-black" : "text-secondary-foreground"}  ml-auto`} />
+        <RiLink
+          className={`w-5 h-5 ${
+            focusedIdsData.length === 1 ? "hover:text-popover-foreground text-black" : "text-secondary-foreground"
+          }  ml-auto`}
+        />
       </div>
 
       <div className="flex-1 overflow-hidden">
@@ -68,7 +76,7 @@ const SidePanel = ({ focusedIds, setFocusedIds, className, cachedData }) => {
 
             <div className="px-12 mt-6">
               <div>
-                <h2 className="text-xl leading-4">{focusedIdsData[0].name}</h2>
+                <h2 className="text-xl leading-6">{focusedIdsData[0].name}</h2>
                 <h3 className="text-xl font-normal">{focusedIdsData[0].authors?.map((a) => `${a.firstName} ${a.name}`)?.join(", ")}</h3>
                 <h3 className="text-xl font-normal leading-5">{focusedIdsData[0]?.allocation?.temporal?.year}</h3>
               </div>
@@ -89,12 +97,25 @@ const SidePanel = ({ focusedIds, setFocusedIds, className, cachedData }) => {
           </div>
         )}
         {focusedIdsData && focusedIdsData.length > 1 && (
-          <div>
-            <h2 className="text-xl mb-2">Author: name name</h2>
+          <div className="px-12 mt-6">
             <div>
-              <ul className="flex gap-4 mb-4">
+              <h2 className="text-xl leading-6">{`${focusedIdsData[0]?.authors[0]?.firstName} ${focusedIdsData[0]?.authors[0]?.name}`}</h2>
+              <h3 className="text-sm font-normal">{stripUrl(focusedIdsData[0]?.authors[0]?.contactInfo?.website)}</h3>
+              <h3 className="text-sm font-normal leading-4">{focusedIdsData[0]?.authors[0]?.contactInfo?.mail}</h3>
+            </div>
+
+            <div className="mt-12">
+              <ul className="w-full">
                 {focusedIdsData.map((project, i) => (
-                  <li key={i}>{project.name}</li>
+                  <li key={i} className="flex justify-between  mb-4">
+                  <div>
+                    <h4 className="p-0">{project.name}</h4>
+                    <h5 className="text-sm font-normal">{project?.allocation?.temporal?.year}</h5>
+                  </div>
+                  <div className="w-20 h-20">
+                    <img src={`${bucketUrl}${project.thumbnail}`} className="w-full h-full object-cover" />
+                  </div>
+                </li>
                 ))}
               </ul>
             </div>
