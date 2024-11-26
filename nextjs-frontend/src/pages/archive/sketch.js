@@ -2,7 +2,7 @@ import { Scale } from "lucide-react";
 import Planet from "./Planet";
 import SolarSystem from "./SolarSystem";
 
-import easingFunctions from '@/lib/easingFunctions' 
+import easingFunctions from "@/lib/easingFunctions";
 
 export function sketch(p5) {
   let img;
@@ -48,7 +48,6 @@ export function sketch(p5) {
     if (props.setFocusedId) {
       updateFocusedId = props.setFocusedId;
     }
-
   };
 
   p5.preload = async () => {
@@ -56,33 +55,36 @@ export function sketch(p5) {
 
     font = p5.loadFont("/fonts/inter/Inter-Regular.otf");
 
-   
-    planetData = await fetchData("http://192.168.1.101:3010/api/all");
-
+    planetData = await fetchData("http://192.168.1.102:3010/api/all");
+  // planetData = await fetchData("http://localhost:3010/api/all");
   };
 
   p5.setup = async () => {
     const parent = document.querySelector("main");
     p5.createCanvas((windowWidth * 5) / 7, parent.offsetHeight, p5.WEBGL);
 
-
-    const scale = 1.5
-    const defaultScale = 1.5
-  
+    const scale = 1.5;
+    const defaultScale = 1.5;
 
     cam = p5.createCamera();
-    cam.ortho(-p5.width / scale, p5.width /scale, -p5.height / scale, p5.height / scale, -20, 3000);
-  
+    cam.ortho(-p5.width / scale, p5.width / scale, -p5.height / scale, p5.height / scale, -20, 3000);
+
     cameraStartView = p5.createCamera();
     cameraStartView.ortho(-p5.width / scale, p5.width / scale, -p5.height / scale, p5.height / scale, -2000, 8000);
     cameraStartView.setPosition(0.000006, 3000, 0.0003);
     cameraStartView.lookAt(0, 0, 0);
-  
-    cameraDefaultView = p5.createCamera();
-    cameraDefaultView.ortho(-p5.width / scale*defaultScale, p5.width / scale*defaultScale, -p5.height / scale*defaultScale, p5.height / scale*defaultScale, 0.1, 3000);
-    cameraDefaultView.setPosition(925, 1350,1040);
-    cameraDefaultView.lookAt(0, 0, 0);
 
+    cameraDefaultView = p5.createCamera();
+    cameraDefaultView.ortho(
+      (-p5.width / scale) * defaultScale,
+      (p5.width / scale) * defaultScale,
+      (-p5.height / scale) * defaultScale,
+      (p5.height / scale) * defaultScale,
+      0.1,
+      3000
+    );
+    cameraDefaultView.setPosition(925, 1350, 1040);
+    cameraDefaultView.lookAt(0, 0, 0);
 
     solarSystem = new SolarSystem(p5);
 
@@ -112,24 +114,14 @@ export function sketch(p5) {
       })
     );
 
-    solarSystem.addPlanet(
-      new Planet(p5, {
-        mode: "ring",
-        distance: planetData.semesters.length,
-        centralPoint: p5.createVector(0, 500, 0),
-        rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
-        distance: 500,
-        data: planetData.semesters,
-        id: "semesters",
-      })
-    );
+ 
 
     solarSystem.addPlanet(
       new Planet(p5, {
         mode: "plane",
-        distance: planetData.entries.length * 3,
+        distance: planetData.entries.length,
         centralPoint: p5.createVector(0, 0, 0),
-        data: planetData.entries.concat(planetData.entries, planetData.entries),
+        data: planetData.entries,
         distance: 20,
         rotationSpeed: 0.01,
         id: "entries",
@@ -137,8 +129,6 @@ export function sketch(p5) {
         planeColumns: 14,
       })
     );
-
-
 
     //  solarSystem.addEllipse({id:"deb2f2ea-8003-4962-8130-9324ba8d55b5" }, { planetId: "semestersB", id: "0a03c9c6-5a44-4f97-a4a3-ae6e59c3ebdb" })
 
@@ -154,29 +144,22 @@ export function sketch(p5) {
   }
 
   p5.draw = () => {
-
-
-    if(!introAnimationFinished) {
-  
-    if (amt < 1) {
-      if (p5.millis() > 100) {
-      amt += 0.005; 
+    if (!introAnimationFinished) {
+      if (amt < 1) {
+        if (p5.millis() > 100) {
+          amt += 0.005;
+        }
+        cam.slerp(cameraStartView, cameraDefaultView, easingFunctions.easeOutCubic(amt));
+        p5.setCamera(cam);
+      } else {
+        p5.setCamera(cam);
+        introAnimationFinished = true;
       }
-      cam.slerp(cameraStartView, cameraDefaultView, easingFunctions.easeOutCubic(amt));
-      p5.setCamera(cam);
     } else {
-      p5.setCamera(cam);
-      introAnimationFinished = true;
-    } 
-  } else {
-    p5.orbitControl(1, 1, 1);
-  }
+      p5.orbitControl(1, 1, 1);
+    }
 
-   
-
-
-  
-   p5.background(236, 239, 241);
+    p5.background(236, 239, 241);
 
     p5.ambientLight(150);
     p5.directionalLight(255, 255, 255, 1, 1, -1);
@@ -212,9 +195,9 @@ export function sketch(p5) {
 
   p5.mouseClicked = () => {
     //solarSystem.setSingleIdActive()
-    galaxyRotation = false
+    galaxyRotation = false;
     introAnimationFinished = true;
-    const newFocusedId = solarSystem.setClickedIdActive(planetData.entries);
+    const newFocusedId = solarSystem.setClickedIdActive(planetData);
     if (newFocusedId) updateFocusedId(newFocusedId);
   };
 

@@ -634,6 +634,8 @@ class Planet {
     return this.id;
   }
 
+ 
+
   getPointById(id) {
     let found;
 

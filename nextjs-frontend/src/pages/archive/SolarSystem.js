@@ -174,25 +174,46 @@ class SolarSystem {
     return hIds[0]?.id;
   }
 
-  setConnectionsForId(id, data) {
+  setConnectionsForId(id, data, type) {
+
+
     this.ellipses = [];
 
-    data.authors.forEach((authorId) => {
-      this.addEllipse({ id: id }, { id: authorId });
-    });
-    data.semester.forEach((semesterId) => {
-      this.addEllipse({ id: id }, { id: semesterId });
-    });
+    switch (type) {
+      case "entries":
+        data.authors.forEach((authorId) => {
+          this.addEllipse({ id: id }, { id: authorId });
+        });
+        data.semester.forEach((semesterId) => {
+          this.addEllipse({ id: id }, { id: semesterId });
+        });
+        break;
+      case "authors":
+        data.entries.forEach((entryId) => {
+          this.addEllipse({ id: id }, { id: entryId });
+        });
+        break;
+      default:
+    }
   }
 
-  setClickedIdActive(data) {
+  setClickedIdActive(d) {
     const id = this.setSingleIdActive();
     this.activeId = id;
+
+    const planetId = this.getPointAndPlanetIdById(id)?.planetId;
+    console.log(planetId, id);
+
+    if (!planetId) {
+      console.log("No planetId found for id", id);
+      return;
+    }
 
     if (id) {
       this.setConnectionsForId(
         id,
-        data.find((entry) => entry.id === id)
+        d[planetId].find((entry) => entry.id === id),
+        planetId
       );
     }
     return id;

@@ -1,0 +1,10 @@
+@font-face {
+    font-family: 'blokk';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("/fonts/blokk/blokk_Neue-Regular.woff2") format("woff2"),
+         url("/fonts/blokk/blokk_Regular.woff?v=1.0") format("woff");
+}
+
+

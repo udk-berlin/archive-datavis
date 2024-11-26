@@ -11,11 +11,13 @@ import { cn } from "@/lib/utils";
 
 const SidePanel = ({ focusedId, setFocusedId, className }) => {
   const [focusedIdData, setFocusedIdData] = useState({});
-  const bucketUrl = "http://192.168.1.101:54321/storage/v1/object/public/";
+  const bucketUrl = "http://192.168.1.102:54321/storage/v1/object/public/";
+// const bucketUrl = "http://localhost:54321/storage/v1/object/public/";
 
   useEffect(() => {
     const fetchData = async (id) => {
-      const response = await fetch(`http://192.168.1.101:3010/api/project/${id}`);
+      const response = await fetch(`http://192.168.1.102:3010/api/project/${id}`);
+   // const response = await fetch(`http://localhost:3010/api/project/${id}`);
       const data = await response.json();
       setFocusedIdData(data);
       return data;

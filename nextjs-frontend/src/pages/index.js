@@ -93,7 +93,7 @@ const Home = () => {
       </section>
 
       <section className="mt-48 col-span-12 gap-4 grid grid-cols-12">
-      <div className="col-span-3 col-start-2 ">
+        <div className="col-span-3 col-start-2 ">
           <h3 className="text-2xl ">Contribute</h3>
           <p className="text-muted mt-4">
             Text about the archive itself, its medias etc.Text about the archive itself, its medias etc.Text about the archive itself, its
@@ -110,11 +110,7 @@ const Home = () => {
             ]}
           />
         </div>
-
-       
       </section>
-
-      
     </div>
   );
 };
