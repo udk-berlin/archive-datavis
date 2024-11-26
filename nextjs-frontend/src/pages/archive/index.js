@@ -41,7 +41,7 @@ const ArchivePage = () => {
     <NextReactP5Wrapper sketch={sketch} windowWidth={windowWidth} setFocusedIds={setFocusedIds} className="flex-1" />
 
     <div className="w-1/3 h-full flex flex-col " >
-      <SidePanel focusedIds={focusedIds} setFocusedIds={setFocusedIds} setFocusedType={setFocusedType} className="flex-1 overflow-y-auto " />
+      <SidePanel focusedIds={focusedIds} setFocusedIds={setFocusedIds} setFocusedType={setFocusedType} className="flex-1  " />
     </div>
   </div>
   );
