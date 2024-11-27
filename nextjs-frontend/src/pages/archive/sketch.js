@@ -14,7 +14,7 @@ export function sketch(p5) {
 
   let planetData = [];
 
-  let galaxyRotation = true;
+  let autoRotation;
 
   let rotationSpeed = 0.05;
 
@@ -35,6 +35,8 @@ export function sketch(p5) {
 
   let windowWidth = 700;
 
+  let setAutoRotation = () => {};
+
   let updateFocusedIds = () => {};
   let updateFocusedType = () => {};
 
@@ -54,6 +56,15 @@ export function sketch(p5) {
     if(props.setFocusedType) {
       updateFocusedType = props.setFocusedType;
     }
+    if(props.setAutoRotation) {
+
+      setAutoRotation = props.setAutoRotation;
+    }
+    if(props.autoRotation) {
+
+      autoRotation = props.autoRotation === "on" ? true : false;
+    }
+
   };
 
   p5.preload = async () => {
@@ -145,9 +156,6 @@ export function sketch(p5) {
         planeColumns: 14,
       })
     );
-
-    //  solarSystem.addEllipse({id:"deb2f2ea-8003-4962-8130-9324ba8d55b5" }, { planetId: "semestersB", id: "0a03c9c6-5a44-4f97-a4a3-ae6e59c3ebdb" })
-
     p5.textFont(font);
     p5.textSize(32);
     p5.textAlign(p5.CENTER, p5.CENTER);
@@ -160,7 +168,6 @@ export function sketch(p5) {
   }
 
   p5.draw = () => {
-    // console.log(solarSystem.getPlanet('semesters')?.getPointById('78978988-40f9-422d-9b50-7820d58eb158'))
     if (!introAnimationFinished) {
       if (amt < 1) {
         if (p5.millis() > 100) {
@@ -181,7 +188,7 @@ export function sketch(p5) {
     p5.ambientLight(150);
     p5.directionalLight(255, 255, 255, 1, 1, -1);
 
-    if (galaxyRotation && p5.millis() > 2000) {
+    if (autoRotation && p5.millis() > 2000) {
       updateRotation();
       p5.push();
       p5.translate(0, 0, 0);
@@ -189,31 +196,17 @@ export function sketch(p5) {
       p5.translate(-centralPoint.x, -centralPoint.y, -centralPoint.z);
     }
 
-    // solarSystem.getPlanets().forEach((planet) => {
-    //   planet.draw();
-
-    //   // draw shadow
-    //   // if (img) {
-    //   //   p5.push();
-    //   //   p5.noStroke();
-    //   //   p5.noLights();
-    //   //   p5.translate(planet.getCentralPoint().x, planet.getCentralPoint().y + planet.getDistance() * 2, planet.getCentralPoint().z);
-    //   //   p5.rotateX(p5.HALF_PI);
-    //   //   p5.texture(img);
-    //   //   p5.plane((planet.getDistance() * planet.getAmountOfPoints()) / 20, (planet.getDistance() * planet.getAmountOfPoints()) / 20);
-    //   //   p5.pop();
-    //   // }
-    // });
-
-    //  solarSystem.drawConnections();
-    //solarSystem.drawEllipses();
     solarSystem.draw() 
-    if (galaxyRotation && p5.millis() > 2000) p5.pop();
+    if (autoRotation && p5.millis() > 2000) p5.pop();
   };
 
   p5.mouseClicked = () => {
     //solarSystem.setSingleIdActive()
-    galaxyRotation = false;
+    if(p5.mouseX > p5.width-100 && p5.mouseX < p5.width && p5.mouseY > p5.height-100 && p5.mouseY < p5.height) {
+      // we will not procced as the click is a z-index above the canvas
+      return
+    }
+   // setAutoRotation(false);
     introAnimationFinished = true;
     const { id: newFocusedId, planetId, focusedKeys } = solarSystem.setClickedIdActive(planetData);
     if (planetId === "entries" && newFocusedId) {
@@ -226,7 +219,13 @@ export function sketch(p5) {
       updateFocusedType({ type: "semesters", id: newFocusedId });
       if (focusedKeys?.entries?.length > 0) updateFocusedIds(focusedKeys.entries);
     }
-    //if (newFocusedId) updateFocusedIds( (prev) => [...prev, newFocusedId]);
+    console.log('reset', newFocusedId)
+    if(!planetId && !newFocusedId) {
+      console.log('reset')
+      updateFocusedType({ type: null, id: null });
+      updateFocusedIds([]);
+      solarSystem.clearFocus();
+    }
   };
 
   async function fetchData(url) {

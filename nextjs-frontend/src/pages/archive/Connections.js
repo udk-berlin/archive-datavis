@@ -25,7 +25,6 @@ class Connections {
   }
 
   addConnection(p1,p2,options) {
-    console.log('asdasdas',p1,p2,options)
     this.connections.push(new Connection({ p5: this.p5, p1, p2, ...options }));
   }
   

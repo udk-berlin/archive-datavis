@@ -123,6 +123,12 @@ class SolarSystem {
     }
   }
 
+  clearFocus() {
+    this.connections.clearConnections();
+    this.deactivateAllActiveIds();
+    this.activeId = null;
+  }
+
   setClickedIdActive(d) {
     const id = this.setSingleIdActive();
     this.activeId = id;
@@ -181,7 +187,7 @@ class SolarSystem {
 
   addConnection(connection) {
     console.warn("addConnection is deprecated, use addIdsAsConnection instead");
-    return
+    return;
     const points = connection.map((id) => {
       let found;
       this.planets.forEach((planet) => {
