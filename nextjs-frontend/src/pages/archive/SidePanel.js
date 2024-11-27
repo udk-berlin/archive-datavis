@@ -9,21 +9,38 @@ import { Badge, badgeVariants } from "@/components/ui/badge";
 import { Link } from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { set } from "lodash";
 
-const SidePanel = ({ focusedIds, setFocusedIds, className, cachedData }) => {
+const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedData }) => {
   const [focusedIdsData, setFocusedIdsData] = useState([]);
-  const bucketUrl = "http://192.168.1.102:54321/storage/v1/object/public/";
+  const bucketUrl = "http://localhost:54321/storage/v1/object/public/";
   // const bucketUrl = "http://localhost:54321/storage/v1/object/public/";
 
+  const [focusedData, setFocusedData] = useState({});
+
   useEffect(() => {
-    if (focusedIdsData) {
-      console.log("sideP Data", focusedIdsData);
+    const fetchData = async (id, key) => {
+      const response = await fetch(`http://localhost:3010/api/${key}/${id}`);
+      const data = await response.json();
+      setFocusedData(data);
+      return data;
+    };
+    if ((focusedType.type === "authors" || focusedType.type === "semesters") && focusedType.id) {
+      fetchData( focusedType.id, focusedType.type)
     }
-  }, [focusedIdsData]);
+  }, [focusedType, setFocusedData]);
+
+  useEffect(() => {
+    if (focusedData) {
+      console.log("fData", focusedData);
+    }
+  }, [focusedData]);
+
+
 
   useEffect(() => {
     const fetchData = async (id) => {
-      const response = await fetch(`http://192.168.1.102:3010/api/project/${id}`);
+      const response = await fetch(`http://localhost:3010/api/project/${id}`);
       // const response = await fetch(`http://localhost:3010/api/project/${id}`);
       const data = await response.json();
 
@@ -99,11 +116,22 @@ const SidePanel = ({ focusedIds, setFocusedIds, className, cachedData }) => {
         )}
         {focusedIdsData && focusedIdsData.length > 1 && (
           <div className="px-12 mt-6">
-            <div>
-              <h2 className="text-xl leading-6">{`${focusedIdsData[0]?.authors[0]?.firstName} ${focusedIdsData[0]?.authors[0]?.name}`}</h2>
-              <h3 className="text-sm font-normal">{stripUrl(focusedIdsData[0]?.authors[0]?.contactInfo?.website)}</h3>
-              <h3 className="text-sm font-normal leading-4">{focusedIdsData[0]?.authors[0]?.contactInfo?.mail}</h3>
-            </div>
+            {focusedType.type === "authors" && focusedData &&  (
+              <div>
+                <h2 className="text-xl leading-6">{`${focusedData?.firstName} ${focusedData?.name}`}</h2>
+                <h3 className="text-sm font-normal">{stripUrl(focusedData?.contactInfo?.website || '')}</h3>
+                <h3 className="text-sm font-normal leading-4">{focusedData?.contactInfo?.mail}</h3>
+              </div>
+            )}
+
+            {focusedType.type === "semesters" && focusedData &&  (
+              <div>
+                <h2 className="text-xl leading-6">{`${focusedData?.name}`}</h2>
+                <h3 className="text-sm font-normal">{focusedData?.term === 'ws' ? "winter semester" : "summer semester"}</h3>
+                <h3 className="text-sm font-normal">{focusedData?.year }</h3>
+  
+              </div>
+            )}
 
             <div className="mt-12">
               <ul className="w-full">

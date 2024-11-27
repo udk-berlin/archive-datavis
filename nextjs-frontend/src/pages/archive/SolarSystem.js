@@ -168,28 +168,25 @@ class SolarSystem {
     const hIds = this.getHoverIds();
     if (hIds && hIds.length > 0) {
       this.deactivateAllActiveIds();
-      console.log(hIds[0].id);
       this.setIdsOfPlanetActive(hIds[0].planetId, [hIds[0].id]);
     }
     return hIds[0]?.id;
   }
 
   setConnectionsForId(id, data, type) {
-
-
     this.ellipses = [];
 
     switch (type) {
       case "entries":
-        data.authors.forEach((authorId) => {
+        data?.authors?.forEach((authorId) => {
           this.addEllipse({ id: id }, { id: authorId });
         });
-        data.semester.forEach((semesterId) => {
+        data?.semester?.forEach((semesterId) => {
           this.addEllipse({ id: id }, { id: semesterId });
         });
         break;
       case "authors":
-        data.entries.forEach((entryId) => {
+        data?.entries?.forEach((entryId) => {
           this.addEllipse({ id: id }, { id: entryId });
         });
         break;
@@ -203,11 +200,11 @@ class SolarSystem {
     const focusedKeys = {};
 
     const planetId = this.getPointAndPlanetIdById(id)?.planetId;
-    console.log(planetId, id);
+
 
     if (!planetId) {
       console.log("No planetId found for id", id);
-      return {planetId: null, id: null, focusedKeys};
+      return { planetId: null, id: null, focusedKeys };
     }
 
     if (id) {
@@ -218,10 +215,35 @@ class SolarSystem {
       );
     }
 
-    if(planetId === 'authors') {
-      focusedKeys.entries = this.getPlanet('entries').getActiveIds();
+    if (planetId === "authors") {
+      focusedKeys.entries = this.getPlanet("entries").getActiveIds();
+      if (focusedKeys?.entries.length > 0) {
+        focusedKeys.semesters = focusedKeys.entries.map((e) => {
+          return d.entries.find((entry) => entry.id === e).semester[0];
+        });
+        this.getPlanet("semesters").setActiveIds(focusedKeys.semesters);
+        focusedKeys.semesters.forEach((s) => {
+          this.addEllipse({ id: id }, { id: s });
+        });
+      }
+
+    } else if (planetId === "semesters") {
+      focusedKeys.entries = d.semesters.find((s) => s.id === id).children;
+
+      this.getPlanet("entries").setActiveIds(focusedKeys.entries);
+      focusedKeys.entries.forEach((e) => {
+        this.addEllipse({ id: id }, { id: e });
+      });
+      const focusedAuthorIds = [];
+      focusedKeys.entries.forEach((e) => {
+        const authors = d.entries.find((entry) => entry.id === e).authors;
+        authors.forEach((a) => {
+          focusedAuthorIds.push(a);
+          this.addEllipse({ id: id }, { id: a });
+        });
+      });
     }
-    return {planetId, id, focusedKeys};
+    return { planetId, id, focusedKeys };
   }
 
   deactivateAllActiveIds() {
@@ -245,13 +267,12 @@ class SolarSystem {
       targetPoint = this.getPointAndPlanetIdById(target.id);
     }
 
-    if (sourcePoint && targetPoint) {
+    if (sourcePoint && sourcePoint.point && targetPoint && targetPoint.point) {
       this.ellipses.push({ source: sourcePoint, target: targetPoint });
-    }
+    } 
 
-    console.log(sourcePoint, targetPoint);
-    this.getPlanet(sourcePoint.planetId).setIdActive(sourcePoint.id.id);
-    this.getPlanet(targetPoint.planetId).setIdActive(targetPoint.id.id);
+    if (sourcePoint?.planetId && sourcePoint?.id?.id) this.getPlanet(sourcePoint.planetId).setIdActive(sourcePoint.id.id);
+    if (targetPoint?.planetId && targetPoint?.id?.id) this.getPlanet(targetPoint.planetId).setIdActive(targetPoint.id.id);
   }
 
   addConnection(connection) {

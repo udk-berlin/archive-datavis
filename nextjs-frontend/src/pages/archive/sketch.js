@@ -4,6 +4,7 @@ import SolarSystem from "./SolarSystem";
 
 import easingFunctions from "@/lib/easingFunctions";
 
+import { v4 as uuidv4 } from 'uuid';
 export function sketch(p5) {
   let img;
 
@@ -35,6 +36,7 @@ export function sketch(p5) {
   let windowWidth = 700;
 
   let updateFocusedIds = () => {};
+  let updateFocusedType = () => {};
 
   p5.updateWithProps = (props) => {
     if (props.focusedId) {
@@ -48,6 +50,10 @@ export function sketch(p5) {
     if (props.setFocusedIds) {
       updateFocusedIds = props.setFocusedIds;
     }
+    
+    if(props.setFocusedType) {
+      updateFocusedType = props.setFocusedType;
+    }
   };
 
   p5.preload = async () => {
@@ -55,8 +61,8 @@ export function sketch(p5) {
 
     font = p5.loadFont("/fonts/inter/Inter-Regular.otf");
 
-    planetData = await fetchData("http://192.168.1.102:3010/api/all");
-  // planetData = await fetchData("http://localhost:3010/api/all");
+    planetData = await fetchData("http://localhost:3010/api/all");
+    // planetData = await fetchData("http://localhost:3010/api/all");
   };
 
   p5.setup = async () => {
@@ -109,19 +115,29 @@ export function sketch(p5) {
         centralPoint: p5.createVector(0, -500, 0),
         rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
         distance: 500,
-        data: planetData.semesters.slice(0, 64),
+        data: planetData.semesters,
         id: "semesters",
       })
     );
 
- 
+    const dummy = [];
+
+    for (let i = 0; i < 500; i++) {
+      dummy.push({
+        id: uuidv4(),
+        name: "",
+        authors: [],
+        semester: [],
+        children: [],
+      });
+    }
 
     solarSystem.addPlanet(
       new Planet(p5, {
         mode: "plane",
         distance: planetData.entries.length,
         centralPoint: p5.createVector(0, 0, 0),
-        data: planetData.entries,
+        data: planetData.entries.concat(dummy),
         distance: 20,
         rotationSpeed: 0.01,
         id: "entries",
@@ -144,6 +160,7 @@ export function sketch(p5) {
   }
 
   p5.draw = () => {
+    // console.log(solarSystem.getPlanet('semesters')?.getPointById('78978988-40f9-422d-9b50-7820d58eb158'))
     if (!introAnimationFinished) {
       if (amt < 1) {
         if (p5.millis() > 100) {
@@ -156,7 +173,7 @@ export function sketch(p5) {
         introAnimationFinished = true;
       }
     } else {
-      p5.orbitControl(1, 1, 1);
+      p5.orbitControl(-1, -1, .25);
     }
 
     p5.background(236, 239, 241);
@@ -197,12 +214,16 @@ export function sketch(p5) {
     //solarSystem.setSingleIdActive()
     galaxyRotation = false;
     introAnimationFinished = true;
-    const {id:newFocusedId, planetId, focusedKeys} = solarSystem.setClickedIdActive(planetData);
-    console.log('asdasd',newFocusedId, planetId);
-    if(planetId === 'entries' && newFocusedId) {
-      updateFocusedIds( [newFocusedId]);
-    } else if (planetId === 'authors' && newFocusedId) {
-      if(focusedKeys?.entries?.length > 0) updateFocusedIds( focusedKeys.entries);
+    const { id: newFocusedId, planetId, focusedKeys } = solarSystem.setClickedIdActive(planetData);
+    if (planetId === "entries" && newFocusedId) {
+      updateFocusedType({ type: "entries", id: newFocusedId });
+      updateFocusedIds([newFocusedId]);
+    } else if (planetId === "authors" && newFocusedId) {
+      updateFocusedType({ type: "authors", id: newFocusedId });
+      if (focusedKeys?.entries?.length > 0) updateFocusedIds(focusedKeys.entries);
+    } else if (planetId === "semesters" && newFocusedId) {
+      updateFocusedType({ type: "semesters", id: newFocusedId });
+      if (focusedKeys?.entries?.length > 0) updateFocusedIds(focusedKeys.entries);
     }
     //if (newFocusedId) updateFocusedIds( (prev) => [...prev, newFocusedId]);
   };

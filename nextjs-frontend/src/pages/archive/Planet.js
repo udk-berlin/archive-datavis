@@ -549,7 +549,7 @@ class Planet {
           this.p5.translate(p.x, p.y, p.z);
           if(this.activeIds.includes(p.id)) {
             this.p5.fill(255, 0, 255);
-            this.p5.sphere(6);
+            this.p5.sphere(4);
           
           } else {
             this.p5.fill(0, 0, 0);
@@ -566,7 +566,7 @@ class Planet {
           this.p5.translate(p.x, p.y, p.z);
           if(this.activeIds.includes(p.id)) {
             this.p5.fill(255, 0, 255);
-            this.p5.sphere(6);
+            this.p5.sphere(4);
           
           } else {
             this.p5.fill(0, 0, 0);
@@ -582,7 +582,7 @@ class Planet {
 
     this.hoverId = null;
     if (this.options.mouseHover) {
-      let hoveredSphere = this.checkRaySphereIntersections(allPoints, { hitBox: 2 });
+      let hoveredSphere = this.checkRaySphereIntersections(allPoints, { hitBox: 4 });
       this.hoverId = hoveredSphere?.id;
       if (hoveredSphere) {
         this.p5.push();
