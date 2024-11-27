@@ -37,7 +37,7 @@ const Home = () => {
             className={"w-full h-[550px]"}
             images={[
               { src: "/images/3N7A0078.jpeg", alt: "hero", className: "left-0 top-0 md:w-4/5", aspectRatio: "3:2" },
-              { src: "/images/3N7A0083.jpeg", alt: "hero", className: "right-0 bottom-0 md:w-1/2 sm:hidden" },
+              { src: "/images/3N7A0083.jpeg", alt: "hero", className: "right-0 bottom-0 lg:w-1/2 lg:block sm:hidden" },
             ]}
           />
         </div>
