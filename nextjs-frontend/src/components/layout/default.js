@@ -52,7 +52,7 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      <SidebarProvider defaultOpened={false}
+      <SidebarProvider defaultOpen={false}
         style={{
           "--sidebar-width": "20rem",
           "--sidebar-width-mobile": "20rem",
