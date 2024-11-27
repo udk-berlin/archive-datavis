@@ -28,6 +28,7 @@ const fileviewtestPage = () => {
           firstNameChar: f.firstNameChar,
           namelength: f.namelength,
           filetype: f.filetype,
+          isBranch: f.filetype ? false : true,
         };
       })
     );
@@ -41,7 +42,7 @@ const fileviewtestPage = () => {
 
       if (!idData?.id) return;
       idData.parent = "root";
-      idData.name = `${idData.firstNameChar}${randomString(idData.namelength)}${idData.filetype ? `.${idData.filetype}` : ""}`;
+      // idData.name = `${idData.firstNameChar}${randomString(idData.namelength)}${idData.filetype ? `.${idData.filetype}` : ""}`;
 
       const appendData = [idData];
 
@@ -49,7 +50,9 @@ const fileviewtestPage = () => {
         for (const child of idData.children) {
           const response = await fetch(`${apiURL}${child}`);
           let data = await response.json();
-          data.name = `${idData.firstNameChar}${randomString(data.namelength)}${data.filetype ? `.${data.filetype}` : ""}`;
+          data.children = [];
+          //data.name = `${idData.firstNameChar}${randomString(data.namelength)}${data.filetype ? `.${data.filetype}` : ""}`;
+
           if (data?.id) appendData.push(data);
         }
       }
@@ -92,6 +95,7 @@ const fileviewtestPage = () => {
         }
       }
 
+      const idsToUpdate = [];
       setFileDatas((prevFileDatas) => {
         const ids = new Set(prevFileDatas.map((file) => file.id));
         const newFileDatas = [...prevFileDatas];
@@ -100,15 +104,38 @@ const fileviewtestPage = () => {
           if (!ids.has(data.id)) {
             newFileDatas.push(data);
             ids.add(data.id);
+          } else if( data.parent === id) {
+            let d = data
+            d.children = []
+            idsToUpdate.push(d);
           }
         });
 
         return newFileDatas;
       });
+      console.log('asdasd IDs to update', idsToUpdate);
+      // if (idsToUpdate.length > 0 ) {
+      //   setFileDatas((prevFileDatas) => {
+      //     idsToUpdate.forEach((toUpdate) => {
+      //       const index = prevFileDatas.findIndex((file) => file.id === toUpdate.id);
+      //       prevFileDatas[index].children = toUpdate.children;
+      //     });
+      //   });
+      // }
     };
 
-    fetchData(iniFileID);
+    fetchData(id);
   };
+
+  const wrappedOnLoadData = async (props) => {
+    //  await onLoadData(props);
+
+    fetchNodeById(props.element.id);
+  };
+
+  useEffect(() => {
+    console.log("data", data);
+  }, [data]);
 
   return (
     <div className="lg:grid lg:grid-cols-5  h-full  gap-8">
@@ -116,7 +143,7 @@ const fileviewtestPage = () => {
         (console.log("asdasdasd", data),
         (
           <div className="ide ">
-            <TreeView
+            {/* <TreeView
               data={data}
               aria-label="directory tree"
               togglableSelect
@@ -124,14 +151,51 @@ const fileviewtestPage = () => {
               onLoadData={(e) => {
                 console.log("load", e);
               }}
-              nodeRenderer={({ element, isBranch, isExpanded, getNodeProps, level, handleSelect }) => (
-                <div {...getNodeProps()} className="flex items-center" style={{ paddingLeft: 20 * (level - 1) }}>
-                  <span className="mr-4">{isBranch ? <RiFolder2Line isOpen={isExpanded} /> : <RiFile2Line filename={element.name} />}</span>
+              nodeRenderer={({ element, isBranch, getNodeProps, level, handleExpand }) => (
+                <div {...getNodeProps()} className="flex items-center" style={{ paddingLeft: 20 * (level - 1) }} >
+                  <span className="mr-4">{isBranch ? <RiFolder2Line /> : <RiFile2Line filename={element.name} />}</span>
                   {element.firstNameChar}
                   <span className="!font-blokk">{randomString(element.namelength)}</span>
                   {element.filetype ? `.${element.filetype}` : ""}
                 </div>
               )}
+            /> */}
+            <TreeView
+              data={data}
+              aria-label="Checkbox tree"
+              onLoadData={wrappedOnLoadData}
+              multiSelect
+              propagateSelect
+              togglableSelect
+              propagateSelectUpwards
+              nodeRenderer={({
+                element,
+                isBranch,
+                isExpanded,
+                isSelected,
+                isHalfSelected,
+                getNodeProps,
+                level,
+                handleSelect,
+                handleExpand,
+              }) => {
+                const branchNode = (isExpanded, element) => {
+                  return isExpanded && element.children.length === 0 ? (
+                    <>
+                      <span role="alert" aria-live="assertive" className="visually-hidden">
+                        loading {element.name}
+                      </span>
+                    </>
+                  ) : null;
+                };
+                return (
+                  <div {...getNodeProps({ onClick: handleExpand })} style={{ marginLeft: 40 * (level - 1) }}>
+                    {isBranch && branchNode(isExpanded, element)}
+
+                    <span className="name">{element.name}</span>
+                  </div>
+                );
+              }}
             />
           </div>
         ))}
