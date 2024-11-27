@@ -189,24 +189,25 @@ export function sketch(p5) {
       p5.translate(-centralPoint.x, -centralPoint.y, -centralPoint.z);
     }
 
-    solarSystem.getPlanets().forEach((planet) => {
-      planet.draw();
+    // solarSystem.getPlanets().forEach((planet) => {
+    //   planet.draw();
 
-      // draw shadow
-      // if (img) {
-      //   p5.push();
-      //   p5.noStroke();
-      //   p5.noLights();
-      //   p5.translate(planet.getCentralPoint().x, planet.getCentralPoint().y + planet.getDistance() * 2, planet.getCentralPoint().z);
-      //   p5.rotateX(p5.HALF_PI);
-      //   p5.texture(img);
-      //   p5.plane((planet.getDistance() * planet.getAmountOfPoints()) / 20, (planet.getDistance() * planet.getAmountOfPoints()) / 20);
-      //   p5.pop();
-      // }
-    });
+    //   // draw shadow
+    //   // if (img) {
+    //   //   p5.push();
+    //   //   p5.noStroke();
+    //   //   p5.noLights();
+    //   //   p5.translate(planet.getCentralPoint().x, planet.getCentralPoint().y + planet.getDistance() * 2, planet.getCentralPoint().z);
+    //   //   p5.rotateX(p5.HALF_PI);
+    //   //   p5.texture(img);
+    //   //   p5.plane((planet.getDistance() * planet.getAmountOfPoints()) / 20, (planet.getDistance() * planet.getAmountOfPoints()) / 20);
+    //   //   p5.pop();
+    //   // }
+    // });
 
     //  solarSystem.drawConnections();
-    solarSystem.drawEllipses();
+    //solarSystem.drawEllipses();
+    solarSystem.draw() 
     if (galaxyRotation && p5.millis() > 2000) p5.pop();
   };
 
