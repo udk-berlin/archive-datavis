@@ -14,16 +14,6 @@ class SolarSystem {
     this.connections.draw();
   }
 
-  // drawEllipses() {
-  //   this.ellipses.forEach((e) => {
-  //     const sourcePoint = this.getPlanet(e.source.planetId).getPointById(e.source.id.id);
-  //     const targetPoint = this.getPlanet(e.target.planetId).getPointById(typeof e.target.id === "object" ? e.target.id.id : e.target.id);
-  //     // if(sourcePoint && targetPoint) this.drawEllipseBetweenPoints(sourcePoint, targetPoint);
-  //     if (sourcePoint && targetPoint) this.drawCurveBetweenPoints(sourcePoint, targetPoint);
-  //     //this.drawEllipseBetweenPoints(e.source.point, e.target.point);
-  //   });
-  // }
-
   async addPlanet(planet, dataUrl) {
     if (dataUrl) {
       try {

@@ -40,8 +40,8 @@ const ArchivePage = () => {
   }, []);
 
   return (
-    <div className="flex w-[100vw] h-full ">
-      <div className="flex-1 relative ">
+    <div className="grid w-full h-full w-[100vw] border-white grid-cols-7 overflow-hidden">
+      <div className="flex-1 relative  col-span-5  " id="sketch-container">
         <NextReactP5Wrapper
           sketch={sketch}
           windowWidth={windowWidth}
@@ -58,7 +58,7 @@ const ArchivePage = () => {
               setVisualisationAutoRotation(visualisationAutoRotation === "on" ? "off" : "on");
             }}
           >
-            {visualisationAutoRotation === "on" ? <RiLoopLeftLine /> : <RiPauseLine />}
+            {visualisationAutoRotation !== "on" ? <RiLoopLeftLine /> : <RiPauseLine />}
           </Button>
           <Button variant="ghost" className="p-0 m-0">
             <RiInformationLine />
@@ -66,7 +66,7 @@ const ArchivePage = () => {
         </div>
       </div>
 
-      <div className="w-1/3 h-full flex flex-col ">
+      <div className="col-span-2 border-l-2 border-white box-border h-full ">
         <SidePanel focusedIds={focusedIds} setFocusedIds={setFocusedIds} focusedType={focusedType} className="flex-1  " />
       </div>
     </div>

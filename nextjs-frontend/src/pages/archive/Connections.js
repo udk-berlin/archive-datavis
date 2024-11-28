@@ -1,3 +1,4 @@
+import easingFunctions from "@/lib/easingFunctions";
 class Connections {
   constructor(p5) {
     this.connections = [];
@@ -5,16 +6,11 @@ class Connections {
     this.p5 = p5;
   }
 
-
-  
-
-
   draw() {
     this.connections.forEach((connection) => {
-        connection.draw();
+      connection.draw();
     });
   }
-
 
   getConnections() {
     return this.connections;
@@ -24,10 +20,10 @@ class Connections {
     this.connections = connections;
   }
 
-  addConnection(p1,p2,options) {
+  addConnection(p1, p2, options) {
     this.connections.push(new Connection({ p5: this.p5, p1, p2, ...options }));
   }
-  
+
   clearConnections() {
     this.connections = [];
   }
@@ -45,7 +41,7 @@ class Connections {
 }
 
 class Connection {
-  constructor({ p5, p1, p2, animated = true, progress = 0, speed = 0.1 }) {
+  constructor({ p5, p1, p2, animated = true, progress = 0, speed = 0.05 }) {
     this.p5 = p5;
     this.p1 = p1;
     this.p2 = p2;
@@ -53,7 +49,6 @@ class Connection {
     this.progress = progress;
     this.speed = speed;
   }
-
 
   draw() {
     this.update();
@@ -65,7 +60,7 @@ class Connection {
   }
 
   drawCurveBetweenPoints(p1, p2, progress) {
-    progress = this.p5.constrain(progress, 0, 1);
+    progress = this.p5.constrain(easingFunctions.easeOutQuart(progress), 0, 1);
 
     let midpoint = this.p5.constructor.Vector.add(p1, p2).mult(0.5);
 
@@ -104,7 +99,6 @@ class Connection {
   }
 }
 
-
 /// old
 
 // drawEllipseBetweenPoints(p1, p2) {
@@ -134,7 +128,6 @@ class Connection {
 //     this.p5.ellipse(0, 0, dist, dist, [50]);
 //     this.p5.pop();
 //   }
-
 
 // drawConnections() {
 //     this.connections.forEach((connection) => {

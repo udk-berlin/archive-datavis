@@ -4,7 +4,7 @@ import SolarSystem from "./SolarSystem";
 
 import easingFunctions from "@/lib/easingFunctions";
 
-import { v4 as uuidv4 } from 'uuid';
+import { v4 as uuidv4 } from "uuid";
 export function sketch(p5) {
   let img;
 
@@ -41,44 +41,32 @@ export function sketch(p5) {
   let updateFocusedType = () => {};
 
   p5.updateWithProps = (props) => {
-    if (props.focusedId) {
-      console.log("fId", props.focusedId);
-    }
-
     if (props.windowWidth) {
       windowWidth = props.windowWidth;
     }
-
     if (props.setFocusedIds) {
       updateFocusedIds = props.setFocusedIds;
     }
-    
-    if(props.setFocusedType) {
+    if (props.setFocusedType) {
       updateFocusedType = props.setFocusedType;
     }
-    if(props.setAutoRotation) {
-
+    if (props.setAutoRotation) {
       setAutoRotation = props.setAutoRotation;
     }
-    if(props.autoRotation) {
-
+    if (props.autoRotation) {
       autoRotation = props.autoRotation === "on" ? true : false;
     }
-
   };
 
   p5.preload = async () => {
     img = p5.loadImage("/images/floatingShadow.png");
-
     font = p5.loadFont("/fonts/inter/Inter-Regular.otf");
-
     planetData = await fetchData("http://localhost:3010/api/all");
-    // planetData = await fetchData("http://localhost:3010/api/all");
   };
 
   p5.setup = async () => {
-    const parent = document.querySelector("main");
-    p5.createCanvas((windowWidth * 5) / 7, parent.offsetHeight, p5.WEBGL);
+    const parent = document.getElementById("sketch-container");
+    p5.createCanvas(parent.offsetWidth, parent.offsetHeight, p5.WEBGL);
 
     const scale = 1.5;
     const defaultScale = 1.5;
@@ -86,22 +74,8 @@ export function sketch(p5) {
     cam = p5.createCamera();
     cam.ortho(-p5.width / scale, p5.width / scale, -p5.height / scale, p5.height / scale, -20, 3000);
 
-    cameraStartView = p5.createCamera();
-    cameraStartView.ortho(-p5.width / scale, p5.width / scale, -p5.height / scale, p5.height / scale, -2000, 8000);
-    cameraStartView.setPosition(0.000006, 3000, 0.0003);
-    cameraStartView.lookAt(0, 0, 0);
-
-    cameraDefaultView = p5.createCamera();
-    cameraDefaultView.ortho(
-      (-p5.width / scale) * defaultScale,
-      (p5.width / scale) * defaultScale,
-      (-p5.height / scale) * defaultScale,
-      (p5.height / scale) * defaultScale,
-      0.1,
-      3000
-    );
-    cameraDefaultView.setPosition(925, 1350, 1040);
-    cameraDefaultView.lookAt(0, 0, 0);
+    cameraStartView = iniStartCamera(p5.createCamera(), scale);
+    cameraDefaultView = iniDefaultCamera(p5.createCamera(), scale, defaultScale);
 
     solarSystem = new SolarSystem(p5);
 
@@ -180,7 +154,7 @@ export function sketch(p5) {
         introAnimationFinished = true;
       }
     } else {
-      p5.orbitControl(-1, -1, .25);
+      p5.orbitControl(-1, -1, 0.25);
     }
 
     p5.background(236, 239, 241);
@@ -196,17 +170,17 @@ export function sketch(p5) {
       p5.translate(-centralPoint.x, -centralPoint.y, -centralPoint.z);
     }
 
-    solarSystem.draw() 
+    solarSystem.draw();
     if (autoRotation && p5.millis() > 2000) p5.pop();
   };
 
   p5.mouseClicked = () => {
     //solarSystem.setSingleIdActive()
-    if(p5.mouseX > p5.width-100 && p5.mouseX < p5.width && p5.mouseY > p5.height-100 && p5.mouseY < p5.height) {
+    if (p5.mouseX > p5.width - 100 && p5.mouseX < p5.width && p5.mouseY > p5.height - 100 && p5.mouseY < p5.height) {
       // we will not procced as the click is a z-index above the canvas
-      return
+      return;
     }
-   // setAutoRotation(false);
+    // setAutoRotation(false);
     introAnimationFinished = true;
     const { id: newFocusedId, planetId, focusedKeys } = solarSystem.setClickedIdActive(planetData);
     if (planetId === "entries" && newFocusedId) {
@@ -219,9 +193,9 @@ export function sketch(p5) {
       updateFocusedType({ type: "semesters", id: newFocusedId });
       if (focusedKeys?.entries?.length > 0) updateFocusedIds(focusedKeys.entries);
     }
-    console.log('reset', newFocusedId)
-    if(!planetId && !newFocusedId) {
-      console.log('reset')
+    console.log("reset", newFocusedId);
+    if (!planetId && !newFocusedId) {
+      console.log("reset");
       updateFocusedType({ type: null, id: null });
       updateFocusedIds([]);
       solarSystem.clearFocus();
@@ -246,5 +220,28 @@ export function sketch(p5) {
       console.error("Error fetching planet data:", error);
       return [];
     }
+  }
+
+  function iniDefaultCamera(camera, scale, defaultScale) {
+    camera = p5.createCamera();
+    camera.ortho(
+      (-p5.width / scale) * defaultScale,
+      (p5.width / scale) * defaultScale,
+      (-p5.height / scale) * defaultScale,
+      (p5.height / scale) * defaultScale,
+      0.1,
+      3000
+    );
+    camera.setPosition(925, 1350, 1040);
+    camera.lookAt(0, 0, 0);
+    return camera;
+  }
+
+  function iniStartCamera(camera, scale) {
+    camera = p5.createCamera();
+    camera.ortho(-p5.width / scale, p5.width / scale, -p5.height / scale, p5.height / scale, -2000, 8000);
+    camera.setPosition(0.000006, 3000, 0.0003);
+    camera.lookAt(0, 0, 0);
+    return camera;
   }
 }

@@ -62,7 +62,7 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
   };
 
   return (
-    <div className={cn("flex-grow border-l-2 border-white overflow-hidden", className)}>
+    <div className={cn("flex-grow  h-full overflow-hidden", className)}>
       <div className="pl-3 pr-12 flex sticky items-center top-0 bg-secondary pt-2 pb-2 z-10">
         <RiArrowLeftLine className="w-6 h-6 text-secondary-foreground" onClick={() => setFocusedId(null)} />
         <div className="relative ml-3 flex-grow mr-4">
@@ -82,7 +82,7 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
         />
       </div>
 
-      <div className="flex-1 overflow-hidden">
+      <div className="flex-1 overflow-x-hidden max-h-full">
         {focusedIdsData && focusedIdsData.length === 1 && (
           <div>
             {focusedIdsData[0].thumbnail && (
