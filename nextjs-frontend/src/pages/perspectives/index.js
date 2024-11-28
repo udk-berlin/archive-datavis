@@ -95,7 +95,7 @@ const PerspectivesPage = () => {
 
   return (
     <div className="grid grid-cols-12 gap-24 pb-24  px-0 3xl:px-80">
-      <div className="col-start-2 col-span-10 mt-24 px-12 xl:px-20  2xl:px-60 3xl:px-80 ">
+      <div className="col-start-0 col-span-10 mt-24  px-12 2xl:px-80 ">
         <h2 className="text-4xl font-bold">Exploring Perspectives on New Media Art</h2>
         <p className="text-4xl font-normal leading-[1.2em]">
           In an age defined by digital innovation, new media art has emerged as a dynamic field where art and technology intersect, creating

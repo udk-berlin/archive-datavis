@@ -8,7 +8,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { NextReactP5Wrapper } from "@p5-wrapper/next";
 import { Button } from "@/components/ui/button";
 
-import { RiInformationLine, RiInformationFill, RiLoopLeftLine, RiPauseLine, RiCompass3Line, RiPauseCircleLine, RiInfoI, RiHomeLine } from "@remixicon/react";
+import { RiInformationLine, RiInformationFill, RiLoopLeftLine, RiPauseLine, RiCompass3Line, RiPauseCircleLine, RiInfoI, RiPlayLine } from "@remixicon/react";
 
 import * as p5code from "./sketch";
 import SidePanel from "./SidePanel";
@@ -67,7 +67,7 @@ const ArchivePage = () => {
               setVisualisationAutoRotation(visualisationAutoRotation === "on" ? "off" : "on");
             }}
           >
-            {visualisationAutoRotation !== "on" ? <RiLoopLeftLine className="!h-full !w-full "/> : <RiPauseLine className="!h-full !w-full" />}
+            {visualisationAutoRotation !== "on" ? <RiPlayLine className="!h-full !w-full "/> : <RiPauseLine className="!h-full !w-full" />}
           </Button>
           <Button variant="ghost" className="p-0 m-0 w-6 h-6">
             <RiInfoI className="!h-full !w-full  "/>
