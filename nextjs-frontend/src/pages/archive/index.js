@@ -8,7 +8,7 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { NextReactP5Wrapper } from "@p5-wrapper/next";
 import { Button } from "@/components/ui/button";
 
-import { RiInformationLine, RiInformationFill, RiLoopLeftLine, RiPauseLine } from "@remixicon/react";
+import { RiInformationLine, RiInformationFill, RiLoopLeftLine, RiPauseLine, RiCompass3Line, RiPauseCircleLine, RiInfoI, RiHomeLine } from "@remixicon/react";
 
 import * as p5code from "./sketch";
 import SidePanel from "./SidePanel";
@@ -50,18 +50,27 @@ const ArchivePage = () => {
           setAutoRotation={setVisualisationAutoRotation}
           autoRotation={visualisationAutoRotation}
         />
-        <div className="absolute bottom-1 right-4 z-10 flex gap-4">
-          <Button
+        <div className="absolute bottom-4 right-3 z-10 flex gap-3">
+        <Button
             variant="ghost"
-            className="p-0 m-0 "
+            className="p-0 m-0 w-6 h-6 "
             onClick={() => {
               setVisualisationAutoRotation(visualisationAutoRotation === "on" ? "off" : "on");
             }}
           >
-            {visualisationAutoRotation !== "on" ? <RiLoopLeftLine /> : <RiPauseLine />}
+           <RiCompass3Line className="!h-full !w-full " /> 
           </Button>
-          <Button variant="ghost" className="p-0 m-0">
-            <RiInformationLine />
+          <Button
+            variant="ghost"
+            className="p-0 m-0 w-6 h-6"
+            onClick={() => {
+              setVisualisationAutoRotation(visualisationAutoRotation === "on" ? "off" : "on");
+            }}
+          >
+            {visualisationAutoRotation !== "on" ? <RiLoopLeftLine className="!h-full !w-full "/> : <RiPauseLine className="!h-full !w-full" />}
+          </Button>
+          <Button variant="ghost" className="p-0 m-0 w-6 h-6">
+            <RiInfoI className="!h-full !w-full  "/>
           </Button>
         </div>
       </div>

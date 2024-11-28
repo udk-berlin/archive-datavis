@@ -5,8 +5,93 @@ import SolarSystem from "./SolarSystem";
 import easingFunctions from "@/lib/easingFunctions";
 
 import { v4 as uuidv4 } from "uuid";
+
+
+class HUD {
+  constructor(p5) {
+    this.p5 = p5;
+  }
+
+
+  draw(point) {
+    const p5 = this.p5;
+
+    p5.push();
+
+    // Move to the point
+    p5.translate(point?.x, point?.y, point?.z);
+
+    // Get the camera position
+    const cam = p5._renderer._curCamera;
+    let camPosition = p5.createVector(cam.eyeX, cam.eyeY, cam.eyeZ);
+
+    // Compute the direction vector from the HUD to the camera
+    let dir = p5.createVector(
+      camPosition.x - point?.x,
+      camPosition.y - point?.y,
+      camPosition.z - point?.z
+    );
+
+    // Calculate the rotation angles
+    let theta = Math.atan2(dir.x, dir.z);
+    let phi = Math.atan2(dir.y, Math.sqrt(dir.x * dir.x + dir.z * dir.z));
+
+    // Rotate the HUD to face the camera
+    p5.rotateY(theta);
+    p5.rotateX(-phi);
+
+    // Draw the HUD element
+    p5.fill(0, 255, 0);
+    p5.noStroke();
+    p5.rect(0, 0, 50, 50);
+
+    p5.pop();
+
+    console.log('HUD drawn');
+  }
+}
+
 export function sketch(p5) {
+
+  p5.constructor.prototype.screenPosition = function(x, y, z) {
+    const p = p5.createVector(x, y, z);
+    const cam = p5._renderer._curCamera;
+  
+    // Model-View-Projection matrix
+    const mvp = p5._renderer.uMVMatrix
+      .copy()
+      .mult(p5._renderer.uPMatrix);
+  
+    // Transform the point
+    const coords = p4MultMatrix(p, mvp);
+  
+    // Normalize
+    const norm = coords.copy().div(coords.w);
+  
+    // Map to screen coordinates
+    norm.x = this.map(norm.x, -1, 1, 0, this.width);
+    norm.y = this.map(-norm.y, -1, 1, 0, this.height);
+  
+    return norm;
+  };
+  
+  function p4MultMatrix(p, m) {
+    const result = p5.createVector();
+    result.x =
+      p.x * m.mat4[0] + p.y * m.mat4[4] + p.z * m.mat4[8] + m.mat4[12];
+    result.y =
+      p.x * m.mat4[1] + p.y * m.mat4[5] + p.z * m.mat4[9] + m.mat4[13];
+    result.z =
+      p.x * m.mat4[2] + p.y * m.mat4[6] + p.z * m.mat4[10] + m.mat4[14];
+    result.w =
+      p.x * m.mat4[3] + p.y * m.mat4[7] + p.z * m.mat4[11] + m.mat4[15];
+    return result;
+  }
+
+
   let img;
+
+  let hud;
 
   let centralPoint = { x: 0, y: 0, z: 0 };
 
@@ -61,12 +146,15 @@ export function sketch(p5) {
   p5.preload = async () => {
     img = p5.loadImage("/images/floatingShadow.png");
     font = p5.loadFont("/fonts/inter/Inter-Regular.otf");
-    planetData = await fetchData("http://localhost:3010/api/all");
+    planetData = await fetchData("http://192.168.1.103:3010/api/all");
   };
 
   p5.setup = async () => {
     const parent = document.getElementById("sketch-container");
     p5.createCanvas(parent.offsetWidth, parent.offsetHeight, p5.WEBGL);
+
+
+    hud = new HUD(p5);
 
     const scale = 1.5;
     const defaultScale = 1.5;
@@ -84,11 +172,11 @@ export function sketch(p5) {
     solarSystem.addPlanet(
       new Planet(p5, {
         mode: "ring",
-        distance: planetData.authors.length,
+        distance: planetData.authors.length*4,
         centralPoint: p5.createVector(0, 0, 0),
         rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
         data: planetData.authors,
-        distance: 500,
+      //  distance: 750,
         id: "authors",
       })
     );
@@ -96,10 +184,22 @@ export function sketch(p5) {
     solarSystem.addPlanet(
       new Planet(p5, {
         mode: "ring",
-        distance: planetData.semesters.length,
+        distance: planetData.semesters.length*4,
         centralPoint: p5.createVector(0, -500, 0),
         rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
-        distance: 500,
+       // distance: 500,
+        data: planetData.semesters,
+        id: "semesters",
+      })
+    );
+
+    solarSystem.addPlanet(
+      new Planet(p5, {
+        mode: "ring",
+        distance: planetData.semesters.length*4,
+        centralPoint: p5.createVector(0, 500, 0),
+        rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
+       // distance: 500,
         data: planetData.semesters,
         id: "semesters",
       })
@@ -107,7 +207,7 @@ export function sketch(p5) {
 
     const dummy = [];
 
-    for (let i = 0; i < 500; i++) {
+    for (let i = 0; i < 1000; i++) {
       dummy.push({
         id: uuidv4(),
         name: "",
@@ -171,8 +271,19 @@ export function sketch(p5) {
     }
 
     solarSystem.draw();
+
+
     if (autoRotation && p5.millis() > 2000) p5.pop();
+
+    const point = solarSystem.getPointAndPlanetIdById("5add7d1a-ecc7-4c24-9cc4-2f992f13644c")
+    console.log(point)
+    hud.draw(point?.point);
+
+
+
   };
+
+  
 
   p5.mouseClicked = () => {
     //solarSystem.setSingleIdActive()
@@ -195,7 +306,6 @@ export function sketch(p5) {
     }
     console.log("reset", newFocusedId);
     if (!planetId && !newFocusedId) {
-      console.log("reset");
       updateFocusedType({ type: null, id: null });
       updateFocusedIds([]);
       solarSystem.clearFocus();

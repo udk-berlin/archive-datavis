@@ -58,16 +58,16 @@ const HeaderNav = ({openSidebar, sidebarOpened}) => {
               {t("Perspectives")}
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link href="/library" className={currentPath === "/library" ? "!underline" : ""}>
               {t("Library")}
             </Link>
-          </li>
-          <li>
+          </li> */}
+          {/* <li>
             <Link href="/contribute" className={currentPath === "/datanetwork" ? "!underline" : ""}>
               {t("Contribute")}
             </Link>
-          </li>
+          </li> */}
           <li>
             <Link href="/about" className={currentPath === "/about" ? "!underline" : ""}>
               {t("About")}
