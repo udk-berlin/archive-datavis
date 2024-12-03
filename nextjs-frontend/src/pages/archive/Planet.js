@@ -2,6 +2,33 @@ import convexHull from "convex-hull";
 import { v4 as uuidv4 } from "uuid";
 import { mat4, vec4, vec3 } from "gl-matrix";
 
+
+class Point {
+  constructor(x, y, z) {
+    this.p = createVector(x, y, z);
+    this.active = false
+    this.hidden = false
+    this.showScaleProcess = 0
+    this.showScaleStep = 0.1
+    
+    this.defaultScale = 2
+    this.activeScale = 6
+  }
+
+  update() {
+    if(this.active && this.showScaleProcess < 1) {
+      this.showScaleProcess += this.showScaleStep
+    } else if(this.showScaleProcess > 1) {
+      this.showScaleProcess = 1
+    }
+  }
+  
+
+
+  getVector() {
+    return this.p;
+  }
+}
 class Planet {
   constructor(
     p5,
@@ -32,6 +59,7 @@ class Planet {
     this.centralPoint = centralPoint;
     this.mode = mode;
     this.activeIds = [];
+    this.hiddenActiveIds = [];
     this.hoverId = null;
     this.planeColumns = planeColumns;
     this.orbitRadii = orbitRadii;
@@ -547,10 +575,9 @@ class Planet {
         this.subpoints.forEach((p, i) => {
           this.p5.push();
           this.p5.translate(p.x, p.y, p.z);
-          if(this.activeIds.includes(p.id)) {
+          if (this.activeIds.includes(p.id) && !this.hiddenActiveIds.includes(p.id)) {
             this.p5.fill(255, 0, 255);
             this.p5.sphere(4);
-          
           } else {
             this.p5.fill(0, 0, 0);
             this.p5.sphere(2);
@@ -562,18 +589,16 @@ class Planet {
       case "plane":
         this.subpoints.forEach((p, i) => {
           this.p5.push();
-     
+
           this.p5.translate(p.x, p.y, p.z);
-          if(this.activeIds.includes(p.id)) {
+          if (this.activeIds.includes(p.id) && !this.hiddenActiveIds.includes(p.id)) {
             this.p5.fill(255, 0, 255);
             this.p5.sphere(4);
-          
           } else {
             this.p5.fill(0, 0, 0);
             this.p5.sphere(2);
-
           }
-          
+
           this.p5.pop();
         });
         break;
@@ -604,8 +629,25 @@ class Planet {
       this.activeIds.push(aId);
     }
   }
+  showHiddenId(id) {
+    const index = this.hiddenActiveIds.indexOf(id);
+    if (index !== -1) {
+      this.hiddenActiveIds.splice(index, 1);
+    }
+  }
+  hideActiveId(id) {
+    if (!this.hiddenActiveIds.includes(id)) {
+      this.hiddenActiveIds.push(id);
+    }
+  }
   setActiveIds(aIds) {
-    this.activeIds = aIds;
+    aIds.forEach((aId) => {
+      this.activeIds.push(aId);
+    });
+  }
+  resetActiveIds() {
+    this.activeIds = [];
+    this.showActiveIds = [];
   }
   getHoverId() {
     return this.hoverId;
@@ -633,8 +675,6 @@ class Planet {
   getId() {
     return this.id;
   }
-
- 
 
   getPointById(id) {
     let found;

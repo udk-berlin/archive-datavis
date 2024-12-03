@@ -139,6 +139,8 @@ class SolarSystem {
       );
     }
 
+
+
     if (planetId === "authors") {
       focusedKeys.entries = this.getPlanet("entries").getActiveIds();
       if (focusedKeys?.entries.length > 0) {
@@ -147,7 +149,8 @@ class SolarSystem {
         });
         this.getPlanet("semesters").setActiveIds(focusedKeys.semesters);
         focusedKeys.semesters.forEach((s) => {
-          this.addIdsAsConnection({ id: id }, { id: s });
+          this.getPlanet("semesters").hideActiveId(s)
+          this.addIdsAsConnection({ id: id }, { id: s },this.getPlanet("semesters"));
         });
       }
     } else if (planetId === "semesters") {
@@ -155,14 +158,16 @@ class SolarSystem {
 
       this.getPlanet("entries").setActiveIds(focusedKeys.entries);
       focusedKeys.entries.forEach((e) => {
-        this.addIdsAsConnection({ id: id }, { id: e });
+        this.getPlanet("entries").hideActiveId(e)
+        this.addIdsAsConnection({ id: id }, { id: e }, this.getPlanet("entries"));
       });
       const focusedAuthorIds = [];
       focusedKeys.entries.forEach((e) => {
         const authors = d.entries.find((entry) => entry.id === e).authors;
         authors.forEach((a) => {
           focusedAuthorIds.push(a);
-          this.addIdsAsConnection({ id: id }, { id: a });
+          this.getPlanet("authors").hideActiveId(a)
+          this.addIdsAsConnection({ id: id }, { id: a }, this.getPlanet("authors"));
         });
       });
     }
@@ -171,7 +176,7 @@ class SolarSystem {
 
   deactivateAllActiveIds() {
     this.planets.forEach((p) => {
-      p.setActiveIds([]);
+      p.resetActiveIds();
     });
   }
 
@@ -190,7 +195,7 @@ class SolarSystem {
     this.connections.push(points);
   }
 
-  addIdsAsConnection(source, target) {
+  addIdsAsConnection(source, target, targetPlanet) {
     let sourcePoint;
     let targetPoint;
 
@@ -206,7 +211,7 @@ class SolarSystem {
     }
 
     if (sourcePoint && sourcePoint.point && targetPoint && targetPoint.point) {
-      this.connections.addConnection(sourcePoint.point, targetPoint.point);
+      this.connections.addConnection(sourcePoint.point, targetPoint.point, targetPlanet,target.id);
     }
 
     if (sourcePoint?.planetId && sourcePoint?.id?.id) this.getPlanet(sourcePoint.planetId).setIdActive(sourcePoint.id.id);

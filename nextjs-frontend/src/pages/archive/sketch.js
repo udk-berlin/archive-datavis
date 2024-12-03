@@ -10,44 +10,71 @@ import { v4 as uuidv4 } from "uuid";
 class HUD {
   constructor(p5) {
     this.p5 = p5;
+    this.labels = []
   }
 
+  drawLabel(point, {side, text, fill, stroke}) {
+    this.p5.push()
+    this.p5.translate(point?.x, point?.y, point?.z);
+    this.p5.rectMode(this.p5.CORNER);
+    this.p5.ellipseMode(this.p5.CENTER);
 
-  draw(point) {
-    const p5 = this.p5;
+    this.p5.noFill();  
+    this.p5.stroke(0);
+    this.p5.strokeWeight(3);
+    this.p5.ellipse(0, 0, 50, 50);
 
-    p5.push();
+    if(side === 'left') {
+      this.p5.line(-25,0,-150,0);
+      // this.p5.fill(236, 239, 241)
+      this.p5.rect(-150, -25, -1*text?.length*22, 50);
+      this.p5.fill(0);
+      this.p5.textAlign(this.p5.RIGHT, this.p5.CENTER);
+      this.p5.textSize(32);
+      this.p5.text(text, -175, -7);
+    }
 
-    // Move to the point
-    p5.translate(point?.x, point?.y, point?.z);
+    this.p5.pop();
+  }
 
-    // Get the camera position
-    const cam = p5._renderer._curCamera;
-    let camPosition = p5.createVector(cam.eyeX, cam.eyeY, cam.eyeZ);
+  addLabel(point, text,type) {
+    this.labels.push({point, text, type});
+  }
 
-    // Compute the direction vector from the HUD to the camera
-    let dir = p5.createVector(
+  draw(point, side) {
+
+
+    this.p5.push();
+
+
+    this.p5.translate(point?.x, point?.y, point?.z);
+
+
+    const cam = this.p5._renderer._curCamera;
+    let camPosition = this.p5.createVector(cam.eyeX, cam.eyeY, cam.eyeZ);
+
+
+    let dir = this.p5.createVector(
       camPosition.x - point?.x,
       camPosition.y - point?.y,
       camPosition.z - point?.z
     );
 
-    // Calculate the rotation angles
+
     let theta = Math.atan2(dir.x, dir.z);
     let phi = Math.atan2(dir.y, Math.sqrt(dir.x * dir.x + dir.z * dir.z));
 
-    // Rotate the HUD to face the camera
-    p5.rotateY(theta);
-    p5.rotateX(-phi);
 
-    // Draw the HUD element
-    p5.fill(0, 255, 0);
-    p5.noStroke();
-    p5.rect(0, 0, 50, 50);
+    this.p5.rotateY(theta);
+    this.p5.rotateX(-phi);
 
-    p5.pop();
+    this.labels.forEach(label => {
+      this.drawLabel(label.point, {side: "left", text: label.text, stroke: "black"});
+    })
 
-    console.log('HUD drawn');
+
+    this.p5.pop();
+
   }
 }
 
@@ -146,7 +173,7 @@ export function sketch(p5) {
   p5.preload = async () => {
     img = p5.loadImage("/images/floatingShadow.png");
     font = p5.loadFont("/fonts/inter/Inter-Regular.otf");
-    planetData = await fetchData("http://192.168.1.103:3010/api/all");
+    planetData = await fetchData("http://localhost:3010/api/all");
   };
 
   p5.setup = async () => {
@@ -233,6 +260,14 @@ export function sketch(p5) {
     p5.textFont(font);
     p5.textSize(32);
     p5.textAlign(p5.CENTER, p5.CENTER);
+
+
+
+    hud.addLabel(centralPoint, "Projects", "left");
+    hud.addLabel(p5.createVector(-1*planetData.authors.length*4,0, 0), "Persons", "left");
+    hud.addLabel(p5.createVector(-1*planetData.semesters.length*4,-500, 0), "Semesters", "left");
+    hud.addLabel(p5.createVector(-1*planetData.semesters.length*4,500, 0), "Archive", "left");
+
   };
 
   function updateRotation() {
@@ -259,8 +294,8 @@ export function sketch(p5) {
 
     p5.background(236, 239, 241);
 
-    p5.ambientLight(150);
-    p5.directionalLight(255, 255, 255, 1, 1, -1);
+    //p5.ambientLight(150);
+   // p5.directionalLight(255, 255, 255, 1, 1, -1);
 
     if (autoRotation && p5.millis() > 2000) {
       updateRotation();
@@ -276,9 +311,8 @@ export function sketch(p5) {
     if (autoRotation && p5.millis() > 2000) p5.pop();
 
     const point = solarSystem.getPointAndPlanetIdById("5add7d1a-ecc7-4c24-9cc4-2f992f13644c")
-    console.log(point)
-    hud.draw(point?.point);
 
+    hud.draw(centralPoint);
 
 
   };

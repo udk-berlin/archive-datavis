@@ -20,8 +20,8 @@ class Connections {
     this.connections = connections;
   }
 
-  addConnection(p1, p2, options) {
-    this.connections.push(new Connection({ p5: this.p5, p1, p2, ...options }));
+  addConnection(p1, p2, targetPlanet,targetId, options) {
+    this.connections.push(new Connection({ targetId: targetId,p5: this.p5, p1, p2, targetPlanet, ...options }));
   }
 
   clearConnections() {
@@ -41,13 +41,15 @@ class Connections {
 }
 
 class Connection {
-  constructor({ p5, p1, p2, animated = true, progress = 0, speed = 0.05 }) {
+  constructor({ p5,targetId,  p1, p2, animated = true, progress = 0, speed = 0.05, targetPlanet }) {
     this.p5 = p5;
     this.p1 = p1;
     this.p2 = p2;
     this.animated = animated;
     this.progress = progress;
     this.speed = speed;
+    this.targetPlanet = targetPlanet;
+    this.targetId = targetId
   }
 
   draw() {
@@ -92,9 +94,11 @@ class Connection {
   }
 
   update() {
-    this.progress += this.speed;
     if (this.progress > 1) {
+      this.targetPlanet?.showHiddenId(this.targetId);
       this.progress = 1;
+    } else if(this.progress < 1) {
+      this.progress += this.speed;
     }
   }
 }

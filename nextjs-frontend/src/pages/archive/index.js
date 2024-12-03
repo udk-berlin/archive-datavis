@@ -23,7 +23,7 @@ const ArchivePage = () => {
   const [focusedIds, setFocusedIds] = useState([]);
   const [focusedType, setFocusedType] = useState({ type: "", id: "" });
 
-  const [visualisationAutoRotation, setVisualisationAutoRotation] = useState("on");
+  const [visualisationAutoRotation, setVisualisationAutoRotation] = useState("off");
 
   useEffect(() => {
     console.log("focusedIds", focusedIds);
