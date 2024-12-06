@@ -6,77 +6,8 @@ import easingFunctions from "@/lib/easingFunctions";
 
 import { v4 as uuidv4 } from "uuid";
 
+import Hud from "./Hud";
 
-class HUD {
-  constructor(p5) {
-    this.p5 = p5;
-    this.labels = []
-  }
-
-  drawLabel(point, {side, text, fill, stroke}) {
-    this.p5.push()
-    this.p5.translate(point?.x, point?.y, point?.z);
-    this.p5.rectMode(this.p5.CORNER);
-    this.p5.ellipseMode(this.p5.CENTER);
-
-    this.p5.noFill();  
-    this.p5.stroke(0);
-    this.p5.strokeWeight(3);
-    this.p5.ellipse(0, 0, 50, 50);
-
-    if(side === 'left') {
-      this.p5.line(-25,0,-150,0);
-      // this.p5.fill(236, 239, 241)
-      this.p5.rect(-150, -25, -1*text?.length*22, 50);
-      this.p5.fill(0);
-      this.p5.textAlign(this.p5.RIGHT, this.p5.CENTER);
-      this.p5.textSize(32);
-      this.p5.text(text, -175, -7);
-    }
-
-    this.p5.pop();
-  }
-
-  addLabel(point, text,type) {
-    this.labels.push({point, text, type});
-  }
-
-  draw(point, side) {
-
-
-    this.p5.push();
-
-
-    this.p5.translate(point?.x, point?.y, point?.z);
-
-
-    const cam = this.p5._renderer._curCamera;
-    let camPosition = this.p5.createVector(cam.eyeX, cam.eyeY, cam.eyeZ);
-
-
-    let dir = this.p5.createVector(
-      camPosition.x - point?.x,
-      camPosition.y - point?.y,
-      camPosition.z - point?.z
-    );
-
-
-    let theta = Math.atan2(dir.x, dir.z);
-    let phi = Math.atan2(dir.y, Math.sqrt(dir.x * dir.x + dir.z * dir.z));
-
-
-    this.p5.rotateY(theta);
-    this.p5.rotateX(-phi);
-
-    this.labels.forEach(label => {
-      this.drawLabel(label.point, {side: "left", text: label.text, stroke: "black"});
-    })
-
-
-    this.p5.pop();
-
-  }
-}
 
 export function sketch(p5) {
 
@@ -181,7 +112,7 @@ export function sketch(p5) {
     p5.createCanvas(parent.offsetWidth, parent.offsetHeight, p5.WEBGL);
 
 
-    hud = new HUD(p5);
+    hud = new Hud(p5);
 
     const scale = 1.5;
     const defaultScale = 1.5;
@@ -199,10 +130,10 @@ export function sketch(p5) {
     solarSystem.addPlanet(
       new Planet(p5, {
         mode: "ring",
-        distance: planetData.authors.length*4,
+        distance: planetData?.authors?.length*4 || 0,
         centralPoint: p5.createVector(0, 0, 0),
         rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
-        data: planetData.authors,
+        data: planetData?.authors || [],
       //  distance: 750,
         id: "authors",
       })
@@ -211,11 +142,11 @@ export function sketch(p5) {
     solarSystem.addPlanet(
       new Planet(p5, {
         mode: "ring",
-        distance: planetData.semesters.length*4,
+        distance: planetData?.semesters?.length*4 || 0,
         centralPoint: p5.createVector(0, -500, 0),
         rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
        // distance: 500,
-        data: planetData.semesters,
+        data: planetData?.semesters || [],
         id: "semesters",
       })
     );
@@ -223,11 +154,11 @@ export function sketch(p5) {
     solarSystem.addPlanet(
       new Planet(p5, {
         mode: "ring",
-        distance: planetData.semesters.length*4,
+        distance: planetData?.semesters?.length*4 || 0,
         centralPoint: p5.createVector(0, 500, 0),
         rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
        // distance: 500,
-        data: planetData.semesters,
+        data: planetData?.semesters || [],
         id: "semesters",
       })
     );
@@ -247,9 +178,9 @@ export function sketch(p5) {
     solarSystem.addPlanet(
       new Planet(p5, {
         mode: "plane",
-        distance: planetData.entries.length,
+        distance: planetData?.entries?.length || 0,
         centralPoint: p5.createVector(0, 0, 0),
-        data: planetData.entries.concat(dummy),
+        data: planetData.entries ? planetData?.entries.concat(dummy) : [],
         distance: 20,
         rotationSpeed: 0.01,
         id: "entries",
@@ -263,10 +194,10 @@ export function sketch(p5) {
 
 
 
-    hud.addLabel(centralPoint, "Projects", "left");
-    hud.addLabel(p5.createVector(-1*planetData.authors.length*4,0, 0), "Persons", "left");
-    hud.addLabel(p5.createVector(-1*planetData.semesters.length*4,-500, 0), "Semesters", "left");
-    hud.addLabel(p5.createVector(-1*planetData.semesters.length*4,500, 0), "Archive", "left");
+    hud.addLabel({point:centralPoint, text:"Projects"});
+    hud.addLabel({point:p5.createVector(-1*planetData.authors.length*4,0, 0),text: "Persons"});
+    hud.addLabel({point:p5.createVector(-1*planetData.semesters.length*4,-500, 0),text: "Semesters"});
+    hud.addLabel({point:p5.createVector(-1*planetData.semesters.length*4,500, 0), text:"Archive"});
 
   };
 
@@ -312,7 +243,15 @@ export function sketch(p5) {
 
     const point = solarSystem.getPointAndPlanetIdById("5add7d1a-ecc7-4c24-9cc4-2f992f13644c")
 
-    hud.draw(centralPoint);
+    // const hoverIds = solarSystem.getHoverIds()
+    // if(hoverIds && hoverIds.length > 0) {
+    //   hud.clearLabels() 
+    //   const d = solarSystem.getPlanet(hoverIds[0]?.planetId)?.getPointById(hoverIds[0]?.id)
+    //   console.log(hoverIds[0], d)
+    //   hud.addLabel({point:d,text: "hover", type:"hover"});
+    // }
+
+     hud.draw(centralPoint);
 
 
   };
