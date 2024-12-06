@@ -104,7 +104,7 @@ const ArchivePage = () => {
           </div>
         </div>
       </ResizablePanel>
-      <ResizableHandle className={'border-2 border-white'} />
+      <ResizableHandle className={'border-0 border-white w-[3px] bg-white'} />
       <ResizablePanel ref={resizablePanelRef} defaultSize={opened ? 25 : 50} maxSize={50}>
         <SidePanel
           focusedIds={focusedIds}

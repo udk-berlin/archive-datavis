@@ -9,7 +9,10 @@ import {
   RiExpandDiagonalFill,
   RiExpandLeftLine,
   RiFolder2Line,
-  RiFolderOpenLine
+  RiFolderOpenLine,
+  RiSquareLine,
+  RiFolderLine,
+  RiFile2Line,
 } from "@remixicon/react";
 import { useEffect, useState } from "react";
 
@@ -22,6 +25,18 @@ import { set } from "lodash";
 
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
+
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+  BreadcrumbEllipsis,
+} from "@/components/ui/breadcrumb";
+
+import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedData, opened, setOpened }) => {
   const [focusedIdsData, setFocusedIdsData] = useState([]);
@@ -72,37 +87,99 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
   };
 
   return (
-    <div className={`grid gap-0 ${opened? "grid-cols-2" : "grid-cols-1"}`}>
+    <div className={`grid gap-0 ${opened ? "grid-cols-2" : "grid-cols-1"}`}>
       {opened && (
-        <div className="h-full z-100">
-          <div className="pl-3 pr-12 flex sticky items-center top-0 bg-secondary pt-2 pb-2 z-10">
-            <RiFolder2Line className="w-6 h-6 text-secondary-foreground" onClick={() => setOpened(!opened)} />
-            <div className="relative ml-3 flex-grow mr-4">
-              <span className="absolute inset-y-0 left-3 flex items-center text-gray-500">
-                <RiSearchLine className="w-4 h-4 text-secondary-foreground" />
-              </span>
-              <Input
-                type="text"
-                placeholder="Search Digitale Klasse ..."
-                className="pl-10 h-8 rounded-lg border-none bg-white w-full text-secondary-foreground focus-visible:ring-none focus-visible:outline-none focus-visible:text-black placeholder-secondary-foreground text-black"
-              />
-            </div>
-            <RiLink
-              className={`w-5 h-5 ${
-                focusedIdsData.length === 1 ? "hover:text-popover-foreground text-black" : "text-secondary-foreground"
-              }  ml-auto`}
-            />
+        <div className="h-full z-100 ">
+          <div className="pl-3 pr-12 pl-12 flex sticky items-center top-0 bg-secondary pt-2 pb-2 z-10 h-12">
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink className="hover:text-popover-foreground" href="/">
+                    .
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator> /</BreadcrumbSeparator>
+                <BreadcrumbItem>
+                  <BreadcrumbEllipsis className="h-4 w-4 text-black hover:text-popover-foreground" />
+                </BreadcrumbItem>
+                <BreadcrumbSeparator> /</BreadcrumbSeparator>
+                <BreadcrumbItem>
+                  <BreadcrumbLink className="hover:text-popover-foreground" href="/components">
+                    Components
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                <BreadcrumbSeparator>/</BreadcrumbSeparator>
+                <BreadcrumbItem>
+                  <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
+                </BreadcrumbItem>
+              </BreadcrumbList>
+            </Breadcrumb>
           </div>
 
-
-          <div className="z-100 text-green">
-            hello
+          <div className="z-100 text-green pl-12 mt-6">
+            <Table>
+              <TableHeader className="hover:bg-transparent">
+                <TableRow className="hover:bg-transparent h-[20px]">
+                  <TableHead className="w-2"></TableHead>
+                  <TableHead className="text-black font-normal text-xs ">Name</TableHead>
+                  <TableHead className="text-right text-black font-normal text-xs">File Size</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody className="">
+                <TableRow>
+                  <TableCell className="font-medium text-left m-0 p-0">
+                    <RiFolderLine className="w-5 h-5" />{" "}
+                  </TableCell>
+                  <TableCell>Folder Folder</TableCell>
+                  <TableCell className="text-right hover:text-black">2.4 MB</TableCell>
+                </TableRow>
+                <TableRow className="">
+                  <TableCell className="font-medium  m-0 p-0">
+                    <RiFolderLine className="w-5 h-5" />
+                  </TableCell>
+                  <TableCell>Folder Folder</TableCell>
+                  <TableCell className="text-right hover:text-black">2.4 MB</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium  m-0 p-0">
+                    <RiFile2Line className="w-5 h-5" />
+                  </TableCell>
+                  <TableCell>Folder Folder</TableCell>
+                  <TableCell className="text-right hover:text-black">2.4 MB</TableCell>
+                </TableRow>
+                <TableRow className="text-darkGrey">
+                  <TableCell className="font-medium  m-0 p-0">
+                    <RiFile2Line className="w-5 h-5" />
+                  </TableCell>
+                  <TableCell className=""><span className="!font-blokk ">something</span>.txt</TableCell>
+                  <TableCell className="text-right hover:text-black">4 MB</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium  m-0 p-0">
+                    <RiFile2Line className="w-5 h-5" />
+                  </TableCell>
+                  <TableCell>Folder Folder</TableCell>
+                  <TableCell className="text-right hover:text-black">4 MB</TableCell>
+                </TableRow>
+                <TableRow>
+                  <TableCell className="font-medium  m-0 p-0">
+                    <RiFile2Line className="w-5 h-5" />
+                  </TableCell>
+                  <TableCell>Folder Folder</TableCell>
+                  <TableCell className="text-right hover:text-black">2.4 MB</TableCell>
+                </TableRow>
+              </TableBody>
+            </Table>
           </div>
         </div>
       )}
       <div className={cn("flex-grow  h-full overflow-hidden", className)}>
         <div className="pl-3 pr-12 flex sticky items-center top-0 bg-secondary pt-2 pb-2 z-10">
-          {!opened ? <RiFolder2Line className="w-6 h-6 " onClick={() => setOpened(!opened)} /> : <RiFolderOpenLine className="w-6 h-6 " onClick={() => setOpened(!opened)} />}
+          {!opened ? (
+            <RiFolder2Line className="w-5 h-5 " onClick={() => setOpened(!opened)} />
+          ) : (
+            <RiFolderOpenLine className="w-5 h-5 " onClick={() => setOpened(!opened)} />
+          )}
           <div className="relative ml-3 flex-grow mr-4">
             <span className="absolute inset-y-0 left-3 flex items-center text-gray-500">
               <RiSearchLine className="w-4 h-4 text-secondary-foreground" />
