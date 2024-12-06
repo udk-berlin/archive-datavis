@@ -109,7 +109,7 @@ export function sketch(p5) {
 
   p5.setup = async () => {
     const parent = document.getElementById("sketch-container");
-    p5.createCanvas(parent.offsetWidth, parent.offsetHeight, p5.WEBGL);
+    p5.createCanvas(windowWidth, parent.offsetHeight, p5.WEBGL);
 
 
     hud = new Hud(p5);
@@ -277,12 +277,12 @@ export function sketch(p5) {
       updateFocusedType({ type: "semesters", id: newFocusedId });
       if (focusedKeys?.entries?.length > 0) updateFocusedIds(focusedKeys.entries);
     }
-    console.log("reset", newFocusedId);
-    if (!planetId && !newFocusedId) {
-      updateFocusedType({ type: null, id: null });
-      updateFocusedIds([]);
-      solarSystem.clearFocus();
-    }
+    // console.log("reset", newFocusedId);
+    // if (!planetId && !newFocusedId) {
+    //   updateFocusedType({ type: null, id: null });
+    //   updateFocusedIds([]);
+    //   solarSystem.clearFocus();
+    // }
   };
 
   async function fetchData(url) {

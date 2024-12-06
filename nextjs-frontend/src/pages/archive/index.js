@@ -8,10 +8,21 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 import { NextReactP5Wrapper } from "@p5-wrapper/next";
 import { Button } from "@/components/ui/button";
 
-import { RiInformationLine, RiInformationFill, RiLoopLeftLine, RiPauseLine, RiCompass3Line, RiPauseCircleLine, RiInfoI, RiPlayLine } from "@remixicon/react";
+import {
+  RiInformationLine,
+  RiInformationFill,
+  RiLoopLeftLine,
+  RiPauseLine,
+  RiCompass3Line,
+  RiPauseCircleLine,
+  RiInfoI,
+  RiPlayLine,
+} from "@remixicon/react";
 
 import * as p5code from "./sketch";
 import SidePanel from "./SidePanel";
+
+import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 
 const ArchivePage = () => {
   let papertexture;
@@ -24,6 +35,11 @@ const ArchivePage = () => {
   const [focusedType, setFocusedType] = useState({ type: "", id: "" });
 
   const [visualisationAutoRotation, setVisualisationAutoRotation] = useState("off");
+
+  const [opened, setOpened] = useState(false);
+
+  const resizablePanelRef = useRef(null);
+
 
   useEffect(() => {
     console.log("focusedIds", focusedIds);
@@ -39,46 +55,67 @@ const ArchivePage = () => {
     };
   }, []);
 
-  return (
-    <div className="grid w-full h-full w-[100vw] border-white grid-cols-7 overflow-hidden">
-      <div className="flex-1 relative  col-span-5  " id="sketch-container">
-        <NextReactP5Wrapper
-          sketch={sketch}
-          windowWidth={windowWidth}
-          setFocusedIds={setFocusedIds}
-          setFocusedType={setFocusedType}
-          setAutoRotation={setVisualisationAutoRotation}
-          autoRotation={visualisationAutoRotation}
-        />
-        <div className="absolute bottom-4 right-3 z-10 flex gap-3">
-        <Button
-            variant="ghost"
-            className="p-0 m-0 w-6 h-6 "
-            onClick={() => {
-              setVisualisationAutoRotation(visualisationAutoRotation === "on" ? "off" : "on");
-            }}
-          >
-           <RiCompass3Line className="!h-full !w-full " /> 
-          </Button>
-          <Button
-            variant="ghost"
-            className="p-0 m-0 w-6 h-6"
-            onClick={() => {
-              setVisualisationAutoRotation(visualisationAutoRotation === "on" ? "off" : "on");
-            }}
-          >
-            {visualisationAutoRotation !== "on" ? <RiPlayLine className="!h-full !w-full "/> : <RiPauseLine className="!h-full !w-full" />}
-          </Button>
-          <Button variant="ghost" className="p-0 m-0 w-6 h-6">
-            <RiInfoI className="!h-full !w-full  "/>
-          </Button>
-        </div>
-      </div>
 
-      <div className="col-span-2 border-l-2 border-white box-border h-full ">
-        <SidePanel focusedIds={focusedIds} setFocusedIds={setFocusedIds} focusedType={focusedType} className="flex-1  " />
-      </div>
-    </div>
+  useEffect(() => {
+    if (resizablePanelRef.current) {
+      resizablePanelRef.current.resize(!opened ? 25 : 50);
+    }
+  }, [opened]);
+
+  return (
+    <ResizablePanelGroup direction="horizontal" className={"h-full w-[100vw] overflow-hidden"}>
+      <ResizablePanel className="h-full" defaultSize={!opened? 75 : 50}>
+        <div className="h-full" id="sketch-container">
+          <NextReactP5Wrapper
+            sketch={sketch}
+            windowWidth={windowWidth}
+            setFocusedIds={setFocusedIds}
+            setFocusedType={setFocusedType}
+            setAutoRotation={setVisualisationAutoRotation}
+            autoRotation={visualisationAutoRotation}
+          />
+
+          <div className="absolute bottom-4 right-3 z-10 flex gap-3">
+            <Button
+              variant="ghost"
+              className="p-0 m-0 w-6 h-6 "
+              onClick={() => {
+                setVisualisationAutoRotation(visualisationAutoRotation === "on" ? "off" : "on");
+              }}
+            >
+              <RiCompass3Line className="!h-full !w-full " />
+            </Button>
+            <Button
+              variant="ghost"
+              className="p-0 m-0 w-6 h-6"
+              onClick={() => {
+                setVisualisationAutoRotation(visualisationAutoRotation === "on" ? "off" : "on");
+              }}
+            >
+              {visualisationAutoRotation !== "on" ? (
+                <RiPlayLine className="!h-full !w-full " />
+              ) : (
+                <RiPauseLine className="!h-full !w-full" />
+              )}
+            </Button>
+            <Button variant="ghost" className="p-0 m-0 w-6 h-6">
+              <RiInfoI className="!h-full !w-full  " />
+            </Button>
+          </div>
+        </div>
+      </ResizablePanel>
+      <ResizableHandle className={'border-2 border-white'} />
+      <ResizablePanel ref={resizablePanelRef} defaultSize={opened ? 25 : 50} maxSize={50}>
+        <SidePanel
+          focusedIds={focusedIds}
+          setFocusedIds={setFocusedIds}
+          focusedType={focusedType}
+          className="flex-1  "
+          opened={opened}
+          setOpened={setOpened}
+        />
+      </ResizablePanel>
+    </ResizablePanelGroup>
   );
 };
 

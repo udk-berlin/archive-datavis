@@ -22,6 +22,12 @@ module.exports = {
   			'99': '.997',
   			'101': '1.003'
   		},
+		  letterSpacing: {
+			"robin": "0.015em",
+		  },
+		  lineHeight:{
+			"robin": "1.4"
+		  },
   		colors: {
   			border: 'hsl(var(--border))',
   			input: 'hsl(var(--input))',
