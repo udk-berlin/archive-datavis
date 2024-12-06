@@ -125,7 +125,9 @@ export function sketch(p5) {
 
     solarSystem = new SolarSystem(p5);
 
-    await new Promise((r) => setTimeout(r, 100));
+    await new Promise((r) => setTimeout(r, 400));
+
+    console.log('abb',planetData);
 
     solarSystem.addPlanet(
       new Planet(p5, {
@@ -154,33 +156,23 @@ export function sketch(p5) {
     solarSystem.addPlanet(
       new Planet(p5, {
         mode: "ring",
-        distance: planetData?.semesters?.length*4 || 0,
+        distance: planetData?.archive?.length || 0,
         centralPoint: p5.createVector(0, 500, 0),
         rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
        // distance: 500,
-        data: planetData?.semesters || [],
-        id: "semesters",
+        data: planetData?.archive || [],
+        id: "archive",
       })
     );
 
-    const dummy = [];
-
-    for (let i = 0; i < 1000; i++) {
-      dummy.push({
-        id: uuidv4(),
-        name: "",
-        authors: [],
-        semester: [],
-        children: [],
-      });
-    }
+  
 
     solarSystem.addPlanet(
       new Planet(p5, {
         mode: "plane",
         distance: planetData?.entries?.length || 0,
         centralPoint: p5.createVector(0, 0, 0),
-        data: planetData.entries ? planetData?.entries.concat(dummy) : [],
+        data: planetData.entries ,
         distance: 20,
         rotationSpeed: 0.01,
         id: "entries",
@@ -197,7 +189,7 @@ export function sketch(p5) {
     hud.addLabel({point:centralPoint, text:"Projects"});
     hud.addLabel({point:p5.createVector(-1*planetData.authors.length*4,0, 0),text: "Persons"});
     hud.addLabel({point:p5.createVector(-1*planetData.semesters.length*4,-500, 0),text: "Semesters"});
-    hud.addLabel({point:p5.createVector(-1*planetData.semesters.length*4,500, 0), text:"Archive"});
+    hud.addLabel({point:p5.createVector(-1*planetData.archive.length,500, 0), text:"Archive"});
 
   };
 
@@ -241,7 +233,7 @@ export function sketch(p5) {
 
     if (autoRotation && p5.millis() > 2000) p5.pop();
 
-    const point = solarSystem.getPointAndPlanetIdById("5add7d1a-ecc7-4c24-9cc4-2f992f13644c")
+    
 
     // const hoverIds = solarSystem.getHoverIds()
     // if(hoverIds && hoverIds.length > 0) {
@@ -276,6 +268,9 @@ export function sketch(p5) {
     } else if (planetId === "semesters" && newFocusedId) {
       updateFocusedType({ type: "semesters", id: newFocusedId });
       if (focusedKeys?.entries?.length > 0) updateFocusedIds(focusedKeys.entries);
+    } else if (planetId === "archive" && newFocusedId) {
+      updateFocusedType({ type: "archive", id: newFocusedId });
+      if (focusedKeys?.archive?.length > 0) updateFocusedIds(focusedKeys.archive);
     }
     // console.log("reset", newFocusedId);
     // if (!planetId && !newFocusedId) {

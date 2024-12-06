@@ -49,10 +49,12 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
     const fetchData = async (id, key) => {
       const response = await fetch(`http://localhost:3010/api/${key}/${id}`);
       const data = await response.json();
+      if (typeof data === "object") {
+      }
       setFocusedData(data);
       return data;
     };
-    if ((focusedType.type === "authors" || focusedType.type === "semesters") && focusedType.id) {
+    if ((focusedType.type === "authors" || focusedType.type === "semesters" || focusedType.type === "archive") && focusedType.id) {
       fetchData(focusedType.id, focusedType.type);
     }
   }, [focusedType, setFocusedData]);
@@ -62,6 +64,12 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
       console.log("fData", focusedData);
     }
   }, [focusedData]);
+
+  useEffect(() => {
+    if (focusedType) {
+      console.log("fType", focusedType);
+    }
+  }, [focusedType]);
 
   useEffect(() => {
     const fetchData = async (id) => {
@@ -151,7 +159,9 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
                   <TableCell className="font-medium  m-0 p-0">
                     <RiFile2Line className="w-5 h-5" />
                   </TableCell>
-                  <TableCell className=""><span className="!font-blokk ">something</span>.txt</TableCell>
+                  <TableCell className="">
+                    <span className="!font-blokk ">something</span>.txt
+                  </TableCell>
                   <TableCell className="text-right hover:text-black">4 MB</TableCell>
                 </TableRow>
                 <TableRow>
@@ -197,7 +207,7 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
           />
         </div>
 
-        {focusedIdsData && focusedIdsData.length === 1 && (
+        {focusedType.type !== "archive" && focusedIdsData && focusedIdsData.length === 1 && (
           <div className="px-12 mt-9 mb-6">
             <div className="mb-2">
               <h2 className="text-xl font-light tracking-robin">{focusedIdsData[0]?.name}</h2>
@@ -216,6 +226,33 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
           </div>
         )}
 
+        {focusedType.type === "archive" && focusedData && (
+          <>
+            <div className="px-12 mt-9 mb-6">
+              <div className="mb-2">
+                <h2 className="text-xl font-light tracking-robin">{focusedData?.name}</h2>
+              </div>
+              <div className="flex space-x-3">
+                {/* {focusedIdsData[0].authors?.map((a, i) => (
+                  <Badge key={i} className="rounded-none  border-black text-base font-light px-2 py-1  tracking-robin" variant={"outline"}>
+                    {a.firstName} {a.name}
+                  </Badge>
+                ))}
+
+                <Badge className="rounded-none  border-black text-base font-light  px-2 py-1 tracking-robin" variant={"outline"}>
+                  {focusedIdsData[0]?.allocation?.temporal?.year}
+                </Badge> */}
+              </div>
+            </div>
+            <div>
+              {focusedData.thumbnail && (
+                <div className="">
+                  <img src={`${bucketUrl}${focusedData.thumbnail}`} className="object-cover" />
+                </div>
+              )}
+            </div>
+          </>
+        )}
         <div className="flex-1 overflow-x-hidden max-h-full px-12">
           {focusedIdsData && focusedIdsData.length === 1 && (
             <div>
@@ -238,6 +275,7 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
                   </Carousel>
                 </div>
               )}
+
               {!focusedIdsData[0].assets && focusedIdsData[0].thumbnail && (
                 <div className="aspect-w-3 aspect-h-2">
                   <img src={`${bucketUrl}${focusedIdsData[0].thumbnail}`} className="object-cover" />

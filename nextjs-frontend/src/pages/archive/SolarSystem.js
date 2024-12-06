@@ -139,9 +139,9 @@ class SolarSystem {
       );
     }
 
-
-
-    if (planetId === "authors") {
+    if (planetId === "archive") {
+      focusedKeys.archive = this.getPlanet("archive").getActiveIds();
+    } else if (planetId === "authors") {
       focusedKeys.entries = this.getPlanet("entries").getActiveIds();
       if (focusedKeys?.entries.length > 0) {
         focusedKeys.semesters = focusedKeys.entries.map((e) => {
@@ -149,8 +149,8 @@ class SolarSystem {
         });
         this.getPlanet("semesters").setActiveIds(focusedKeys.semesters);
         focusedKeys.semesters.forEach((s) => {
-          this.getPlanet("semesters").hideActiveId(s)
-          this.addIdsAsConnection({ id: id }, { id: s },this.getPlanet("semesters"));
+          this.getPlanet("semesters").hideActiveId(s);
+          this.addIdsAsConnection({ id: id }, { id: s }, this.getPlanet("semesters"));
         });
       }
     } else if (planetId === "semesters") {
@@ -158,7 +158,7 @@ class SolarSystem {
 
       this.getPlanet("entries").setActiveIds(focusedKeys.entries);
       focusedKeys.entries.forEach((e) => {
-        this.getPlanet("entries").hideActiveId(e)
+        this.getPlanet("entries").hideActiveId(e);
         this.addIdsAsConnection({ id: id }, { id: e }, this.getPlanet("entries"));
       });
       const focusedAuthorIds = [];
@@ -166,7 +166,7 @@ class SolarSystem {
         const authors = d.entries.find((entry) => entry.id === e).authors;
         authors.forEach((a) => {
           focusedAuthorIds.push(a);
-          this.getPlanet("authors").hideActiveId(a)
+          this.getPlanet("authors").hideActiveId(a);
           this.addIdsAsConnection({ id: id }, { id: a }, this.getPlanet("authors"));
         });
       });
@@ -211,7 +211,7 @@ class SolarSystem {
     }
 
     if (sourcePoint && sourcePoint.point && targetPoint && targetPoint.point) {
-      this.connections.addConnection(sourcePoint.point, targetPoint.point, targetPlanet,target.id);
+      this.connections.addConnection(sourcePoint.point, targetPoint.point, targetPlanet, target.id);
     }
 
     if (sourcePoint?.planetId && sourcePoint?.id?.id) this.getPlanet(sourcePoint.planetId).setIdActive(sourcePoint.id.id);
