@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/breadcrumb";
 
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import FileViewer from "./FileViewer";
 
 const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedData, opened, setOpened }) => {
   const [focusedIdsData, setFocusedIdsData] = useState([]);
@@ -97,91 +98,7 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
   return (
     <div className={`grid gap-0 ${opened ? "grid-cols-2" : "grid-cols-1"}`}>
       {opened && (
-        <div className="h-full z-100 ">
-          <div className="pl-3 pr-12 pl-12 flex sticky items-center top-0 bg-secondary pt-2 pb-2 z-10 h-12">
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink className="hover:text-popover-foreground" href="/">
-                    .
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator> /</BreadcrumbSeparator>
-                <BreadcrumbItem>
-                  <BreadcrumbEllipsis className="h-4 w-4 text-black hover:text-popover-foreground" />
-                </BreadcrumbItem>
-                <BreadcrumbSeparator> /</BreadcrumbSeparator>
-                <BreadcrumbItem>
-                  <BreadcrumbLink className="hover:text-popover-foreground" href="/components">
-                    Components
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator>/</BreadcrumbSeparator>
-                <BreadcrumbItem>
-                  <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
-          </div>
-
-          <div className="z-100 text-green pl-12 mt-6">
-            <Table>
-              <TableHeader className="hover:bg-transparent">
-                <TableRow className="hover:bg-transparent h-[20px]">
-                  <TableHead className="w-2"></TableHead>
-                  <TableHead className="text-black font-normal text-xs ">Name</TableHead>
-                  <TableHead className="text-right text-black font-normal text-xs">File Size</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody className="">
-                <TableRow>
-                  <TableCell className="font-medium text-left m-0 p-0">
-                    <RiFolderLine className="w-5 h-5" />{" "}
-                  </TableCell>
-                  <TableCell>Folder Folder</TableCell>
-                  <TableCell className="text-right hover:text-black">2.4 MB</TableCell>
-                </TableRow>
-                <TableRow className="">
-                  <TableCell className="font-medium  m-0 p-0">
-                    <RiFolderLine className="w-5 h-5" />
-                  </TableCell>
-                  <TableCell>Folder Folder</TableCell>
-                  <TableCell className="text-right hover:text-black">2.4 MB</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium  m-0 p-0">
-                    <RiFile2Line className="w-5 h-5" />
-                  </TableCell>
-                  <TableCell>Folder Folder</TableCell>
-                  <TableCell className="text-right hover:text-black">2.4 MB</TableCell>
-                </TableRow>
-                <TableRow className="text-darkGrey">
-                  <TableCell className="font-medium  m-0 p-0">
-                    <RiFile2Line className="w-5 h-5" />
-                  </TableCell>
-                  <TableCell className="">
-                    <span className="!font-blokk ">something</span>.txt
-                  </TableCell>
-                  <TableCell className="text-right hover:text-black">4 MB</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium  m-0 p-0">
-                    <RiFile2Line className="w-5 h-5" />
-                  </TableCell>
-                  <TableCell>Folder Folder</TableCell>
-                  <TableCell className="text-right hover:text-black">4 MB</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className="font-medium  m-0 p-0">
-                    <RiFile2Line className="w-5 h-5" />
-                  </TableCell>
-                  <TableCell>Folder Folder</TableCell>
-                  <TableCell className="text-right hover:text-black">2.4 MB</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </div>
-        </div>
+        <FileViewer />
       )}
       <div className={cn("flex-grow  h-full overflow-hidden", className)}>
         <div className="pl-3 pr-12 flex sticky items-center top-0 bg-secondary pt-2 pb-2 z-10">
