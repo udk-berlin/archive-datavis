@@ -60,17 +60,7 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
     }
   }, [focusedType, setFocusedData]);
 
-  useEffect(() => {
-    if (focusedData) {
-      console.log("fData", focusedData);
-    }
-  }, [focusedData]);
 
-  useEffect(() => {
-    if (focusedType) {
-      console.log("fType", focusedType);
-    }
-  }, [focusedType]);
 
   useEffect(() => {
     const fetchData = async (id) => {
@@ -97,13 +87,20 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
 
   return (
     <div className={`grid gap-0 ${opened ? "grid-cols-2" : "grid-cols-1"}`}>
-      {opened && (
-        <FileViewer />
-      )}
+      {opened && <FileViewer />}
       <div className={cn("flex-grow  h-full overflow-hidden", className)}>
         <div className="pl-3 pr-12 flex sticky items-center top-0 bg-secondary pt-2 pb-2 z-10">
           {!opened ? (
-            <RiFolder2Line className="w-5 h-5 " onClick={() => setOpened(!opened)} />
+            <RiFolder2Line
+              className={`w-5 h-5 ${
+                !(focusedIdsData.length === 1 && focusedIdsData[0]?.files) || (focusedData && focusedData?.files) ? "opacity-25" : ""
+              }`}
+              onClick={() => {
+                if ((focusedIdsData.length === 1 && focusedIdsData[0]?.files) || (focusedData && focusedData?.files)) {
+                  setOpened(!opened);
+                }
+              }}
+            />
           ) : (
             <RiFolderOpenLine className="w-5 h-5 " onClick={() => setOpened(!opened)} />
           )}
