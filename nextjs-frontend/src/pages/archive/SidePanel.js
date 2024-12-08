@@ -1,49 +1,19 @@
 import { Input } from "@/components/ui/input";
-import { Fragment } from "react";
-
 import {
   RiSearchLine,
-  RiQuestionLine,
-  RiArrowLeftLine,
   RiLink,
-  RiExpandDiagonalFill,
-  RiExpandLeftLine,
   RiFolder2Line,
   RiFolderOpenLine,
-  RiSquareLine,
-  RiFolderLine,
-  RiFile2Line,
 } from "@remixicon/react";
 import { useEffect, useState } from "react";
-
-import { Badge, badgeVariants } from "@/components/ui/badge";
-
-import { Link } from "next/link";
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { set } from "lodash";
-
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel";
-
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-  BreadcrumbEllipsis,
-} from "@/components/ui/breadcrumb";
-
-import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import FileViewer from "./FileViewer";
+import AbstractView from "./AbstractView";
 
 const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedData, opened, setOpened }) => {
   const [focusedIdsData, setFocusedIdsData] = useState([]);
   const bucketUrl = "http://localhost:54321/storage/v1/object/public/";
-  // const bucketUrl = "http://localhost:54321/storage/v1/object/public/";
-
   const [focusedData, setFocusedData] = useState({});
 
   useEffect(() => {
@@ -60,14 +30,10 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
     }
   }, [focusedType, setFocusedData]);
 
-
-
   useEffect(() => {
     const fetchData = async (id) => {
       const response = await fetch(`http://localhost:3010/api/project/${id}`);
-      // const response = await fetch(`http://localhost:3010/api/project/${id}`);
       const data = await response.json();
-
       return data;
     };
 
@@ -88,7 +54,7 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
   return (
     <div className={`grid gap-0 ${opened ? "grid-cols-2" : "grid-cols-1"}`}>
       {opened && <FileViewer />}
-      <div className={cn("flex-grow  h-full overflow-hidden", className)}>
+      <div className={cn("flex-grow  h-full ", className)}>
         <div className="pl-3 pr-12 flex sticky items-center top-0 bg-secondary pt-2 pb-2 z-10">
           {!opened ? (
             <RiFolder2Line
@@ -121,24 +87,7 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
           />
         </div>
 
-        {focusedType.type !== "archive" && focusedIdsData && focusedIdsData.length === 1 && (
-          <div className="px-12 mt-9 mb-6">
-            <div className="mb-2">
-              <h2 className="text-xl font-light tracking-robin">{focusedIdsData[0]?.name}</h2>
-            </div>
-            <div className="flex space-x-3">
-              {focusedIdsData[0].authors?.map((a, i) => (
-                <Badge key={i} className="rounded-none  border-black text-base font-light px-2 py-1  tracking-robin" variant={"outline"}>
-                  {a.firstName} {a.name}
-                </Badge>
-              ))}
-
-              <Badge className="rounded-none  border-black text-base font-light  px-2 py-1 tracking-robin" variant={"outline"}>
-                {focusedIdsData[0]?.allocation?.temporal?.year}
-              </Badge>
-            </div>
-          </div>
-        )}
+       
 
         {focusedType.type === "archive" && focusedData && (
           <>
@@ -168,42 +117,8 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
           </>
         )}
         <div className="flex-1 overflow-x-hidden max-h-full px-12">
-          {focusedIdsData && focusedIdsData.length === 1 && (
-            <div>
-              {focusedIdsData[0].assets && (
-                <div className="">
-                  <Carousel className="">
-                    <CarouselPrevious variant="ghost" className="absolute bottom-0 left-0 mr-8 mb-0 rounded-none border-none z-10" />
-                    <CarouselContent>
-                      {focusedIdsData[0]?.assets.map((url, index) => (
-                        <CarouselItem key={index} className="p-0 m-0">
-                          <Card className="p-0 m-0 bg-none   ">
-                            <CardContent className="p-0 m-0 w-full aspect-[1.05/1] overflow-none">
-                              <img src={`${bucketUrl}${url}`} className="w-full h-full object-cover" />
-                            </CardContent>
-                          </Card>
-                        </CarouselItem>
-                      ))}
-                    </CarouselContent>
-                    <CarouselNext variant="ghost" className="absolute bottom-0 right-0 ml-2 mb-0 bg-none rounded-none border-none z-10" />
-                  </Carousel>
-                </div>
-              )}
-
-              {!focusedIdsData[0].assets && focusedIdsData[0].thumbnail && (
-                <div className="aspect-w-3 aspect-h-2">
-                  <img src={`${bucketUrl}${focusedIdsData[0].thumbnail}`} className="object-cover" />
-                </div>
-              )}
-
-              <div className="mt-4">
-                {focusedIdsData[0].abstract && (
-                  <p className="mt-3 text-base mb-12 leading-normal font-light tracking-robin leading-robin">
-                    {focusedIdsData[0].abstract}
-                  </p>
-                )}
-              </div>
-            </div>
+          {focusedType.type !== "archive" && focusedIdsData && focusedIdsData.length === 1 && (
+            <AbstractView data={focusedIdsData[0]} />
           )}
           {focusedIdsData && focusedIdsData.length > 1 && (
             <div className="px-12 mt-6">

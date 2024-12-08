@@ -67,7 +67,7 @@ const ArchivePage = () => {
   return (
     <ResizablePanelGroup direction="horizontal" className={"h-full !w-[100vw] overflow-hidden"}>
       <ResizablePanel className="h-full" defaultSize={!opened? 75 : 50} id="sketch-container" onResize={ (e) => {setP5PanelPercent(e)}}>
-        <div className="h-full" >
+        <div className="h-full relative" >
           <NextReactP5Wrapper
             sketch={sketch}
             windowWidth={windowWidth}
