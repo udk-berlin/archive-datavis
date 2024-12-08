@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 import { useEffect, useState } from "react";
@@ -21,8 +22,19 @@ const FilePreview = ({ show, fileData, closeFilePreview }) => {
 
   const displayFile = ({ type = "", url, data }) => {
     if (type.includes("image")) {
-      return renderImage(url, data?.name + "abc");
+      return renderImage(url, data?.name);
     }
+
+    return (
+      <div className="w-full flex items-center">
+        <Button
+          className=" cursor-pointer rounded-none hover:bg-popover-foreground hover:text-popover hover:border-popover-foreground"
+          onClick={() => window.open(url, "_blank")}
+        >
+          Download
+        </Button>
+      </div>
+    );
   };
 
   return (

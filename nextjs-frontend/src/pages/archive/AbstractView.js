@@ -13,11 +13,18 @@ const AbstractView = ({ data }) => {
         </div>
         <div className="flex space-x-3">
           {data.authors?.map((a, i) => (
-            <Badge key={i} className="rounded-none  border-black text-base font-light px-2 py-1  tracking-robin" variant={"outline"}>
+            <Badge
+              key={i}
+              className="rounded-none cursor-pointer border-black text-base font-light px-2 py-1  tracking-robin hover:bg-popover-foreground hover:text-popover hover:border-popover-foreground"
+              variant={"outline"}
+            >
               {a.firstName} {a.name}
             </Badge>
           ))}
-          <Badge className="rounded-none  border-black text-base font-light  px-2 py-1 tracking-robin" variant={"outline"}>
+          <Badge
+            className="rounded-none cursor-pointer border-black text-base font-light  px-2 py-1 tracking-robin hover:bg-popover-foreground hover:text-popover hover:border-popover-foreground"
+            variant={"outline"}
+          >
             {data?.allocation?.temporal?.year}
           </Badge>
         </div>

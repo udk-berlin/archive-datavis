@@ -1,20 +1,10 @@
-import dynamic from "next/dynamic";
-
-import * as THREE from "three";
-import { ConvexGeometry } from "three/examples/jsm/geometries/ConvexGeometry.js";
-
-import { useState, useEffect, useRef, useCallback, useMemo } from "react";
-
+import { useState, useEffect, useRef, useMemo } from "react";
 import { NextReactP5Wrapper } from "@p5-wrapper/next";
 import { Button } from "@/components/ui/button";
 
 import {
-  RiInformationLine,
-  RiInformationFill,
-  RiLoopLeftLine,
   RiPauseLine,
   RiCompass3Line,
-  RiPauseCircleLine,
   RiInfoI,
   RiPlayLine,
 } from "@remixicon/react";
@@ -25,7 +15,6 @@ import SidePanel from "./SidePanel";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 
 const ArchivePage = () => {
-  let papertexture;
 
   const sketch = useMemo(() => p5code.sketch, []);
 
@@ -35,17 +24,10 @@ const ArchivePage = () => {
   const [focusedType, setFocusedType] = useState({ type: "", id: "" });
 
   const [visualisationAutoRotation, setVisualisationAutoRotation] = useState("off");
-
   const [opened, setOpened] = useState(false);
-
   const [p5PanelPercent, setP5PanelPercent] = useState(75)
-
   const resizablePanelRef = useRef(null);
 
-
-  useEffect(() => {
-    console.log("focusedIds", focusedIds);
-  }, [focusedIds]);
 
   useEffect(() => {
     const handleResize = () => {

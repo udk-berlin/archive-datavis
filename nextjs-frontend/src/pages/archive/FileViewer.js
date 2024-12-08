@@ -183,7 +183,7 @@ const FileViewer = ({ rootFileId = "0263315a-dd48-42b4-b28d-9fd5bd679fb8", opene
                     <TableCell className="font-medium  m-0 p-0">
                       {child.type === "file" ? <RiFile2Line className="w-5 h-5" /> : <RiFolderLine className="w-5 h-5" />}
                     </TableCell>
-                    <TableCell
+                    <TableCell className={`${child.type === "file" && child?.name && child?.publicUrl ? "cursor-pointer" : ""}`}
                       onClick={() => {
                         if (child.type === "directory") {
                           setCurrentId(child.id);
