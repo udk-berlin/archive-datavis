@@ -83,6 +83,10 @@ export function sketch(p5) {
   let updateFocusedIds = () => {};
   let updateFocusedType = () => {};
 
+  let parent 
+
+  let canvasSizeChanged = false
+
   p5.updateWithProps = (props) => {
     if (props.windowWidth) {
       windowWidth = props.windowWidth;
@@ -99,7 +103,20 @@ export function sketch(p5) {
     if (props.autoRotation) {
       autoRotation = props.autoRotation === "on" ? true : false;
     }
+    if(props.canvasSizeChanged) {
+      canvasSizeChanged = props.canvasSizeChanged
+      if(windowWidth && parent) {
+        p5.resizeCanvas(windowWidth*(canvasSizeChanged/100), parent.offsetHeight,true);
+        p5.redraw()
+        p5.clear()
+      }
+      
+    }
   };
+
+  async function resizeCanvasByParent() {
+
+  }
 
   p5.preload = async () => {
     img = p5.loadImage("/images/floatingShadow.png");
@@ -107,9 +124,14 @@ export function sketch(p5) {
     planetData = await fetchData("http://localhost:3010/api/all");
   };
 
+   p5.windowResized = () => {
+ 
+    p5.resizeCanvas(parent.offsetWidth, parent.offsetHeight,true);
+  }
+
   p5.setup = async () => {
-    const parent = document.getElementById("sketch-container");
-    p5.createCanvas(windowWidth, parent.offsetHeight, p5.WEBGL);
+     parent = document.getElementById("sketch-container");
+    p5.createCanvas(parent.offsetWidth, parent.offsetHeight, p5.WEBGL);
 
 
     hud = new Hud(p5);
@@ -118,7 +140,7 @@ export function sketch(p5) {
     const defaultScale = 1.5;
 
     cam = p5.createCamera();
-    cam.ortho(-p5.width / scale, p5.width / scale, -p5.height / scale, p5.height / scale, -20, 3000);
+  //  cam.ortho(-p5.width / scale, p5.width / scale, -p5.height / scale, p5.height / scale, -20, 3000);
 
     cameraStartView = iniStartCamera(p5.createCamera(), scale);
     cameraDefaultView = iniDefaultCamera(p5.createCamera(), scale, defaultScale);
@@ -127,7 +149,6 @@ export function sketch(p5) {
 
     await new Promise((r) => setTimeout(r, 400));
 
-    console.log('abb',planetData);
 
     solarSystem.addPlanet(
       new Planet(p5, {
@@ -231,6 +252,10 @@ export function sketch(p5) {
     solarSystem.draw();
 
 
+    p5.fill(236, 239, 241)
+    p5.plane(280,600)
+  
+
     if (autoRotation && p5.millis() > 2000) p5.pop();
 
     
@@ -302,14 +327,14 @@ export function sketch(p5) {
 
   function iniDefaultCamera(camera, scale, defaultScale) {
     camera = p5.createCamera();
-    camera.ortho(
-      (-p5.width / scale) * defaultScale,
-      (p5.width / scale) * defaultScale,
-      (-p5.height / scale) * defaultScale,
-      (p5.height / scale) * defaultScale,
-      0.1,
-      3000
-    );
+    // camera.ortho(
+    //   (-p5.width / scale) * defaultScale,
+    //   (p5.width / scale) * defaultScale,
+    //   (-p5.height / scale) * defaultScale,
+    //   (p5.height / scale) * defaultScale,
+    //   0.1,
+    //   3000
+    // );
     camera.setPosition(925, 1350, 1040);
     camera.lookAt(0, 0, 0);
     return camera;
@@ -317,7 +342,7 @@ export function sketch(p5) {
 
   function iniStartCamera(camera, scale) {
     camera = p5.createCamera();
-    camera.ortho(-p5.width / scale, p5.width / scale, -p5.height / scale, p5.height / scale, -2000, 8000);
+//    camera.ortho(-p5.width / scale, p5.width / scale, -p5.height / scale, p5.height / scale, -2000, 8000);
     camera.setPosition(0.000006, 3000, 0.0003);
     camera.lookAt(0, 0, 0);
     return camera;

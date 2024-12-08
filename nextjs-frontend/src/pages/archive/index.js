@@ -38,6 +38,8 @@ const ArchivePage = () => {
 
   const [opened, setOpened] = useState(false);
 
+  const [p5PanelPercent, setP5PanelPercent] = useState(75)
+
   const resizablePanelRef = useRef(null);
 
 
@@ -63,9 +65,9 @@ const ArchivePage = () => {
   }, [opened]);
 
   return (
-    <ResizablePanelGroup direction="horizontal" className={"h-full w-[100vw] overflow-hidden"}>
-      <ResizablePanel className="h-full" defaultSize={!opened? 75 : 50}>
-        <div className="h-full" id="sketch-container">
+    <ResizablePanelGroup direction="horizontal" className={"h-full !w-[100vw] overflow-hidden"}>
+      <ResizablePanel className="h-full" defaultSize={!opened? 75 : 50} id="sketch-container" onResize={ (e) => {setP5PanelPercent(e)}}>
+        <div className="h-full" >
           <NextReactP5Wrapper
             sketch={sketch}
             windowWidth={windowWidth}
@@ -73,6 +75,7 @@ const ArchivePage = () => {
             setFocusedType={setFocusedType}
             setAutoRotation={setVisualisationAutoRotation}
             autoRotation={visualisationAutoRotation}
+            canvasSizeChanged={p5PanelPercent}
           />
 
           <div className="absolute bottom-4 right-3 z-10 flex gap-3">

@@ -8,16 +8,29 @@ import {
   BreadcrumbEllipsis,
 } from "@/components/ui/breadcrumb";
 
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+
 import { Table, TableBody, TableCaption, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { RiFolderLine, RiFile2Line } from "@remixicon/react";
 import getConfig from "next/config";
 import { useEffect, useState } from "react";
+import FilePreview from "./FilePreview";
 
 const FileViewer = ({ rootFileId = "0263315a-dd48-42b4-b28d-9fd5bd679fb8", opened, setOpened }) => {
   const [data, setData] = useState([]);
   const [currentId, setCurrentId] = useState(rootFileId);
   const [path, setPath] = useState([rootFileId]);
   const [currentContent, setCurrentContent] = useState({});
+
+  const [filePreviewOpened, setFilePreviewOpened] = useState(false);
+  const [filePreviewData, setFilePreviewData] = useState({});
 
   console.log(getConfig().publicRuntimeConfig);
 
@@ -76,9 +89,9 @@ const FileViewer = ({ rootFileId = "0263315a-dd48-42b4-b28d-9fd5bd679fb8", opene
 
   const getName = (cId) => {
     const d = data.find(({ id }) => id === cId);
-    if(!d) return {name:"", cyphered: true}
+    if (!d) return { name: "", cyphered: true };
     let returnName = d?.name ? d.name : randomString(d?.namelength || 2);
-    return { name: returnName, filetype: d?.filetype,  cyphered: 'name' in d ? false : true };
+    return { name: returnName, filetype: d?.filetype, cyphered: "name" in d ? false : true };
   };
 
   const getSize = (cId) => {
@@ -102,45 +115,55 @@ const FileViewer = ({ rootFileId = "0263315a-dd48-42b4-b28d-9fd5bd679fb8", opene
   };
 
   const renderName = (cId) => {
-    const { name, cyphered,filetype } = getName(cId);
+    const { name, cyphered, filetype } = getName(cId);
     if (cyphered) {
-        if(filetype) {
-            return <><span className="!font-blokk">{name}</span><span>.{filetype}</span></>
-        } else {
-            return <><span className="!font-blokk">{name}</span></>
-        }
+      if (filetype) {
+        return (
+          <>
+            <span className="!font-blokk">{name}</span>
+            <span>.{filetype}</span>
+          </>
+        );
+      } else {
+        return (
+          <>
+            <span className="!font-blokk">{name}</span>
+          </>
+        );
+      }
     } else {
-        return name;
+      return name;
     }
-  
   };
   return (
-    <div className="h-full z-100 ">
-      <div className="pl-3 pr-12 pl-12 flex sticky items-center top-0 bg-secondary pt-2 pb-2 z-10 h-12">
-        <Breadcrumb>
-          <BreadcrumbList>
-            {path.map((id) => {
-              return (
-                <>
-                  <BreadcrumbItem>
-                    <BreadcrumbLink
-                      className="hover:text-popover-foreground"
-                      onClick={() => {
-                        setPath((prevPath) => {
-                          return prevPath.slice(0, prevPath.indexOf(id) + 1);
-                        });
-                        setCurrentId(id);
-                      }}
-                    >
-                      {renderName(id)}
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                  <BreadcrumbSeparator> /</BreadcrumbSeparator>
-                </>
-              );
-            })}
+    <>
+     <FilePreview show={filePreviewOpened} fileData={filePreviewData} closeFilePreview={ () => {setFilePreviewOpened(false)}} />
+      <div className="h-full z-100 ">
+        <div className="pl-3 pr-12 pl-12 flex sticky items-center top-0 bg-secondary pt-2 pb-2 z-10 h-12">
+          <Breadcrumb>
+            <BreadcrumbList>
+              {path.map((id) => {
+                return (
+                  <>
+                    <BreadcrumbItem>
+                      <BreadcrumbLink
+                        className="hover:text-popover-foreground"
+                        onClick={() => {
+                          setPath((prevPath) => {
+                            return prevPath.slice(0, prevPath.indexOf(id) + 1);
+                          });
+                          setCurrentId(id);
+                        }}
+                      >
+                        {renderName(id)}
+                      </BreadcrumbLink>
+                    </BreadcrumbItem>
+                    <BreadcrumbSeparator> /</BreadcrumbSeparator>
+                  </>
+                );
+              })}
 
-            {/* <BreadcrumbItem>
+              {/* <BreadcrumbItem>
               <BreadcrumbEllipsis className="h-4 w-4 text-black hover:text-popover-foreground" />
             </BreadcrumbItem>
             <BreadcrumbSeparator> /</BreadcrumbSeparator>
@@ -153,43 +176,48 @@ const FileViewer = ({ rootFileId = "0263315a-dd48-42b4-b28d-9fd5bd679fb8", opene
             <BreadcrumbItem>
               <BreadcrumbPage>Breadcrumb</BreadcrumbPage>
             </BreadcrumbItem> */}
-          </BreadcrumbList>
-        </Breadcrumb>
-      </div>
+            </BreadcrumbList>
+          </Breadcrumb>
+        </div>
 
-      <div className="z-100 text-green pl-12 mt-6">
-        <Table>
-          <TableHeader className="hover:bg-transparent">
-            <TableRow className="hover:bg-transparent h-[20px]">
-              <TableHead className="w-2"></TableHead>
-              <TableHead className="text-black font-normal text-xs ">Name</TableHead>
-              <TableHead className="text-right text-black font-normal text-xs">File Size</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody className="">
-            {currentContent?.childrenData?.map((child) => {
-              return (
-                <TableRow key={child.id}>
-                  <TableCell className="font-medium  m-0 p-0">
-                    {child.type === "file" ? <RiFile2Line className="w-5 h-5" /> : <RiFolderLine className="w-5 h-5" />}
-                  </TableCell>
-                  <TableCell
-                    onClick={() => {
-                      if (child.type === "directory") {
-                        setCurrentId(child.id);
-                        setPath((prevPath) => {
-                          return prevPath.concat(child.id);
-                        });
-                      }
-                    }}
-                  >
-                    {renderName(child.id)}
-                  </TableCell>
-                  <TableCell className="text-right hover:text-black">{getSize(child.id)}</TableCell>
-                </TableRow>
-              );
-            })}
-            {/* <TableRow>
+        <div className="z-100 text-green pl-12 mt-6">
+          <Table>
+            <TableHeader className="hover:bg-transparent">
+              <TableRow className="hover:bg-transparent h-[20px]">
+                <TableHead className="w-2"></TableHead>
+                <TableHead className="text-black font-normal text-xs ">Name</TableHead>
+                <TableHead className="text-right text-black font-normal text-xs">File Size</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody className="">
+              {currentContent?.childrenData?.map((child) => {
+                return (
+                  <TableRow key={child.id}>
+                    <TableCell className="font-medium  m-0 p-0">
+                      {child.type === "file" ? <RiFile2Line className="w-5 h-5" /> : <RiFolderLine className="w-5 h-5" />}
+                    </TableCell>
+                    <TableCell
+                      onClick={() => {
+                        if (child.type === "directory") {
+                          setCurrentId(child.id);
+                          setPath((prevPath) => {
+                            return prevPath.concat(child.id);
+                          });
+                        }
+                        if( child.type === "file" &&  child?.name && child?.publicUrl) {
+
+                          setFilePreviewOpened(true);
+                          setFilePreviewData(child);
+                        }
+                      }}
+                    >
+                      {renderName(child.id)}
+                    </TableCell>
+                    <TableCell className="text-right hover:text-black">{getSize(child.id)}</TableCell>
+                  </TableRow>
+                );
+              })}
+              {/* <TableRow>
               <TableCell className="font-medium text-left m-0 p-0">
                 <RiFolderLine className="w-5 h-5" />{" "}
               </TableCell>
@@ -233,10 +261,11 @@ const FileViewer = ({ rootFileId = "0263315a-dd48-42b4-b28d-9fd5bd679fb8", opene
               <TableCell>Folder Folder</TableCell>
               <TableCell className="text-right hover:text-black">2.4 MB</TableCell>
             </TableRow> */}
-          </TableBody>
-        </Table>
+            </TableBody>
+          </Table>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
