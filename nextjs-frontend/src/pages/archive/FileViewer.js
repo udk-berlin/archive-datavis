@@ -72,14 +72,19 @@ const FileViewer = ({ rootFileId = "0263315a-dd48-42b4-b28d-9fd5bd679fb8", opene
     console.log("data", data);
   }, [data]);
 
+  const randomString = (length) => Array.from({ length }, () => Math.random().toString(36).charAt(2)).join("");
+
   const getName = (cId) => {
-    return data.find(({ id }) => id === cId)?.name;
+    const d = data.find(({ id }) => id === cId);
+    if(!d) return {name:"", cyphered: true}
+    let returnName = d?.name ? d.name : randomString(d?.namelength || 2);
+    return { name: returnName, filetype: d?.filetype,  cyphered: 'name' in d ? false : true };
   };
 
   const getSize = (cId) => {
     const s = data.find(({ id }) => id === cId)?.filesize;
 
-    if(!s) return "";
+    if (!s) return "";
 
     let ret;
 
@@ -96,6 +101,19 @@ const FileViewer = ({ rootFileId = "0263315a-dd48-42b4-b28d-9fd5bd679fb8", opene
     return ret;
   };
 
+  const renderName = (cId) => {
+    const { name, cyphered,filetype } = getName(cId);
+    if (cyphered) {
+        if(filetype) {
+            return <><span className="!font-blokk">{name}</span><span>.{filetype}</span></>
+        } else {
+            return <><span className="!font-blokk">{name}</span></>
+        }
+    } else {
+        return name;
+    }
+  
+  };
   return (
     <div className="h-full z-100 ">
       <div className="pl-3 pr-12 pl-12 flex sticky items-center top-0 bg-secondary pt-2 pb-2 z-10 h-12">
@@ -114,7 +132,7 @@ const FileViewer = ({ rootFileId = "0263315a-dd48-42b4-b28d-9fd5bd679fb8", opene
                         setCurrentId(id);
                       }}
                     >
-                      {getName(id)}
+                      {renderName(id)}
                     </BreadcrumbLink>
                   </BreadcrumbItem>
                   <BreadcrumbSeparator> /</BreadcrumbSeparator>
@@ -165,7 +183,7 @@ const FileViewer = ({ rootFileId = "0263315a-dd48-42b4-b28d-9fd5bd679fb8", opene
                       }
                     }}
                   >
-                    {child.name}
+                    {renderName(child.id)}
                   </TableCell>
                   <TableCell className="text-right hover:text-black">{getSize(child.id)}</TableCell>
                 </TableRow>
