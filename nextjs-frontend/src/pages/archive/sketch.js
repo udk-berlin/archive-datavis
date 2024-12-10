@@ -140,7 +140,7 @@ export function sketch(p5) {
     const defaultScale = 1.5;
 
     cam = p5.createCamera();
-  //  cam.ortho(-p5.width / scale, p5.width / scale, -p5.height / scale, p5.height / scale, -20, 3000);
+    cam.ortho(-p5.width / scale, p5.width / scale, -p5.height / scale, p5.height / scale, -20, 3000);
 
     cameraStartView = iniStartCamera(p5.createCamera(), scale);
     cameraDefaultView = iniDefaultCamera(p5.createCamera(), scale, defaultScale);
@@ -176,7 +176,7 @@ export function sketch(p5) {
 
     solarSystem.addPlanet(
       new Planet(p5, {
-        mode: "ring",
+        mode: "stripe",
         distance: planetData?.archive?.length || 0,
         centralPoint: p5.createVector(0, 500, 0),
         rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
@@ -251,9 +251,9 @@ export function sketch(p5) {
 
     solarSystem.draw();
 
-
-    p5.fill(236, 239, 241)
-    p5.plane(280,600)
+    // plane
+    // p5.fill(236, 239, 241)
+    // p5.plane(280,600)
   
 
     if (autoRotation && p5.millis() > 2000) p5.pop();
@@ -268,7 +268,7 @@ export function sketch(p5) {
     //   hud.addLabel({point:d,text: "hover", type:"hover"});
     // }
 
-     hud.draw(centralPoint);
+ //    hud.draw(centralPoint);
 
 
   };
@@ -327,22 +327,22 @@ export function sketch(p5) {
 
   function iniDefaultCamera(camera, scale, defaultScale) {
     camera = p5.createCamera();
-    // camera.ortho(
-    //   (-p5.width / scale) * defaultScale,
-    //   (p5.width / scale) * defaultScale,
-    //   (-p5.height / scale) * defaultScale,
-    //   (p5.height / scale) * defaultScale,
-    //   0.1,
-    //   3000
-    // );
-    camera.setPosition(925, 1350, 1040);
+    camera.ortho(
+      (-p5.width / scale) * defaultScale,
+      (p5.width / scale) * defaultScale,
+      (-p5.height / scale) * defaultScale,
+      (p5.height / scale) * defaultScale,
+      0.1,
+      3000
+    );
+    camera.setPosition(0, -1350, 1040);
     camera.lookAt(0, 0, 0);
     return camera;
   }
 
   function iniStartCamera(camera, scale) {
     camera = p5.createCamera();
-//    camera.ortho(-p5.width / scale, p5.width / scale, -p5.height / scale, p5.height / scale, -2000, 8000);
+    camera.ortho(-p5.width / scale, p5.width / scale, -p5.height / scale, p5.height / scale, -2000, 8000);
     camera.setPosition(0.000006, 3000, 0.0003);
     camera.lookAt(0, 0, 0);
     return camera;

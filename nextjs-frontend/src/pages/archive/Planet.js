@@ -2,28 +2,25 @@ import convexHull from "convex-hull";
 import { v4 as uuidv4 } from "uuid";
 import { mat4, vec4, vec3 } from "gl-matrix";
 
-
 class Point {
   constructor(x, y, z) {
     this.p = createVector(x, y, z);
-    this.active = false
-    this.hidden = false
-    this.showScaleProcess = 0
-    this.showScaleStep = 0.1
-    
-    this.defaultScale = 2
-    this.activeScale = 6
+    this.active = false;
+    this.hidden = false;
+    this.showScaleProcess = 0;
+    this.showScaleStep = 0.1;
+
+    this.defaultScale = 2;
+    this.activeScale = 6;
   }
 
   update() {
-    if(this.active && this.showScaleProcess < 1) {
-      this.showScaleProcess += this.showScaleStep
-    } else if(this.showScaleProcess > 1) {
-      this.showScaleProcess = 1
+    if (this.active && this.showScaleProcess < 1) {
+      this.showScaleProcess += this.showScaleStep;
+    } else if (this.showScaleProcess > 1) {
+      this.showScaleProcess = 1;
     }
   }
-  
-
 
   getVector() {
     return this.p;
@@ -50,6 +47,11 @@ class Planet {
       rotationSpeed = 0.1,
       selfRotation = false,
       planeColumns = 10,
+      stripeSettings = {
+        maxPerRing: 60,
+        layerDistance: 10,
+        layerRotation: 10,
+      },
     }
   ) {
     this.id = id;
@@ -63,6 +65,7 @@ class Planet {
     this.hoverId = null;
     this.planeColumns = planeColumns;
     this.orbitRadii = orbitRadii;
+    this.stripeSettings = stripeSettings;
     this.points = this.create3dOrbit({ distance, n: this.n, centralPoint });
     this.points.forEach((point, i) => {
       this.points[i].id = data[i].id ? data[i].id : this.generatedId();
@@ -115,6 +118,9 @@ class Planet {
         break;
       case "plane":
         this.generatePlaneSubpoints(data);
+        break;
+      case "stripe":
+        this.generateStripeSubpoints(data);
         break;
       default:
     }
@@ -200,6 +206,33 @@ class Planet {
       point.add(this.centralPoint);
       point.id = data && data[i].id ? data[i].id : this.generatedId();
       this.subpoints.push(point);
+    }
+  }
+
+  generateStripeSubpoints(data, maxPerRing = 60, layerDistance = 10, layerRotation = 10) {
+    let { angleX, angleY, angleZ } = this.rotationAngles;
+    let { rx, ry } = this.orbitRadii;
+
+    let nLayers = Math.ceil(this.n / this.stripeSettings.maxPerRing);
+
+    for (let j = 0; j < nLayers; j++) {
+      let currentRotation = j * this.stripeSettings.layerRotation * (this.p5.PI / 180);
+      let layerOffset = j * this.stripeSettings.layerDistance;
+
+      for (let i = 0; i < this.stripeSettings.maxPerRing; i++) {
+        let theta = (2 * this.p5.PI * i) / this.stripeSettings.maxPerRing;
+        let x = rx * this.p5.cos(theta);
+        let y = ry * this.p5.sin(theta);
+        let z = layerOffset;
+
+        let point = this.p5.createVector(x, y, z);
+        point = this.rotateVector(point, angleX, angleY + currentRotation, angleZ);
+        point.add(this.centralPoint);
+
+        let index = j * this.stripeSettings.maxPerRing + i;
+        point.id = data && data[index] && data[index].id ? data[index].id : this.generatedId();
+        this.subpoints.push(point);
+      }
     }
   }
 
@@ -527,6 +560,14 @@ class Planet {
         this.p5.pop();
         allPoints = allPoints.concat(this.subpoints);
         break;
+      case "stripe":
+        this.p5.push();
+        this.p5.fill(255, 0, 0);
+        this.p5.translate(this.centralPoint.x, this.centralPoint.y, this.centralPoint.z);
+        this.p5.sphere(1);
+        this.p5.pop();
+        allPoints = allPoints.concat(this.subpoints);
+        break;
       case "plane":
         this.p5.push();
         this.p5.fill(255, 0, 0);
@@ -570,6 +611,23 @@ class Planet {
         break;
 
       case "ring":
+        //this.drawOrbitEllipse();
+
+        this.subpoints.forEach((p, i) => {
+          this.p5.push();
+          this.p5.translate(p.x, p.y, p.z);
+          if (this.activeIds.includes(p.id) && !this.hiddenActiveIds.includes(p.id)) {
+            this.p5.fill(255, 0, 255);
+            this.p5.sphere(4);
+          } else {
+            this.p5.fill(0, 0, 0);
+            this.p5.sphere(2);
+          }
+          this.p5.pop();
+        });
+        break;
+
+      case "stripe":
         //this.drawOrbitEllipse();
 
         this.subpoints.forEach((p, i) => {
