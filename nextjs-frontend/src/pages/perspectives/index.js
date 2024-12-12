@@ -82,7 +82,7 @@ const PerspectivesPage = () => {
                 ? {
                     src: perspective.images[0],
                     alt: "hero",
-                    className: ` bottom-0 w-1/4 ${isEven ? "right-0" : "left-1/3"}`,
+                    className: ` bottom-10 w-1/4 ${isEven ? "right-0" : "left-1/3"}`,
                     aspectRatio: "1:1",
                   }
                 : "",

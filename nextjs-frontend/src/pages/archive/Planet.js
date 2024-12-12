@@ -618,7 +618,7 @@ class Planet {
           this.p5.translate(p.x, p.y, p.z);
           if (this.activeIds.includes(p.id) && !this.hiddenActiveIds.includes(p.id)) {
             this.p5.fill(255, 0, 255);
-            this.p5.sphere(4);
+            this.p5.sphere(2);
           } else {
             this.p5.fill(0, 0, 0);
             this.p5.sphere(2);
@@ -635,7 +635,7 @@ class Planet {
           this.p5.translate(p.x, p.y, p.z);
           if (this.activeIds.includes(p.id) && !this.hiddenActiveIds.includes(p.id)) {
             this.p5.fill(255, 0, 255);
-            this.p5.sphere(4);
+            this.p5.sphere(2);
           } else {
             this.p5.fill(0, 0, 0);
             this.p5.sphere(2);
@@ -651,7 +651,7 @@ class Planet {
           this.p5.translate(p.x, p.y, p.z);
           if (this.activeIds.includes(p.id) && !this.hiddenActiveIds.includes(p.id)) {
             this.p5.fill(255, 0, 255);
-            this.p5.sphere(4);
+            this.p5.sphere(2);
           } else {
             this.p5.fill(0, 0, 0);
             this.p5.sphere(2);
@@ -667,11 +667,11 @@ class Planet {
     if (this.options.mouseHover) {
       let hoveredSphere = this.checkRaySphereIntersections(allPoints, { hitBox: 4 });
       this.hoverId = hoveredSphere?.id;
-      if (hoveredSphere) {
+      if (hoveredSphere && !this.activeIds.includes(hoveredSphere?.id)) {
         this.p5.push();
-        this.p5.fill(255, 0, 0);
+        this.p5.fill(0, 0, 255);
         this.p5.translate(hoveredSphere.x, hoveredSphere.y, hoveredSphere.z);
-        this.p5.sphere(3);
+        this.p5.sphere(5);
         this.p5.pop();
       }
     }

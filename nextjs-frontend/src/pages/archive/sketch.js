@@ -13,16 +13,12 @@ export function sketch(p5) {
     const p = p5.createVector(x, y, z);
     const cam = p5._renderer._curCamera;
 
-    // Model-View-Projection matrix
     const mvp = p5._renderer.uMVMatrix.copy().mult(p5._renderer.uPMatrix);
 
-    // Transform the point
     const coords = p4MultMatrix(p, mvp);
 
-    // Normalize
     const norm = coords.copy().div(coords.w);
 
-    // Map to screen coordinates
     norm.x = this.map(norm.x, -1, 1, 0, this.width);
     norm.y = this.map(-norm.y, -1, 1, 0, this.height);
 
@@ -135,7 +131,6 @@ export function sketch(p5) {
 
     await new Promise((r) => setTimeout(r, 400));
 
-    const dummyData = [...planetData.entries, ...planetData.entries];
 
     const entriesDistance = 17
     const entriesColumns = 10
@@ -143,9 +138,9 @@ export function sketch(p5) {
     solarSystem.addPlanet(
       new Planet(p5, {
         mode: "plane",
-        distance: dummyData.length || 0,
+        distance: planetData.entries.length || 0,
         centralPoint: p5.createVector(0, 0, 0),
-        data: dummyData,
+        data: planetData.entries,
         distance: entriesDistance,
         rotationSpeed: 0.01,
         id: "entries",
@@ -155,15 +150,14 @@ export function sketch(p5) {
     );
 
 
-    const dummyAuthors = [...planetData.authors, ...planetData.authors];
 
     solarSystem.addPlanet(
       new Planet(p5, {
         mode: "stripe",
-        distance: dummyAuthors?.length * 4 || 0,
-        centralPoint: p5.createVector(0, ((dummyData.length/entriesColumns)*entriesDistance)/4, 0),
+        distance: planetData.authors.length * 4 || 0,
+        centralPoint: p5.createVector(0, ((planetData.entries.length/entriesColumns)*entriesDistance)/4, 0),
         rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
-        data: dummyAuthors || [],
+        data: planetData.authors || [],
           distance: 300,
         id: "authors",
         stripeSettings: {
@@ -179,7 +173,7 @@ export function sketch(p5) {
       new Planet(p5, {
         mode: "ring",
         distance: planetData?.semesters?.length * 4 || 0,
-        centralPoint: p5.createVector(0, ((dummyData.length/entriesColumns)*entriesDistance)/4*-1, 0),
+        centralPoint: p5.createVector(0, ((planetData.entries.length/entriesColumns)*entriesDistance)/4*-1, 0),
         rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
          distance: 300,
         data: planetData?.semesters || [],
@@ -253,8 +247,8 @@ export function sketch(p5) {
     solarSystem.draw();
 
     // plane
-    p5.fill(236, 239, 241)
-    p5.plane(200,1400)
+    // p5.fill(236, 239, 241)
+    // p5.plane(200,1400)
 
     if (autoRotation && p5.millis() > 2000) p5.pop();
 
@@ -329,7 +323,7 @@ export function sketch(p5) {
       0.1,
       3000
     );
-    camera.setPosition(0, -1350, 1040);
+    camera.setPosition(0, 1350, 1040);
     camera.lookAt(0, 0, 0);
     return camera;
   }
@@ -337,7 +331,7 @@ export function sketch(p5) {
   function iniStartCamera(camera, scale) {
     camera = p5.createCamera();
     camera.ortho(-p5.width / scale, p5.width / scale, -p5.height / scale, p5.height / scale, -2000, 8000);
-    camera.setPosition(0.000006, 3000, 0.0003);
+    camera.setPosition(0.000006, 3000, 110.0003);
     camera.lookAt(0, 0, 0);
     return camera;
   }

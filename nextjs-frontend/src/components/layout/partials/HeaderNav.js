@@ -37,7 +37,7 @@ const HeaderNav = ({openSidebar, sidebarOpened}) => {
 
   useEffect(() => {
     if(!isMobile) setOpen(false)
-  }, [isMobile])
+  }, [isMobile, setOpen])
 
 
 
