@@ -104,45 +104,4 @@ class Connection {
   }
 }
 
-/// old
-
-// drawEllipseBetweenPoints(p1, p2) {
-//     let midpoint = this.p5.constructor.Vector.add(p1, p2).mult(0.5);
-//     let direction = this.p5.constructor.Vector.sub(p2, p1);
-//     let dist = direction.mag();
-
-//     let dir = direction.copy().normalize();
-
-//     let originalVector = this.p5.createVector(1, 0, 0);
-
-//     let angle = Math.acos(dir.dot(originalVector));
-//     let axis = this.p5.constructor.Vector.cross(originalVector, dir);
-
-//     if (axis.mag() < 0.0001 || isNaN(angle)) {
-//       axis = this.p5.constructor.createVector(0, 0, 1);
-//       angle = 0;
-//     } else {
-//       axis.normalize();
-//     }
-
-//     this.p5.push();
-//     this.p5.translate(midpoint.x, midpoint.y, midpoint.z);
-//     this.p5.rotate(angle, axis);
-//     this.p5.noFill();
-//     this.p5.stroke(255, 0, 255);
-//     this.p5.ellipse(0, 0, dist, dist, [50]);
-//     this.p5.pop();
-//   }
-
-// drawConnections() {
-//     this.connections.forEach((connection) => {
-//       this.p5.stroke(0, 250, 0);
-//       this.p5.beginShape();
-//       connection.forEach((point) => {
-//         this.p5.vertex(point.x, point.y, point.z);
-//       });
-//       this.p5.endShape(this.p5.CLOSE);
-//     });
-//   }
-
 export default Connections;

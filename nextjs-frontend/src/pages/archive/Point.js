@@ -7,7 +7,6 @@ class Point {
     this.hover = false;
     this.showScaleProcess = 0;
     this.showScaleStep = 0.1;
-
     this.defaultScale = 2;
     this.activeScale = 6;
     this.p5 = p5;
@@ -24,20 +23,18 @@ class Point {
   draw() {
     this.p5.push();
     this.p5.translate(this.p.x, this.p.y, this.p.z);
-    if (this.active) {
+    if (this.active && !this.hidden) {
       this.p5.fill(255, 0, 255);
       this.p5.sphere(2);
     } else {
-        if(this.hover) {
-            this.p5.fill(0, 0, 255);
-            this.p5.sphere(5);
-        } else {
-            this.p5.fill(0, 0, 0);
-            this.p5.sphere(2);
-        }
-  
+      if (this.hover) {
+        this.p5.fill(0, 0, 255);
+        this.p5.sphere(5);
+      } else {
+        this.p5.fill(0, 0, 0);
+        this.p5.sphere(2);
+      }
     }
-
     this.p5.pop();
   }
   getVector() {

@@ -78,6 +78,7 @@ class SolarSystem {
   }
 
   setIdsOfPlanetActive(planetId, activeIds) {
+    console.log("asdas",planetId, activeIds)
     activeIds.forEach((aId, i) => {
       this.getPlanet(planetId).setIdActive(aId);
     });
@@ -121,7 +122,7 @@ class SolarSystem {
 
   setClickedIdActive(d) {
     const id = this.setSingleIdActive();
-    console.log("sId",id)
+    console.log("sId", id);
     this.activeId = id;
     const focusedKeys = {};
 
@@ -133,7 +134,7 @@ class SolarSystem {
     }
 
     if (id) {
-      console.log('1')
+      console.log("1");
       this.setConnectionsForId(
         id,
         d[planetId].find((entry) => entry.id === id),
@@ -182,20 +183,6 @@ class SolarSystem {
     });
   }
 
-  addConnection(connection) {
-    console.warn("addConnection is deprecated, use addIdsAsConnection instead");
-    return;
-    const points = connection.map((id) => {
-      let found;
-      this.planets.forEach((planet) => {
-        if (!found) {
-          found = planet.getPointById(id);
-        }
-      });
-      return found;
-    });
-    this.connections.push(points);
-  }
 
   addIdsAsConnection(source, target, targetPlanet) {
     let sourcePoint;

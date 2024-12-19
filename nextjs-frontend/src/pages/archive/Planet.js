@@ -13,7 +13,6 @@ class Planet {
       centralPoint,
       data,
       mode = "ring",
-      displacementDistance = 5,
       rotationAngles = { angleX: 0, angleY: 0, angleZ: 0 },
       orbitRadii = { rx: distance, ry: distance },
       camera,
@@ -36,8 +35,6 @@ class Planet {
     this.n = data.length;
     this.centralPoint = centralPoint;
     this.mode = mode;
-    this.activeIds = [];
-    this.hiddenActiveIds = [];
 
     this.planeColumns = planeColumns;
     this.orbitRadii = orbitRadii;
@@ -50,13 +47,10 @@ class Planet {
     };
     this.selfRotation = selfRotation;
 
-    this.displacementDistance = displacementDistance;
     this.camera = camera;
 
     this.rayDirection = null;
     this.rayOrigin = null;
-
-    this.subpoints = [];
 
     this.renderPoints = [];
 
@@ -420,44 +414,28 @@ class Planet {
     return this.renderPoints.map((p) => (p.getActive() ? p.getId() : null)).filter((p) => p !== null);
   }
   setIdActive(aId) {
-    if (!this.getActiveIds().includes(aId)) {
-      const candidate = this.renderPoints.find((p) => p.getId() === aId?.id);
-      if (candidate) candidate.setActive(true);
-    }
+    this.renderPoints.find((p) => p.getId() === aId)?.setActive(true)
   }
   showHiddenId(id) {
-    console.log("showHiddenIds!", id)
-    const index = this.hiddenActiveIds.indexOf(id);
-    if (index !== -1) {
-      this.hiddenActiveIds.splice(index, 1);
-    }
+    this.renderPoints.find((p) => p.getId() === id)?.setHidden(false);
   }
   hideActiveId(id) {
-    console.log("hideActiveID!", id)
-    if (!this.hiddenActiveIds.includes(id)) {
-      this.hiddenActiveIds.push(id);
-    }
+    this.renderPoints.find((p) => p.getId() === id)?.setHidden(true);
   }
   setActiveIds(aIds) {
-    console.log('aIDssssss',aIds)
     aIds.forEach((aId) => {
-      this.activeIds.push(aId);
+     this.renderPoints.find((p) => p.getId() === aId)?.setActive(true);
     });
   }
   resetActiveIds() {
-    this.activeIds = [];
-    this.showActiveIds = [];
     this.renderPoints.forEach((p) => p.setActive(false));
   }
   getHoverId() {
-    return this.renderPoints.find((p) => p.getHover())?.getVector();
+    return this.renderPoints.find((p) => p.getHover())?.getId();
   }
 
   getPoints() {
     return this.points;
-  }
-  getDisplacedPoints() {
-    return this.displacedPoints;
   }
 
   getDistance() {
