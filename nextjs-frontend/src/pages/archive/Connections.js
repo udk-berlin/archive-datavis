@@ -20,8 +20,8 @@ class Connections {
     this.connections = connections;
   }
 
-  addConnection(p1, p2, targetPlanet,targetId, options) {
-    this.connections.push(new Connection({ targetId: targetId,p5: this.p5, p1, p2, targetPlanet, ...options }));
+  addConnection(p1, p2, targetPlanet, targetId, options) {
+    this.connections.push(new Connection({ targetId: targetId, p5: this.p5, p1, p2, targetPlanet, ...options }));
   }
 
   clearConnections() {
@@ -41,7 +41,7 @@ class Connections {
 }
 
 class Connection {
-  constructor({ p5,targetId,  p1, p2, animated = true, progress = 0, speed = 0.05, targetPlanet }) {
+  constructor({ p5, targetId, p1, p2, animated = true, progress = 0, speed = 0.05, targetPlanet }) {
     this.p5 = p5;
     this.p1 = p1;
     this.p2 = p2;
@@ -49,7 +49,7 @@ class Connection {
     this.progress = progress;
     this.speed = speed;
     this.targetPlanet = targetPlanet;
-    this.targetId = targetId
+    this.targetId = targetId;
   }
 
   draw() {
@@ -89,7 +89,6 @@ class Connection {
     this.p5.beginShape();
     this.p5.vertex(p1.x, p1.y, p1.z);
     this.p5.quadraticVertex(interp1.x, interp1.y, interp1.z, currentMidpoint.x, currentMidpoint.y, currentMidpoint.z);
-   // this.p5.vertex(p2.x, p2.y, p2.z);
     this.p5.endShape();
     this.p5.pop();
   }
@@ -98,7 +97,7 @@ class Connection {
     if (this.progress > 1) {
       this.targetPlanet?.showHiddenId(this.targetId);
       this.progress = 1;
-    } else if(this.progress < 1) {
+    } else if (this.progress < 1) {
       this.progress += this.speed;
     }
   }

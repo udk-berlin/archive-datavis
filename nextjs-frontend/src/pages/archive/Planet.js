@@ -392,6 +392,7 @@ class Planet {
       allPoints = this.renderPoints.map((p) => p.getVector());
 
       this.renderPoints.forEach((p, i) => {
+        p.update();
         p.draw();
       });
     }
@@ -414,17 +415,19 @@ class Planet {
     return this.renderPoints.map((p) => (p.getActive() ? p.getId() : null)).filter((p) => p !== null);
   }
   setIdActive(aId) {
-    this.renderPoints.find((p) => p.getId() === aId)?.setActive(true)
+    this.renderPoints.find((p) => p.getId() === aId)?.setActive(true);
   }
   showHiddenId(id) {
+    console.log('show id',id)
     this.renderPoints.find((p) => p.getId() === id)?.setHidden(false);
   }
   hideActiveId(id) {
+    console.log('hide id', id)
     this.renderPoints.find((p) => p.getId() === id)?.setHidden(true);
   }
   setActiveIds(aIds) {
     aIds.forEach((aId) => {
-     this.renderPoints.find((p) => p.getId() === aId)?.setActive(true);
+      this.renderPoints.find((p) => p.getId() === aId)?.setActive(true);
     });
   }
   resetActiveIds() {
