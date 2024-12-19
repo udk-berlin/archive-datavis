@@ -20,8 +20,8 @@ class Connections {
     this.connections = connections;
   }
 
-  addConnection(p1, p2, targetPlanet,targetId, options) {
-    this.connections.push(new Connection({ targetId: targetId,p5: this.p5, p1, p2, targetPlanet, ...options }));
+  addConnection(p1, p2, targetPlanet, targetId, options) {
+    this.connections.push(new Connection({ targetId: targetId, p5: this.p5, p1, p2, targetPlanet, ...options }));
   }
 
   clearConnections() {
@@ -41,7 +41,7 @@ class Connections {
 }
 
 class Connection {
-  constructor({ p5,targetId,  p1, p2, animated = true, progress = 0, speed = 0.05, targetPlanet }) {
+  constructor({ p5, targetId, p1, p2, animated = true, progress = 0, speed = 0.05, targetPlanet }) {
     this.p5 = p5;
     this.p1 = p1;
     this.p2 = p2;
@@ -49,7 +49,7 @@ class Connection {
     this.progress = progress;
     this.speed = speed;
     this.targetPlanet = targetPlanet;
-    this.targetId = targetId
+    this.targetId = targetId;
   }
 
   draw() {
@@ -88,8 +88,7 @@ class Connection {
     this.p5.strokeWeight(1.5);
     this.p5.beginShape();
     this.p5.vertex(p1.x, p1.y, p1.z);
-   // this.p5.quadraticVertex(interp1.x, interp1.y, interp1.z, currentMidpoint.x, currentMidpoint.y, currentMidpoint.z);
-    this.p5.vertex(p2.x, p2.y, p2.z);
+    this.p5.quadraticVertex(interp1.x, interp1.y, interp1.z, currentMidpoint.x, currentMidpoint.y, currentMidpoint.z);
     this.p5.endShape();
     this.p5.pop();
   }
@@ -98,51 +97,10 @@ class Connection {
     if (this.progress > 1) {
       this.targetPlanet?.showHiddenId(this.targetId);
       this.progress = 1;
-    } else if(this.progress < 1) {
+    } else if (this.progress < 1) {
       this.progress += this.speed;
     }
   }
 }
-
-/// old
-
-// drawEllipseBetweenPoints(p1, p2) {
-//     let midpoint = this.p5.constructor.Vector.add(p1, p2).mult(0.5);
-//     let direction = this.p5.constructor.Vector.sub(p2, p1);
-//     let dist = direction.mag();
-
-//     let dir = direction.copy().normalize();
-
-//     let originalVector = this.p5.createVector(1, 0, 0);
-
-//     let angle = Math.acos(dir.dot(originalVector));
-//     let axis = this.p5.constructor.Vector.cross(originalVector, dir);
-
-//     if (axis.mag() < 0.0001 || isNaN(angle)) {
-//       axis = this.p5.constructor.createVector(0, 0, 1);
-//       angle = 0;
-//     } else {
-//       axis.normalize();
-//     }
-
-//     this.p5.push();
-//     this.p5.translate(midpoint.x, midpoint.y, midpoint.z);
-//     this.p5.rotate(angle, axis);
-//     this.p5.noFill();
-//     this.p5.stroke(255, 0, 255);
-//     this.p5.ellipse(0, 0, dist, dist, [50]);
-//     this.p5.pop();
-//   }
-
-// drawConnections() {
-//     this.connections.forEach((connection) => {
-//       this.p5.stroke(0, 250, 0);
-//       this.p5.beginShape();
-//       connection.forEach((point) => {
-//         this.p5.vertex(point.x, point.y, point.z);
-//       });
-//       this.p5.endShape(this.p5.CLOSE);
-//     });
-//   }
 
 export default Connections;

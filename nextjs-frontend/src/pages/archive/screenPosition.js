@@ -260,4 +260,4 @@ function addScreenPositionFunction(p5Instance) {
 }
 
 
-export  {addScreenPositionFunction}
+export  default addScreenPositionFunction

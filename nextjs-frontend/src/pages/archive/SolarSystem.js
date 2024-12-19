@@ -78,6 +78,7 @@ class SolarSystem {
   }
 
   setIdsOfPlanetActive(planetId, activeIds) {
+    console.log("asdas", planetId, activeIds);
     activeIds.forEach((aId, i) => {
       this.getPlanet(planetId).setIdActive(aId);
     });
@@ -98,15 +99,15 @@ class SolarSystem {
     switch (type) {
       case "entries":
         data?.authors?.forEach((authorId) => {
-          this.addIdsAsConnection({ id: id }, { id: authorId });
+          this.addIdsAsConnection({ id: id }, { id: authorId }, this.getPlanet("authors"));
         });
         data?.semester?.forEach((semesterId) => {
-          this.addIdsAsConnection({ id: id }, { id: semesterId });
+          this.addIdsAsConnection({ id: id }, { id: semesterId }, this.getPlanet("semesters"));
         });
         break;
       case "authors":
         data?.entries?.forEach((entryId) => {
-          this.addIdsAsConnection({ id: id }, { id: entryId });
+          this.addIdsAsConnection({ id: id }, { id: entryId }, this.getPlanet("entries"));
         });
         break;
       default:
@@ -138,6 +139,8 @@ class SolarSystem {
         planetId
       );
     }
+
+
 
     if (planetId === "archive") {
       focusedKeys.archive = this.getPlanet("archive").getActiveIds();
@@ -180,21 +183,6 @@ class SolarSystem {
     });
   }
 
-  addConnection(connection) {
-    console.warn("addConnection is deprecated, use addIdsAsConnection instead");
-    return;
-    const points = connection.map((id) => {
-      let found;
-      this.planets.forEach((planet) => {
-        if (!found) {
-          found = planet.getPointById(id);
-        }
-      });
-      return found;
-    });
-    this.connections.push(points);
-  }
-
   addIdsAsConnection(source, target, targetPlanet) {
     let sourcePoint;
     let targetPoint;
@@ -216,6 +204,7 @@ class SolarSystem {
 
     if (sourcePoint?.planetId && sourcePoint?.id?.id) this.getPlanet(sourcePoint.planetId).setIdActive(sourcePoint.id.id);
     if (targetPoint?.planetId && targetPoint?.id?.id) this.getPlanet(targetPoint.planetId).setIdActive(targetPoint.id.id);
+    if (targetPoint?.planetId && targetPoint?.id?.id) this.getPlanet(targetPoint.planetId).hideActiveId(targetPoint.id.id);
   }
 }
 
