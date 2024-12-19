@@ -135,7 +135,7 @@ class Planet {
 
       const point = p5.createVector(x, y, z);
       point.id = data && data[i].id ? data[i].id : this.generatedId();
-      this.renderPoints.push(new Point(point, data && data[i].id ? data[i].id : this.generatedId(), {}, this.p5));
+      this.renderPoints.push(new Point(point, data && data[i].id ? data[i].id : this.generatedId(), { name: data.name }, this.p5));
     }
   }
 
@@ -152,7 +152,7 @@ class Planet {
       point = this.rotateVector(point, angleX, angleY, angleZ);
       point.add(this.centralPoint);
       point.id = data && data[i].id ? data[i].id : this.generatedId();
-      this.renderPoints.push(new Point(point, data && data[i].id ? data[i].id : this.generatedId(), {}, this.p5));
+      this.renderPoints.push(new Point(point, data && data[i].id ? data[i].id : this.generatedId(), { name: data.name }, this.p5));
     }
   }
 
@@ -178,7 +178,9 @@ class Planet {
 
         let index = j * this.stripeSettings.maxPerRing + i;
         point.id = data && data[index] && data[index].id ? data[index].id : this.generatedId();
-        this.renderPoints.push(new Point(point, data && data[index] && data[index].id ? data[index].id : this.generatedId(), {}, this.p5));
+        this.renderPoints.push(
+          new Point(point, data && data[index] && data[index].id ? data[index].id : this.generatedId(), { name: data.name }, this.p5)
+        );
       }
     }
   }
@@ -418,11 +420,11 @@ class Planet {
     this.renderPoints.find((p) => p.getId() === aId)?.setActive(true);
   }
   showHiddenId(id) {
-    console.log('show id',id)
+    console.log("show id", id);
     this.renderPoints.find((p) => p.getId() === id)?.setHidden(false);
   }
   hideActiveId(id) {
-    console.log('hide id', id)
+    console.log("hide id", id);
     this.renderPoints.find((p) => p.getId() === id)?.setHidden(true);
   }
   setActiveIds(aIds) {

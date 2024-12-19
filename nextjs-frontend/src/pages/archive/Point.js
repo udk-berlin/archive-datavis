@@ -10,6 +10,7 @@ class Point {
     this.defaultScale = 2;
     this.activeScale = 6;
     this.p5 = p5;
+    this.name = options?.name
   }
 
   update() {
