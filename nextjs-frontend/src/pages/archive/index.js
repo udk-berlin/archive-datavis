@@ -9,14 +9,14 @@ import {
   RiPlayLine,
 } from "@remixicon/react";
 
-import * as p5code from "./sketch";
+import  sketch from "./sketch";
 import SidePanel from "./SidePanel";
 
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
 
 const ArchivePage = () => {
 
-  const sketch = useMemo(() => p5code.sketch, []);
+  const sketchData = useMemo(() => sketch, []);
 
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
 
@@ -51,7 +51,7 @@ const ArchivePage = () => {
       <ResizablePanel className="h-full" defaultSize={!opened? 75 : 50} id="sketch-container" onResize={ (e) => {setP5PanelPercent(e)}}>
         <div className="h-full relative" >
           <NextReactP5Wrapper
-            sketch={sketch}
+            sketch={sketchData}
             windowWidth={windowWidth}
             setFocusedIds={setFocusedIds}
             setFocusedType={setFocusedType}

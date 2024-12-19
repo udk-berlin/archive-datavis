@@ -8,7 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 
 import Hud from "./Hud";
 
-export function sketch(p5) {
+export default function sketch(p5) {
   p5.constructor.prototype.screenPosition = function (x, y, z) {
     const p = p5.createVector(x, y, z);
     const cam = p5._renderer._curCamera;

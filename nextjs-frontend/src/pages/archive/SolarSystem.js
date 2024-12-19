@@ -121,6 +121,7 @@ class SolarSystem {
 
   setClickedIdActive(d) {
     const id = this.setSingleIdActive();
+    console.log("sId",id)
     this.activeId = id;
     const focusedKeys = {};
 
@@ -132,6 +133,7 @@ class SolarSystem {
     }
 
     if (id) {
+      console.log('1')
       this.setConnectionsForId(
         id,
         d[planetId].find((entry) => entry.id === id),

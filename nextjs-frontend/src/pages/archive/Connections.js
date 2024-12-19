@@ -88,8 +88,8 @@ class Connection {
     this.p5.strokeWeight(1.5);
     this.p5.beginShape();
     this.p5.vertex(p1.x, p1.y, p1.z);
-   // this.p5.quadraticVertex(interp1.x, interp1.y, interp1.z, currentMidpoint.x, currentMidpoint.y, currentMidpoint.z);
-    this.p5.vertex(p2.x, p2.y, p2.z);
+    this.p5.quadraticVertex(interp1.x, interp1.y, interp1.z, currentMidpoint.x, currentMidpoint.y, currentMidpoint.z);
+   // this.p5.vertex(p2.x, p2.y, p2.z);
     this.p5.endShape();
     this.p5.pop();
   }

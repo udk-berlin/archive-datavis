@@ -2,30 +2,8 @@ import convexHull from "convex-hull";
 import { v4 as uuidv4 } from "uuid";
 import { mat4, vec4, vec3 } from "gl-matrix";
 
-class Point {
-  constructor(x, y, z) {
-    this.p = createVector(x, y, z);
-    this.active = false;
-    this.hidden = false;
-    this.showScaleProcess = 0;
-    this.showScaleStep = 0.1;
+import Point from "./Point";
 
-    this.defaultScale = 2;
-    this.activeScale = 6;
-  }
-
-  update() {
-    if (this.active && this.showScaleProcess < 1) {
-      this.showScaleProcess += this.showScaleStep;
-    } else if (this.showScaleProcess > 1) {
-      this.showScaleProcess = 1;
-    }
-  }
-
-  getVector() {
-    return this.p;
-  }
-}
 class Planet {
   constructor(
     p5,
@@ -34,7 +12,7 @@ class Planet {
       distance,
       centralPoint,
       data,
-      mode = "displacment",
+      mode = "ring",
       displacementDistance = 5,
       rotationAngles = { angleX: 0, angleY: 0, angleZ: 0 },
       orbitRadii = { rx: distance, ry: distance },
@@ -42,8 +20,6 @@ class Planet {
       showOrbit = true,
       showPlanet = true,
       mouseHover = true,
-      drawHull = false,
-      drawDisplacedHull = false,
       rotationSpeed = 0.1,
       selfRotation = false,
       planeColumns = 10,
@@ -62,15 +38,11 @@ class Planet {
     this.mode = mode;
     this.activeIds = [];
     this.hiddenActiveIds = [];
-    this.hoverId = null;
+
     this.planeColumns = planeColumns;
     this.orbitRadii = orbitRadii;
     this.stripeSettings = stripeSettings;
-    this.points = this.create3dOrbit({ distance, n: this.n, centralPoint });
-    this.points.forEach((point, i) => {
-      this.points[i].id = data[i].id ? data[i].id : this.generatedId();
-    });
-    // console.log(this.points);
+
     this.rotationAngles = {
       angleX: this.p5.radians(rotationAngles.angleX),
       angleY: this.p5.radians(rotationAngles.angleY),
@@ -78,7 +50,6 @@ class Planet {
     };
     this.selfRotation = selfRotation;
 
-    this.pointsHull = convexHull(this.points.map((p) => [p.x, p.y, p.z]));
     this.displacementDistance = displacementDistance;
     this.camera = camera;
 
@@ -87,32 +58,17 @@ class Planet {
 
     this.subpoints = [];
 
+    this.renderPoints = [];
+
     this.options = {
       showOrbit,
       showPlanet,
       mouseHover,
-      drawHull,
-      drawDisplacedHull,
     };
 
     this.rotationSpeed = rotationSpeed;
 
     switch (this.mode) {
-      case "displacement":
-        this.displacedPoints = this.createDisplacedPoints({ _points: this.points, distances: data.map((d) => d.children.length) });
-        this.displacedPointsHull = convexHull(this.displacedPoints.map((p) => [p.x, p.y, p.z]));
-        break;
-      case "line":
-        this.points.forEach((p, i) => {
-          let n = data[i].children.length;
-          let direction = p5.constructor.Vector.sub(p, this.centralPoint);
-          let unitDirection = direction.normalize();
-          for (let i = 1; i <= n; i++) {
-            let newPoint = p5.constructor.Vector.add(p, p5.constructor.Vector.mult(unitDirection, this.displacementDistance * i));
-            this.subpoints.push(newPoint);
-          }
-        });
-        break;
       case "ring":
         this.generateRingSubpoints(data);
         break;
@@ -124,11 +80,6 @@ class Planet {
         break;
       default:
     }
-    if (this.displacedPoints) {
-      this.displacedPoints.forEach((point, i) => {
-        this.displacedPoints[i].id = this?.points[i]?.id ? this.points[i].id : this.generatedId();
-      });
-    }
   }
 
   generatedId() {
@@ -136,28 +87,31 @@ class Planet {
   }
 
   generatePlaneSubpoints(data) {
-    const { centralPoint, planeColumns, n, rotationAngles, distance, p5, subpoints } = this;
+    const { centralPoint, planeColumns, n, rotationAngles, distance, p5, renderPoints } = this;
 
     const rows = Math.ceil(n / planeColumns);
 
+    const tmpPoints = [];
+
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < planeColumns; j++) {
-        if (subpoints.length >= n) break;
+        if (tmpPoints.length >= n) break;
         const x = j * distance;
         const y = i * distance;
         const z = 0;
-        subpoints.push(p5.createVector(x, y, z));
+        const point = p5.createVector(x, y, z);
+        tmpPoints.push(point);
       }
     }
 
     const centerX = ((planeColumns - 1) * distance) / 2;
     const centerY = ((rows - 1) * distance) / 2;
-    for (let i = 0; i < subpoints.length; i++) {
-      subpoints[i].x -= centerX;
-      subpoints[i].y -= centerY;
-      subpoints[i].x += centralPoint.x;
-      subpoints[i].y += centralPoint.y;
-      subpoints[i].z += centralPoint.z;
+    for (let i = 0; i < tmpPoints.length; i++) {
+      tmpPoints[i].x -= centerX;
+      tmpPoints[i].y -= centerY;
+      tmpPoints[i].x += centralPoint.x;
+      tmpPoints[i].y += centralPoint.y;
+      tmpPoints[i].z += centralPoint.z;
     }
 
     const cosX = Math.cos(rotationAngles.angleX);
@@ -167,8 +121,8 @@ class Planet {
     const cosZ = Math.cos(rotationAngles.angleZ);
     const sinZ = Math.sin(rotationAngles.angleZ);
 
-    for (let i = 0; i < subpoints.length; i++) {
-      let { x, y, z } = subpoints[i];
+    for (let i = 0; i < tmpPoints.length; i++) {
+      let { x, y, z } = tmpPoints[i];
 
       let y1 = y * cosX - z * sinX;
       let z1 = y * sinX + z * cosX;
@@ -185,11 +139,10 @@ class Planet {
       x = x1;
       y = y1;
 
-      subpoints[i] = p5.createVector(x, y, z);
-      subpoints[i].id = data && data[i].id ? data[i].id : this.generatedId();
+      const point = p5.createVector(x, y, z);
+      point.id = data && data[i].id ? data[i].id : this.generatedId();
+      this.renderPoints.push(new Point(point, data && data[i].id ? data[i].id : this.generatedId(), {}, this.p5));
     }
-
-    return subpoints;
   }
 
   generateRingSubpoints(data) {
@@ -205,7 +158,7 @@ class Planet {
       point = this.rotateVector(point, angleX, angleY, angleZ);
       point.add(this.centralPoint);
       point.id = data && data[i].id ? data[i].id : this.generatedId();
-      this.subpoints.push(point);
+      this.renderPoints.push(new Point(point, data && data[i].id ? data[i].id : this.generatedId(), {}, this.p5));
     }
   }
 
@@ -231,7 +184,7 @@ class Planet {
 
         let index = j * this.stripeSettings.maxPerRing + i;
         point.id = data && data[index] && data[index].id ? data[index].id : this.generatedId();
-        this.subpoints.push(point);
+        this.renderPoints.push(new Point(point, data && data[index] && data[index].id ? data[index].id : this.generatedId(), {}, this.p5));
       }
     }
   }
@@ -268,92 +221,10 @@ class Planet {
     return this.p5.createVector(x, y, v.z);
   }
 
-  drawOrbitEllipse() {
-    let { angleX, angleY, angleZ } = this.rotationAngles;
-    let { rx, ry } = this.orbitRadii;
-    let p5 = this.p5;
-    let centralPoint = this.centralPoint;
-
-    let numSegments = 100;
-
-    p5.push();
-    p5.noFill();
-    p5.stroke(0, 0, 255);
-    p5.strokeWeight(0.1);
-
-    p5.beginShape();
-    for (let i = 0; i <= numSegments; i++) {
-      let theta = (2 * p5.PI * i) / numSegments;
-
-      let x = rx * p5.cos(theta);
-      let y = ry * p5.sin(theta);
-      let z = 0;
-
-      let point = p5.createVector(x, y, z);
-
-      point = this.rotateVector(point, angleX, angleY, angleZ);
-
-      point.add(centralPoint);
-
-      p5.vertex(point.x, point.y, point.z);
-    }
-    p5.endShape();
-    p5.pop();
-  }
-
-  create3dOrbit({ distance, n, centralPoint }) {
-    const _points = [];
-    for (let i = 0; i < n; i++) {
-      let theta = this.p5.acos(1 - (2 * (i + 0.5)) / n);
-      let phi = i * this.p5.PI * (3 - this.p5.sqrt(5));
-
-      let x = this.centralPoint.x + distance * this.p5.sin(theta) * this.p5.cos(phi);
-      let y = this.centralPoint.y + distance * this.p5.sin(theta) * this.p5.sin(phi);
-      let z = this.centralPoint.z + distance * this.p5.cos(theta);
-
-      _points.push(this.p5.createVector(x, y, z));
-    }
-
-    return _points;
-  }
-
-  createDisplacedPoints({ _points, distances }) {
-    const newPoints = _points.map((point, i) => {
-      const direction = this.p5.createVector(point.x - this.centralPoint.x, point.y - this.centralPoint.y, point.z - this.centralPoint.z);
-
-      direction.normalize();
-
-      const extensionLength = (distances[i] ? distances[i] * 3 : 1) || 1;
-      const extendedDirection = direction.mult(extensionLength);
-
-      const newEndPoint = this.p5.createVector(point.x + extendedDirection.x, point.y + extendedDirection.y, point.z + extendedDirection.z);
-
-      return this.p5.createVector(newEndPoint.x, newEndPoint.y, newEndPoint.z);
-    });
-
-    return newPoints;
-  }
-
-  drawTriangles({ p, h, drawHull }) {
-    const hull = h ? h : convexHull(p);
-
-    if (drawHull) {
-      hull.forEach((face, i) => {
-        const [a, b, c] = face;
-
-        this.p5.beginShape(this.p5.constructor.TRIANGLES);
-        this.p5.vertex(p[a].x, p[a].y, p[a].z);
-        this.p5.vertex(p[b].x, p[b].y, p[b].z);
-        this.p5.vertex(p[c].x, p[c].y, p[c].z);
-        this.p5.endShape();
-      });
-    }
-
-    return hull;
-  }
-
-  checkRaySphereIntersections(points, options = {}) {
+  checkRaySphereIntersections(pointObjects, options = {}) {
     // Convert mouse coordinates to NDC
+    const points = pointObjects.map((p) => p.getVector());
+
     let ndcX = (this.p5.mouseX / this.p5.width) * 2 - 1;
     let ndcY = 1 - (this.p5.mouseY / this.p5.height) * 2; // Invert Y axis
 
@@ -500,9 +371,6 @@ class Planet {
   }
 
   draw() {
-    this.p5.fill(255, 255, 255, 150);
-    this.drawTriangles({ p: this.points, h: this.pointsHull, drawHull: this.options.drawHull });
-
     if (this.selfRotation) {
       this.updateRotation();
       this.p5.push();
@@ -513,192 +381,65 @@ class Planet {
       this.p5.translate(-this.centralPoint.x, -this.centralPoint.y, -this.centralPoint.z);
     }
 
-    switch (this.mode) {
-      case "displacement":
-        this.p5.stroke(235);
-        this.p5.strokeWeight(1);
-        this.drawTriangles({ p: this.displacedPoints, h: this.displacedPointsHull, drawHull: this.options.drawDisplacedHull });
-        this.p5.noStroke();
-        break;
-      default:
-    }
-
     if (!this.options.showPlanet) {
       if (this.selfRotation) this.p5.pop();
       return;
     }
 
-    // this.drawMousePointOnPlane(this.p5._renderer._curCamera);
     if (!this.options.showOrbit) {
       if (this.selfRotation) this.p5.pop();
       return;
     }
 
     let allPoints = [];
-    switch (this.mode) {
-      case "displacement":
-        this.displacedPoints.forEach((p) => {
-          allPoints.push(p);
-        });
-        break;
-      case "line":
-        this.p5.push();
-        this.p5.fill(255, 0, 0);
-        this.p5.translate(this.centralPoint.x, this.centralPoint.y, this.centralPoint.z);
-        this.p5.sphere(1);
-        this.p5.pop();
-        this.points.forEach((p) => {
-          allPoints.push(p);
-        });
-        allPoints = allPoints.concat(this.subpoints);
-        break;
-      case "ring":
-        this.p5.push();
-        this.p5.fill(255, 0, 0);
-        this.p5.translate(this.centralPoint.x, this.centralPoint.y, this.centralPoint.z);
-        this.p5.sphere(1);
-        this.p5.pop();
-        allPoints = allPoints.concat(this.subpoints);
-        break;
-      case "stripe":
-        this.p5.push();
-        this.p5.fill(255, 0, 0);
-        this.p5.translate(this.centralPoint.x, this.centralPoint.y, this.centralPoint.z);
-        this.p5.sphere(1);
-        this.p5.pop();
-        allPoints = allPoints.concat(this.subpoints);
-        break;
-      case "plane":
-        this.p5.push();
-        this.p5.fill(255, 0, 0);
-        this.p5.translate(this.centralPoint.x, this.centralPoint.y, this.centralPoint.z);
-        this.p5.sphere(1);
-        this.p5.pop();
-        allPoints = allPoints.concat(this.subpoints);
-      default:
-        // Add other modes if necessary
-        break;
-    }
 
     this.p5.noStroke();
-    switch (this.mode) {
-      case "displacement":
-        this.p5.strokeWeight(0.5);
-        this.displacedPoints.forEach((p, i) => {
-          this.p5.push();
-          this.p5.fill(0, 0, 0);
-          this.p5.translate(p.x, p.y, p.z);
-          this.p5.sphere(2);
-          this.p5.pop();
-        });
-        break;
-      case "line":
-        this.points.forEach((p, i) => {
-          this.p5.push();
-          this.p5.translate(p.x, p.y, p.z);
-          this.p5.fill(0, 0, 255);
-          this.p5.sphere(1);
-          this.p5.pop();
-        });
+    if (this.mode === "ring" || this.mode === "plane" || this.mode === "stripe") {
+      allPoints = this.renderPoints.map((p) => p.getVector());
 
-        this.subpoints.forEach((p, i) => {
-          this.p5.push();
-          this.p5.fill(0, 0, 255);
-          this.p5.translate(p.x, p.y, p.z);
-          this.p5.sphere(1);
-          this.p5.pop();
-        });
-        break;
-
-      case "ring":
-        //this.drawOrbitEllipse();
-
-        this.subpoints.forEach((p, i) => {
-          this.p5.push();
-          this.p5.translate(p.x, p.y, p.z);
-          if (this.activeIds.includes(p.id) && !this.hiddenActiveIds.includes(p.id)) {
-            this.p5.fill(255, 0, 255);
-            this.p5.sphere(2);
-          } else {
-            this.p5.fill(0, 0, 0);
-            this.p5.sphere(2);
-          }
-          this.p5.pop();
-        });
-        break;
-
-      case "stripe":
-        //this.drawOrbitEllipse();
-
-        this.subpoints.forEach((p, i) => {
-          this.p5.push();
-          this.p5.translate(p.x, p.y, p.z);
-          if (this.activeIds.includes(p.id) && !this.hiddenActiveIds.includes(p.id)) {
-            this.p5.fill(255, 0, 255);
-            this.p5.sphere(2);
-          } else {
-            this.p5.fill(0, 0, 0);
-            this.p5.sphere(2);
-          }
-          this.p5.pop();
-        });
-        break;
-
-      case "plane":
-        this.subpoints.forEach((p, i) => {
-          this.p5.push();
-
-          this.p5.translate(p.x, p.y, p.z);
-          if (this.activeIds.includes(p.id) && !this.hiddenActiveIds.includes(p.id)) {
-            this.p5.fill(255, 0, 255);
-            this.p5.sphere(2);
-          } else {
-            this.p5.fill(0, 0, 0);
-            this.p5.sphere(2);
-          }
-
-          this.p5.pop();
-        });
-        break;
-      default:
+      this.renderPoints.forEach((p, i) => {
+        p.draw();
+      });
     }
 
-    this.hoverId = null;
     if (this.options.mouseHover) {
-      let hoveredSphere = this.checkRaySphereIntersections(allPoints, { hitBox: 4 });
-      this.hoverId = hoveredSphere?.id;
-      if (hoveredSphere && !this.activeIds.includes(hoveredSphere?.id)) {
-        this.p5.push();
-        this.p5.fill(0, 0, 255);
-        this.p5.translate(hoveredSphere.x, hoveredSphere.y, hoveredSphere.z);
-        this.p5.sphere(5);
-        this.p5.pop();
-      }
+      let hoveredSphere = this.checkRaySphereIntersections(this.renderPoints, { hitBox: 4 });
+      this.setPointToHover(hoveredSphere?.id);
     }
 
     if (this.selfRotation) this.p5.pop();
   }
 
+  setPointToHover(id) {
+    this.renderPoints.forEach((p) => {
+      p.setHover(p.getId() === id);
+    });
+  }
+
   getActiveIds() {
-    return this.activeIds;
+    return this.renderPoints.map((p) => (p.getActive() ? p.getId() : null)).filter((p) => p !== null);
   }
   setIdActive(aId) {
-    if (!this.activeIds.includes(aId)) {
-      this.activeIds.push(aId);
+    if (!this.getActiveIds().includes(aId)) {
+      const candidate = this.renderPoints.find((p) => p.getId() === aId?.id);
+      if (candidate) candidate.setActive(true);
     }
   }
   showHiddenId(id) {
+    console.log("showHiddenIds!", id)
     const index = this.hiddenActiveIds.indexOf(id);
     if (index !== -1) {
       this.hiddenActiveIds.splice(index, 1);
     }
   }
   hideActiveId(id) {
+    console.log("hideActiveID!", id)
     if (!this.hiddenActiveIds.includes(id)) {
       this.hiddenActiveIds.push(id);
     }
   }
   setActiveIds(aIds) {
+    console.log('aIDssssss',aIds)
     aIds.forEach((aId) => {
       this.activeIds.push(aId);
     });
@@ -706,9 +447,10 @@ class Planet {
   resetActiveIds() {
     this.activeIds = [];
     this.showActiveIds = [];
+    this.renderPoints.forEach((p) => p.setActive(false));
   }
   getHoverId() {
-    return this.hoverId;
+    return this.renderPoints.find((p) => p.getHover())?.getVector();
   }
 
   getPoints() {
@@ -742,17 +484,8 @@ class Planet {
       found.id = this.id;
     }
 
-    if (!found && this.displacedPoints && this.mode === "displacement") {
-      found = this.displacedPoints.find((point) => point.id === id);
-    }
-    if (!found && this.subpoints && this.mode === "ring") {
-      found = this.subpoints.find((point) => point.id === id);
-    }
-    if (!found && this.subpoints && this.mode === "plane") {
-      found = this.subpoints.find((point) => point.id === id);
-    }
-    if (!found && this.points) {
-      found = this.points.find((point) => point.id === id);
+    if (!found && this.renderPoints) {
+      found = this.renderPoints.find((point) => point.getId() === id)?.getVector();
     }
 
     return found;
@@ -804,31 +537,6 @@ class Planet {
     ret.id = id;
 
     return ret;
-  }
-
-  devGetAllIds() {
-    let ids = [];
-
-    ids.push(this.id);
-
-    if (this.points) {
-      this.points.forEach((point) => {
-        ids.push(point.id);
-      });
-    }
-
-    if (this.displacedPoints) {
-      this.displacedPoints.forEach((point) => {
-        ids.push(point.id);
-      });
-    }
-
-    if (this.subpoints) {
-      this.subpoints.forEach((point) => {
-        ids.push(point.id);
-      });
-    }
-    return ids;
   }
 }
 
