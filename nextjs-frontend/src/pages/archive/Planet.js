@@ -426,11 +426,9 @@ class Planet {
     this.renderPoints.find((p) => p.getId() === aId)?.setActive(true);
   }
   showHiddenId(id) {
-    console.log("show id", id);
     this.renderPoints.find((p) => p.getId() === id)?.setHidden(false);
   }
   hideActiveId(id) {
-    console.log("hide id", id);
     this.renderPoints.find((p) => p.getId() === id)?.setHidden(true);
   }
   setActiveIds(aIds) {

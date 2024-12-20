@@ -22,10 +22,10 @@ const ArchivePage = () => {
   const [p5PanelPercent, setP5PanelPercent] = useState(75);
   const resizablePanelRef = useRef(null);
 
-  const [rotationA, setRotationA] = useState(-0.47);
-  const [rotationB, setRotationB] = useState(0.21);
-  const [rotationC, setRotationC] = useState(1);
-  const [rotationD, setRotationD] = useState(-0.43);
+  const [rotationA, setRotationA] = useState(-3);
+  const [rotationB, setRotationB] = useState(0.37);
+  const [rotationC, setRotationC] = useState(-0.48);
+  const [rotationD, setRotationD] = useState(0.09);
 
   useEffect(() => {
     const handleResize = () => {

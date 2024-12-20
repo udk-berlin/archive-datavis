@@ -100,13 +100,13 @@ const SidePanel = ({
           />
         </div>
 
-        {!focusedData && (
+        {!focusedType.type && (
           <>
             <div className="grid gap-8 mt-4">
-              <Slider defaultValue={[rotationA]} max={1} min={-1} step={0.01} onValueChange={(e) => setRotationA(e[0])} />
-              <Slider defaultValue={[rotationB]} max={1} min={-1} step={0.01} onValueChange={(e) => setRotationB(e[0])} />
-              <Slider defaultValue={[rotationC]} max={1} min={-1} step={0.01} onValueChange={(e) => setRotationC(e[0])} />
-              <Slider defaultValue={[rotationD]} max={1} min={-1} step={0.01} onValueChange={(e) => setRotationD(e[0])} />
+              <Slider defaultValue={[rotationA]} max={3} min={-3} step={0.01} onValueChange={(e) => setRotationA(e[0])} />
+              <Slider defaultValue={[rotationB]} max={2} min={-2} step={0.01} onValueChange={(e) => setRotationB(e[0])} />
+              <Slider defaultValue={[rotationC]} max={2} min={-2} step={0.01} onValueChange={(e) => setRotationC(e[0])} />
+              <Slider defaultValue={[rotationD]} max={2} min={-2} step={0.01} onValueChange={(e) => setRotationD(e[0])} />
             </div>
             <div>
               const [rotationA, setRotationA] = useState({rotationA}); const [rotationB, setRotationB] = useState({rotationB}); const

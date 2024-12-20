@@ -57,7 +57,9 @@ export default function sketch(p5) {
   let rotationA = 0;
   let rotationB = 0;
   let rotationC = 0;
-  let rotationD = 0
+  let rotationD = 0;
+
+
 
   p5.updateWithProps = (props) => {
     if (props.windowWidth) {
@@ -117,10 +119,10 @@ export default function sketch(p5) {
     addScreenPositionFunction(p5);
 
     easycam = p5.createEasyCam(p5._renderer, { distance: 1000 });
-    
+    easycam.setRotation([rotationA, rotationB, rotationC, rotationD]);
     //easycam.setDefaultInterpolationTime(2000);
 
-    easycam.setDistance(1200, 3500);
+    easycam.setDistance(1600, 3500);
      easycam.setCenter([0, 0, 0]);
  
 
@@ -198,10 +200,11 @@ export default function sketch(p5) {
     p5.textSize(32);
     p5.textAlign(p5.CENTER, p5.CENTER);
 
-    // hud.addLabel({ point: centralPoint, text: "Projects" });
-    // hud.addLabel({ point: p5.createVector(-1 * planetData.authors.length * 4, 0, 0), text: "Persons" });
-    // hud.addLabel({ point: p5.createVector(-1 * planetData.semesters.length * 4, -500, 0), text: "Semesters" });
-    // hud.addLabel({ point: p5.createVector(-1 * planetData.archive.length, 500, 0), text: "Archive" });
+    hud = new Hud(p5);
+    hud.addLabel({ point: centralPoint, text: "Projects" });
+    hud.addLabel({ point: p5.createVector(-1 * planetData.authors.length * 2+20, 175, 0), text: "Persons" });
+    hud.addLabel({ point: p5.createVector(-1 * planetData.semesters.length * 4-37, -175, 0), text: "Semesters" });
+    hud.addLabel({ point: p5.createVector(-1 * planetData.archive.length/2-15, -60, 0), text: "Archive" });
   };
 
   function updateRotation() {
@@ -211,7 +214,7 @@ export default function sketch(p5) {
   }
 
   p5.draw = () => {
-    easycam.setRotation([rotationA, rotationB, rotationC, rotationD]);
+
     var cam_dist = easycam.getDistance();
     var oscale = cam_dist * 0.001;
     var ox = (p5.width / 2) * oscale;
@@ -250,12 +253,15 @@ export default function sketch(p5) {
     // p5.fill(236, 239, 241)
     // p5.plane(200,1400)
 
+    hud?.updateLabelPositions()
+
     if (autoRotation && p5.millis() > 2000) p5.pop();
 
     easycam.beginHUD();
     p5.push();
     p5.translate(p5.width / 2, p5.height / 2);
     solarSystem.draw2d();
+    hud?.draw()
 
     p5.pop();
 
