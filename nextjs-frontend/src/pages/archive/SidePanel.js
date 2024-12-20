@@ -1,17 +1,30 @@
 import { Input } from "@/components/ui/input";
-import {
-  RiSearchLine,
-  RiLink,
-  RiFolder2Line,
-  RiFolderOpenLine,
-} from "@remixicon/react";
+import { RiSearchLine, RiLink, RiFolder2Line, RiFolderOpenLine } from "@remixicon/react";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import FileViewer from "./FileViewer";
 import AbstractView from "./AbstractView";
 
-const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedData, opened, setOpened }) => {
+import { Slider } from "@/components/ui/slider";
+
+const SidePanel = ({
+  focusedIds,
+  setFocusedIds,
+  focusedType,
+  className,
+  cachedData,
+  opened,
+  setOpened,
+  rotationA,
+  setRotationA,
+  rotationB,
+  setRotationB,
+  rotationC,
+  setRotationC,
+  rotationD,
+  setRotationD,
+}) => {
   const [focusedIdsData, setFocusedIdsData] = useState([]);
   const bucketUrl = "http://localhost:54321/storage/v1/object/public/";
   const [focusedData, setFocusedData] = useState({});
@@ -87,7 +100,20 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
           />
         </div>
 
-       
+        {!focusedData && (
+          <>
+            <div className="grid gap-8 mt-4">
+              <Slider defaultValue={[rotationA]} max={1} min={-1} step={0.01} onValueChange={(e) => setRotationA(e[0])} />
+              <Slider defaultValue={[rotationB]} max={1} min={-1} step={0.01} onValueChange={(e) => setRotationB(e[0])} />
+              <Slider defaultValue={[rotationC]} max={1} min={-1} step={0.01} onValueChange={(e) => setRotationC(e[0])} />
+              <Slider defaultValue={[rotationD]} max={1} min={-1} step={0.01} onValueChange={(e) => setRotationD(e[0])} />
+            </div>
+            <div>
+              const [rotationA, setRotationA] = useState({rotationA}); const [rotationB, setRotationB] = useState({rotationB}); const
+              [rotationC, setRotationC] = useState({rotationC}); const [rotationD, setRotationD] = useState({rotationD});
+            </div>
+          </>
+        )}
 
         {focusedType.type === "archive" && focusedData && (
           <>
@@ -117,9 +143,7 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
           </>
         )}
         <div className="flex-1 overflow-x-hidden max-h-full px-12">
-          {focusedType.type !== "archive" && focusedIdsData && focusedIdsData.length === 1 && (
-            <AbstractView data={focusedIdsData[0]} />
-          )}
+          {focusedType.type !== "archive" && focusedIdsData && focusedIdsData.length === 1 && <AbstractView data={focusedIdsData[0]} />}
           {focusedIdsData && focusedIdsData.length > 1 && (
             <div className="px-12 mt-6">
               {focusedType.type === "authors" && focusedData && (

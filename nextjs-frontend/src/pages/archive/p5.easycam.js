@@ -1034,7 +1034,6 @@ var Dw = (function (ext) {
         renderer.uViewMatrix.set(p5.Matrix.identity());
       } else if (VERSION && ver >= 1 && subVer >= 6) {
         // behavior in p5.js v1.6 -> v1.9.4
-        console.log('asdalskdl')
         renderer.uMVMatrix = p5.Matrix.identity();
       } else renderer.resetMatrix();
 

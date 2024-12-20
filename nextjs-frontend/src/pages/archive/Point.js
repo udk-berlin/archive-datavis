@@ -12,9 +12,9 @@ class Point {
     this.p5 = p5;
     this.name = options?.name;
     this.primary = options?.primary;
-    this.labelMode = null
+    this.labelMode = null;
 
-    this.screenPos = {x:0, y:0}
+    this.screenPos = { x: 0, y: 0 };
   }
 
   update() {
@@ -25,12 +25,12 @@ class Point {
     }
 
     let scp = this.p5.screenPosition(this.p.x, this.p.y, this.p.z);
-    this.screenPos.x = scp.x
-    this.screenPos.y = scp.y
+    this.screenPos.x = scp.x;
+    this.screenPos.y = scp.y;
   }
 
   draw() {
-    this.labelMode = null
+    this.labelMode = null;
     this.p5.push();
     this.p5.translate(this.p.x, this.p.y, this.p.z);
     if (this.active && !this.hidden) {
@@ -39,30 +39,27 @@ class Point {
       this.p5.fill(255, 0, 255);
       this.p5.sphere(this.p5.map(this.showScaleProcess, 0, 1, 0, 2));
       if (this.primary) {
-        this.labelMode = "active"
+        this.labelMode = "active";
       }
       //  this.drawLabel(this.p, { type: "active", text: this.name, fill: { r: 236, g: 239, b: 241 }, stroke: { r: 0, g: 0, b: 0 } });
     } else {
       if (this.hover) {
         this.p5.fill(0, 0, 255);
         this.p5.sphere(5);
-        this.labelMode = "hover"
-      //  this.drawLabel(this.p, { type: "hover", text: this.name, fill: { r: 236, g: 239, b: 241 }, stroke: { r: 0, g: 0, b: 0 } });
+        this.labelMode = "hover";
+        //  this.drawLabel(this.p, { type: "hover", text: this.name, fill: { r: 236, g: 239, b: 241 }, stroke: { r: 0, g: 0, b: 0 } });
       } else {
         this.p5.fill(0, 0, 0);
         this.p5.sphere(2);
       }
     }
 
-    // console.log(scp)
     this.p5.pop();
   }
 
   draw2d() {
-    switch(this.labelMode) {
+    switch (this.labelMode) {
       case "hover":
-        console.log(this.screenPos)
-        
         this.drawLabel(this.p, { type: "hover", text: this.name, fill: { r: 236, g: 239, b: 241 }, stroke: { r: 0, g: 0, b: 0 } });
         break;
       case "active":
@@ -73,12 +70,7 @@ class Point {
   }
 
   drawLabel(point, { type, text, fill, stroke }) {
-
-
     // console.log('Angle between camera and x/y origin plane:', angleDegrees);
-
-
-
 
     if (type === "hover") {
       this.p5.stroke(0, 0, 255);
@@ -87,7 +79,7 @@ class Point {
       this.p5.textAlign(this.p5.LEFT, this.p5.CENTER);
       this.p5.textSize(12);
       this.p5.fill(0, 0, 255);
-      this.p5.text(text, this.screenPos.x+ 20, this.screenPos.y +0);
+      this.p5.text(text, this.screenPos.x + 20, this.screenPos.y + 0);
     } else if (type === "active") {
       this.p5.stroke(255, 0, 255);
       this.p5.fill(236, 239, 241);
@@ -95,7 +87,7 @@ class Point {
       this.p5.textAlign(this.p5.LEFT, this.p5.CENTER);
       this.p5.textSize(12);
       this.p5.fill(255, 0, 255);
-      this.p5.text(text, this.screenPos.x+ 20, this.screenPos.y +0);
+      this.p5.text(text, this.screenPos.x + 20, this.screenPos.y + 0);
     }
   }
 

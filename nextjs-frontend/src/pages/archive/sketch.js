@@ -54,6 +54,11 @@ export default function sketch(p5) {
 
   let easycam;
 
+  let rotationA = 0;
+  let rotationB = 0;
+  let rotationC = 0;
+  let rotationD = 0
+
   p5.updateWithProps = (props) => {
     if (props.windowWidth) {
       windowWidth = props.windowWidth;
@@ -78,6 +83,18 @@ export default function sketch(p5) {
         p5.clear();
       }
     }
+    if(props.rotationA) {
+      rotationA = props.rotationA
+    }
+    if(props.rotationB) {
+      rotationB = props.rotationB
+    }
+    if(props.rotationC) {
+      rotationC = props.rotationC
+    }
+    if(props.rotationD) {
+      rotationD = props.rotationD
+    }
   };
 
   async function resizeCanvasByParent() {}
@@ -100,9 +117,12 @@ export default function sketch(p5) {
     addScreenPositionFunction(p5);
 
     easycam = p5.createEasyCam(p5._renderer, { distance: 1000 });
+    
     //easycam.setDefaultInterpolationTime(2000);
 
-    easycam.setDistance(400, 2500);
+    easycam.setDistance(1200, 3500);
+     easycam.setCenter([0, 0, 0]);
+ 
 
     const scale = 1.5;
     const defaultScale = 1.5;
@@ -191,12 +211,13 @@ export default function sketch(p5) {
   }
 
   p5.draw = () => {
+    easycam.setRotation([rotationA, rotationB, rotationC, rotationD]);
     var cam_dist = easycam.getDistance();
     var oscale = cam_dist * 0.001;
     var ox = (p5.width / 2) * oscale;
     var oy = (p5.height / 2) * oscale;
     p5.ortho(-ox, +ox, -oy, +oy, -10000, 10000);
-  //  easycam.setPanScale(0.004 / p5.sqrt(cam_dist));
+      easycam.setPanScale(0.004 / p5.sqrt(cam_dist));
 
     // if (!introAnimationFinished) {
     //   if (amt < 1) {
@@ -239,6 +260,8 @@ export default function sketch(p5) {
     p5.pop();
 
     easycam.endHUD();
+
+
   };
 
   p5.mouseClicked = () => {
