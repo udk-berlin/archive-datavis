@@ -407,6 +407,12 @@ class Planet {
     if (this.selfRotation) this.p5.pop();
   }
 
+  draw2d() {
+    this.renderPoints.forEach((p) => {
+      p.draw2d();
+    })
+  }
+
   setPointToHover(id) {
     this.renderPoints.forEach((p) => {
       p.setHover(p.getId() === id);
