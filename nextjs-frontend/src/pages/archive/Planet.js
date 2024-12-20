@@ -135,7 +135,7 @@ class Planet {
 
       const point = p5.createVector(x, y, z);
       point.id = data && data[i].id ? data[i].id : this.generatedId();
-      this.renderPoints.push(new Point(point, data && data[i].id ? data[i].id : this.generatedId(), { name: data.name }, this.p5));
+      this.renderPoints.push(new Point(point, data && data[i].id ? data[i].id : this.generatedId(), { name: data[i].name }, this.p5));
     }
   }
 
@@ -152,7 +152,7 @@ class Planet {
       point = this.rotateVector(point, angleX, angleY, angleZ);
       point.add(this.centralPoint);
       point.id = data && data[i].id ? data[i].id : this.generatedId();
-      this.renderPoints.push(new Point(point, data && data[i].id ? data[i].id : this.generatedId(), { name: data.name }, this.p5));
+      this.renderPoints.push(new Point(point, data && data[i].id ? data[i].id : this.generatedId(), { name: data[i].name }, this.p5));
     }
   }
 
@@ -179,7 +179,7 @@ class Planet {
         let index = j * this.stripeSettings.maxPerRing + i;
         point.id = data && data[index] && data[index].id ? data[index].id : this.generatedId();
         this.renderPoints.push(
-          new Point(point, data && data[index] && data[index].id ? data[index].id : this.generatedId(), { name: data.name }, this.p5)
+          new Point(point, data && data[index] && data[index].id ? data[index].id : this.generatedId(), { name: data[i].name }, this.p5)
         );
       }
     }
@@ -433,7 +433,10 @@ class Planet {
     });
   }
   resetActiveIds() {
-    this.renderPoints.forEach((p) => p.setActive(false));
+    this.renderPoints.forEach((p) => {
+      p.setActive(false);
+      p.setPrimary(false);
+    });
   }
   getHoverId() {
     return this.renderPoints.find((p) => p.getHover())?.getId();
@@ -445,6 +448,12 @@ class Planet {
 
   getDistance() {
     return this.distance;
+  }
+  setPrimary(id, p) {
+    this.renderPoints.find((p) => p.getId() === id)?.setPrimary(p);
+  }
+  getPrimary(id) {
+    return this.renderPoints.find((p) => p.getId() === id)?.getPrimary();
   }
 
   getCentralPoint() {

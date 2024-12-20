@@ -261,6 +261,9 @@ export default function sketch(p5) {
     // }
 
     //    hud.draw(centralPoint);
+
+    
+
   };
 
   p5.mouseClicked = () => {

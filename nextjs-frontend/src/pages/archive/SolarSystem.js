@@ -77,10 +77,12 @@ class SolarSystem {
     return found;
   }
 
-  setIdsOfPlanetActive(planetId, activeIds) {
-    console.log("asdas", planetId, activeIds);
+  setIdsOfPlanetActive(planetId, activeIds, options) {
     activeIds.forEach((aId, i) => {
       this.getPlanet(planetId).setIdActive(aId);
+      if(options?.primary) {
+        this.getPlanet(planetId).setPrimary(aId,true);
+      }
     });
   }
 
@@ -88,7 +90,7 @@ class SolarSystem {
     const hIds = this.getHoverIds();
     if (hIds && hIds.length > 0) {
       this.deactivateAllActiveIds();
-      this.setIdsOfPlanetActive(hIds[0].planetId, [hIds[0].id]);
+      this.setIdsOfPlanetActive(hIds[0].planetId, [hIds[0].id], { primary: true });
     }
     return hIds[0]?.id;
   }
