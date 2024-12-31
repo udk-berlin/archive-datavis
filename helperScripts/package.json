@@ -1,0 +1,22 @@
+{
+  "name": "helperscripts",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.45.4",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "express": "^4.21.1",
+    "lodash": "^4.17.21",
+    "matrix-js-sdk": "^34.13.0",
+    "node-fetch": "^3.3.2"
+  },
+  "type": "module"
+}
