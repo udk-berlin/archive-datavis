@@ -74,18 +74,23 @@ class Point {
 
     if (type === "hover") {
       this.p5.stroke(0, 0, 255);
+
       this.p5.fill(236, 239, 241);
       this.p5.rect(this.screenPos.x + 15, this.screenPos.y + 20, text?.length * 8, -40);
+
       this.p5.textAlign(this.p5.LEFT, this.p5.CENTER);
-      this.p5.textSize(12);
+      this.p5.textSize(16);
       this.p5.fill(0, 0, 255);
       this.p5.text(text, this.screenPos.x + 20, this.screenPos.y + 0);
     } else if (type === "active") {
       this.p5.stroke(255, 0, 255);
+
       this.p5.fill(236, 239, 241);
       this.p5.rect(this.screenPos.x + 15, this.screenPos.y + 20, text?.length * 8, -40);
+
+
       this.p5.textAlign(this.p5.LEFT, this.p5.CENTER);
-      this.p5.textSize(12);
+      this.p5.textSize(16);
       this.p5.fill(255, 0, 255);
       this.p5.text(text, this.screenPos.x + 20, this.screenPos.y + 0);
     }

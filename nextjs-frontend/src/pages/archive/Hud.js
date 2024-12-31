@@ -16,6 +16,7 @@ class Hud {
     this.p5.ellipse(screenPos.x, screenPos.y, 20, 20);
 
     if (side === "left") {
+
       this.p5.line(screenPos.x + -10, screenPos.y, screenPos.x + -50, screenPos.y);
       // this.p5.fill(236, 239, 241)
       this.p5.rect(screenPos.x + -50, screenPos.y + -15, -1 * text?.length * 10, 30);
@@ -23,6 +24,7 @@ class Hud {
       this.p5.textAlign(this.p5.RIGHT, this.p5.CENTER);
       this.p5.textSize(14);
       this.p5.text(text, screenPos.x + -60, screenPos.y + -3);
+
     }
   }
 

@@ -100,6 +100,7 @@ const SidePanel = ({
           />
         </div>
 
+
         {!focusedType.type && (
           <>
             <div className="grid gap-8 mt-4">
@@ -114,6 +115,7 @@ const SidePanel = ({
             </div>
           </>
         )}
+
 
         {focusedType.type === "archive" && focusedData && (
           <>
