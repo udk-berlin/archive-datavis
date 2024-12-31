@@ -25,13 +25,7 @@ const ArchivePage = () => {
   const [rotationA, setRotationA] = useState(-3);
   const [rotationB, setRotationB] = useState(0.37);
   const [rotationC, setRotationC] = useState(-0.48);
-  const [rotationD, setRotationD] = useState(0.09);
-
-  const [rotationA, setRotationA] = useState(0);
-  const [rotationB, setRotationB] = useState(0);
-  const [rotationC, setRotationC] = useState(0);
-  const [rotationD, setRotationD] = useState(0);
-
+  const [rotationD, setRotationD] = useState(0.05);
 
   useEffect(() => {
     const handleResize = () => {
