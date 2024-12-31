@@ -28,6 +28,13 @@ const ArchivePage = () => {
   const [p5PanelPercent, setP5PanelPercent] = useState(75)
   const resizablePanelRef = useRef(null);
 
+<<<<<<< Updated upstream
+=======
+  const [rotationA, setRotationA] = useState(0);
+  const [rotationB, setRotationB] = useState(0);
+  const [rotationC, setRotationC] = useState(0);
+  const [rotationD, setRotationD] = useState(0);
+>>>>>>> Stashed changes
 
   useEffect(() => {
     const handleResize = () => {

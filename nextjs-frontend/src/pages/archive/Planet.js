@@ -484,14 +484,14 @@ class Planet {
   }
 
   getRotatedPointById(id) {
-    // Find the point by id
+  
     const point = this.getPointById(id);
     if (!point || point.x == null || point.y == null || point.z == null) {
       console.error("Point not found or invalid:", point);
       return null;
     }
 
-    // Convert point coordinates to numbers
+  
     const x = Number(point.x);
     const y = Number(point.y);
     const z = Number(point.z);
@@ -501,10 +501,10 @@ class Planet {
       return null;
     }
 
-    // Create a vec3 from the point coordinates
+
     const position = vec3.fromValues(x, y, z);
 
-    // Get rotation angles in radians
+  
     const toRadians = (degrees) => degrees * (Math.PI / 180);
     const angleX = toRadians(this.rotationAngles.x || 0);
     const angleY = toRadians(this.rotationAngles.y || 0);
@@ -515,16 +515,16 @@ class Planet {
       return null;
     }
 
-    // Create a rotation matrix
+  
     const rotationMatrix = mat4.create();
     mat4.rotateX(rotationMatrix, rotationMatrix, angleX);
     mat4.rotateY(rotationMatrix, rotationMatrix, angleY);
     mat4.rotateZ(rotationMatrix, rotationMatrix, angleZ);
 
-    // Apply the rotation to the position
+ 
     vec3.transformMat4(position, position, rotationMatrix);
 
-    // Return the rotated position
+
     const ret = this.p5.createVector(position[0], position[1], position[2]);
     ret.id = id;
 

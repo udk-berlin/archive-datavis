@@ -116,7 +116,17 @@ export default function sketch(p5) {
     parent = document.getElementById("sketch-container");
     p5.createCanvas(parent.offsetWidth, parent.offsetHeight, p5.WEBGL);
 
+<<<<<<< Updated upstream
     hud = new Hud(p5);
+=======
+    easycam = p5.createEasyCam(p5._renderer, { distance: 1000 });
+    easycam.setRotation([0.9, -0.09, 0.3, -0.03]);
+    //easycam.setDefaultInterpolationTime(2000);
+
+    easycam.setDistance(900, 3500);
+     easycam.setCenter([0, 0, 0]);
+ 
+>>>>>>> Stashed changes
 
     const scale = 1.5;
     const defaultScale = 1.5;
@@ -216,6 +226,7 @@ export default function sketch(p5) {
   }
 
   p5.draw = () => {
+<<<<<<< Updated upstream
     if (!introAnimationFinished) {
       if (amt < 1) {
         if (p5.millis() > 100) {
@@ -230,6 +241,31 @@ export default function sketch(p5) {
     } else {
       p5.orbitControl(-1, -1, 0.25);
     }
+=======
+   // easycam.setRotation([rotationA, rotationB, rotationC, rotationD]);
+
+    var cam_dist = easycam.getDistance();
+    var oscale = cam_dist * 0.001;
+    var ox = (p5.width / 2) * oscale;
+    var oy = (p5.height / 2) * oscale;
+    p5.ortho(-ox, +ox, -oy, +oy, -10000, 10000);
+      easycam.setPanScale(0.004 / p5.sqrt(cam_dist));
+
+    // if (!introAnimationFinished) {
+    //   if (amt < 1) {
+    //     if (p5.millis() > 100) {
+    //       amt += 0.005;
+    //     }
+    //     //  cam.slerp(cameraStartView, cameraDefaultView, easingFunctions.easeOutCubic(amt));
+    //     //   p5.setCamera(cam);
+    //   } else {
+    //     //   p5.setCamera(cam);
+    //     introAnimationFinished = true;
+    //   }
+    // } else {
+    //   p5.orbitControl(-1, -1, 0.25);
+    // }
+>>>>>>> Stashed changes
 
     p5.background(236, 239, 241);
 
