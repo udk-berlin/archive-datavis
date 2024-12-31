@@ -14,6 +14,10 @@ class SolarSystem {
     this.connections.draw();
   }
 
+  draw2d() {
+    this.planets.forEach((planet) => planet.draw2d());
+  }
+
   async addPlanet(planet, dataUrl) {
     if (dataUrl) {
       try {

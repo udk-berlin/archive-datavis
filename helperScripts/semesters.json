@@ -1,0 +1,332 @@
+ [
+    {
+      "semester": "Winter 2022",
+      "shortHandle": "2022-ws",
+      "topic": "Genius Loci"
+    },
+    {
+      "semester": "Summer 2022",
+      "shortHandle": "2022-ss",
+      "topic": "Carte Blanche"
+    },
+    {
+      "semester": "Winter 2021",
+      "shortHandle": "2021-ws-k",
+      "topic": "Re-state, re-stage, re-enact (Short-term\n    Project)"
+    },
+    {
+      "semester": "Winter 2021",
+      "shortHandle": "2021-ws",
+      "topic": "Legacy"
+    },
+    {
+      "semester": "Summer 2021",
+      "shortHandle": "2021-ss-k",
+      "topic": "Input, Output, Community (Short-term\n    Project)"
+    },
+    {
+      "semester": "Summer 2021",
+      "shortHandle": "2021-ss",
+      "topic": "Island of things"
+    },
+    {
+      "semester": "Winter 2020",
+      "shortHandle": "2020-ws-k2",
+      "topic": "Convergence"
+    },
+    {
+      "semester": "Winter 2020",
+      "shortHandle": "2020-ws",
+      "topic": "Concretely Unimaginable"
+    },
+    {
+      "semester": "Summer 2020",
+      "shortHandle": "2020-ss-k",
+      "topic": "Unstable Objects (Short-term Project)"
+    },
+    {
+      "semester": "Summer 2020",
+      "shortHandle": "2020-ss",
+      "topic": "Expanding Spaces"
+    },
+    {
+      "semester": "Winter 2019",
+      "shortHandle": "2019-ws-k2",
+      "topic": "Five Lines of Code (Short-term Project)"
+    },
+    {
+      "semester": "Winter 2019",
+      "shortHandle": "2019-ws-k1",
+      "topic": "Minimal Hacks for Big Statements\n    (Short-term Project)"
+    },
+    {
+      "semester": "Winter 2019",
+      "shortHandle": "2019-ws",
+      "topic": "Media Minimalism"
+    },
+    {
+      "semester": "Summer 2019",
+      "shortHandle": "2019-ss",
+      "topic": "Navigation, Orientation, Information"
+    },
+    {
+      "semester": "Winter 2018",
+      "shortHandle": "2018-ws-k",
+      "topic": "Constraints (Short-term Project)"
+    },
+    {
+      "semester": "Winter 2018",
+      "shortHandle": "2018-ws",
+      "topic": "Carte Blanche"
+    },
+    {
+      "semester": "Summer 2018",
+      "shortHandle": "2018-ss",
+      "topic": "'Mirror: Material, Metaphor, Medium'"
+    },
+    {
+      "semester": "Winter 2017",
+      "shortHandle": "2017-ws",
+      "topic": "Artificial Intelligence in Art and\n    Design"
+    },
+    {
+      "semester": "Winter 2016",
+      "shortHandle": "2016-ws",
+      "topic": "Aura"
+    },
+    {
+      "semester": "Summer 2016",
+      "shortHandle": "2016-ss-k",
+      "topic": "Rose is a rose is a rose is a rose\n    (Short-term Project)"
+    },
+    {
+      "semester": "Summer 2016",
+      "shortHandle": "2016-ss",
+      "topic": "Digital Garden — Digital Wilderness"
+    },
+    {
+      "semester": "Winter 2015",
+      "shortHandle": "2015-ws-k",
+      "topic": "Creating Paraphrases (Short Time\n    Project)"
+    },
+    {
+      "semester": "Winter 2015",
+      "shortHandle": "2015-ws",
+      "topic": "Remote Control"
+    },
+    {
+      "semester": "Summer 2015",
+      "shortHandle": "2015-ss-k",
+      "topic": "Making History (Short-term Project)"
+    },
+    {
+      "semester": "Summer 2015",
+      "shortHandle": "2015-ss",
+      "topic": "One Century — Five Regimes"
+    },
+    {
+      "semester": "Winter 2014",
+      "shortHandle": "2014-ws-k",
+      "topic": "Video Cards (Short-term Project)"
+    },
+    {
+      "semester": "Winter 2014",
+      "shortHandle": "2014-ws",
+      "topic": "Narrative Material"
+    },
+    {
+      "semester": "Summer 2014",
+      "shortHandle": "2014-ss",
+      "topic": "Techno Legacy"
+    },
+    {
+      "semester": "Winter 2013",
+      "shortHandle": "2013-ws",
+      "topic": "Measuring Instruments"
+    },
+    {
+      "semester": "Summer 2013",
+      "shortHandle": "2013-ss",
+      "topic": "Free Project"
+    },
+    {
+      "semester": "Winter 2012",
+      "shortHandle": "2012-ws",
+      "topic": "Kinetic"
+    },
+    {
+      "semester": "Summer 2012",
+      "shortHandle": "2012-ss",
+      "topic": "Exhibition in the Cloud"
+    },
+    {
+      "semester": "Winter 2011",
+      "shortHandle": "2011-ws-k",
+      "topic": "Data at Home (Short-term Project)"
+    },
+    {
+      "semester": "Winter 2011",
+      "shortHandle": "2011-ws",
+      "topic": "Sensing the City"
+    },
+    {
+      "semester": "Summer 2011",
+      "shortHandle": "2011-ss",
+      "topic": "100 Pieces, 10 Variations"
+    },
+    {
+      "semester": "Winter 2010",
+      "shortHandle": "2010-ws",
+      "topic": "AR Reloaded"
+    },
+    {
+      "semester": "Summer 2010",
+      "shortHandle": "2010-ss-k",
+      "topic": "Instant Pain (Short-term Project)"
+    },
+    {
+      "semester": "Summer 2010",
+      "shortHandle": "2010-ss",
+      "topic": "In Situ – Ad Hoc"
+    },
+    {
+      "semester": "Winter 2009",
+      "shortHandle": "2009-ws-f",
+      "topic": "Free Project"
+    },
+    {
+      "semester": "Winter 2009",
+      "shortHandle": "2009-ws",
+      "topic": "Powers of Two"
+    },
+    {
+      "semester": "Summer 2009",
+      "shortHandle": "2009-ss",
+      "topic": "Computational Photography"
+    },
+    {
+      "semester": "Winter 2008",
+      "shortHandle": "2008-ws",
+      "topic": "Micro Communities"
+    },
+    {
+      "semester": "Summer 2008",
+      "shortHandle": "2008-ss",
+      "topic": "Indie Design"
+    },
+    {
+      "semester": "Winter 2007",
+      "shortHandle": "2007-ws",
+      "topic": "Beauty of Data"
+    },
+    {
+      "semester": "Summer 2007",
+      "shortHandle": "2007-ss",
+      "topic": "Implants, Wearables, and Prostheses"
+    },
+    {
+      "semester": "Winter 2006",
+      "shortHandle": "2006-ws",
+      "topic": "Minimal Media Interventions in Public\n    Space"
+    },
+    {
+      "semester": "Summer 2006",
+      "shortHandle": "2006-ss",
+      "topic": "Sacral Design"
+    },
+    {
+      "semester": "Winter 2005",
+      "shortHandle": "2005-ws",
+      "topic": "Networked Objects"
+    },
+    {
+      "semester": "Summer 2005",
+      "shortHandle": "2005-ss",
+      "topic": "Free Project"
+    },
+    {
+      "semester": "Winter 2004",
+      "shortHandle": "2004-ws",
+      "topic": "Sensitive Surfaces"
+    },
+    {
+      "semester": "Summer 2004",
+      "shortHandle": "2004-ss",
+      "topic": "Object of Desire"
+    },
+    {
+      "semester": "Winter 2003",
+      "shortHandle": "2003-ws",
+      "topic": "Computational Design or How to\n    Communicate with Software"
+    },
+    {
+      "semester": "Summer 2003",
+      "shortHandle": "2003-ss",
+      "topic": "New Media in Museums and Exhibitions"
+    },
+    {
+      "semester": "Winter 2002",
+      "shortHandle": "2002-ws",
+      "topic": "Memory of the City"
+    },
+    {
+      "semester": "Summer 2002",
+      "shortHandle": "2002-ss",
+      "topic": "Free Project"
+    },
+    {
+      "semester": "Winter 2001",
+      "shortHandle": "2001-ws",
+      "topic": "Information Architecture"
+    },
+    {
+      "semester": "Summer 2001",
+      "shortHandle": "2001-ss",
+      "topic": "Hands On — Hands Off"
+    },
+    {
+      "semester": "Summer 2000",
+      "shortHandle": "2000-ss",
+      "topic": "Real Benefit vs. Value Fiction"
+    },
+    {
+      "semester": "Winter 1999",
+      "shortHandle": "1999-ws",
+      "topic": "The Animated House"
+    },
+    {
+      "semester": "Summer 1999",
+      "shortHandle": "1999-ss",
+      "topic": "Typography in Space"
+    },
+    {
+      "semester": "Winter 1998",
+      "shortHandle": "1998-ws",
+      "topic": "Free Project"
+    },
+    {
+      "semester": "Summer 1998",
+      "shortHandle": "1998-ss",
+      "topic": "Interactives for Berlin’s Museum of\n    Natural History"
+    },
+    {
+      "semester": "Winter 1997",
+      "shortHandle": "1997-ws",
+      "topic": "Senses, Perception, Illusion"
+    },
+    {
+      "semester": "Summer 1997",
+      "shortHandle": "1997-ss",
+      "topic": "Chronos"
+    },
+    {
+      "semester": "Winter 1996",
+      "shortHandle": "1996-ws",
+      "topic": "Position Determination"
+    },
+    {
+      "semester": "—",
+      "shortHandle": "00XX-free",
+      "topic": "Free Projects"
+    }
+  ]

@@ -8,32 +8,11 @@ import { v4 as uuidv4 } from "uuid";
 
 import Hud from "./Hud";
 
+import addScreenPositionFunction from "./addScreenPositionFunction";
+
+import { easyCam_ini } from "./p5.easycam.js";
+
 export default function sketch(p5) {
-  p5.constructor.prototype.screenPosition = function (x, y, z) {
-    const p = p5.createVector(x, y, z);
-    const cam = p5._renderer._curCamera;
-
-    const mvp = p5._renderer.uMVMatrix.copy().mult(p5._renderer.uPMatrix);
-
-    const coords = p4MultMatrix(p, mvp);
-
-    const norm = coords.copy().div(coords.w);
-
-    norm.x = this.map(norm.x, -1, 1, 0, this.width);
-    norm.y = this.map(-norm.y, -1, 1, 0, this.height);
-
-    return norm;
-  };
-
-  function p4MultMatrix(p, m) {
-    const result = p5.createVector();
-    result.x = p.x * m.mat4[0] + p.y * m.mat4[4] + p.z * m.mat4[8] + m.mat4[12];
-    result.y = p.x * m.mat4[1] + p.y * m.mat4[5] + p.z * m.mat4[9] + m.mat4[13];
-    result.z = p.x * m.mat4[2] + p.y * m.mat4[6] + p.z * m.mat4[10] + m.mat4[14];
-    result.w = p.x * m.mat4[3] + p.y * m.mat4[7] + p.z * m.mat4[11] + m.mat4[15];
-    return result;
-  }
-
   let img;
 
   let hud;
@@ -60,7 +39,6 @@ export default function sketch(p5) {
 
   let font;
 
-  let cam, cameraStartView, cameraDefaultView;
   let amt = 0;
 
   let windowWidth = 700;
@@ -73,6 +51,15 @@ export default function sketch(p5) {
   let parent;
 
   let canvasSizeChanged = false;
+
+  let easycam;
+
+  let rotationA = 0;
+  let rotationB = 0;
+  let rotationC = 0;
+  let rotationD = 0;
+
+
 
   p5.updateWithProps = (props) => {
     if (props.windowWidth) {
@@ -98,6 +85,18 @@ export default function sketch(p5) {
         p5.clear();
       }
     }
+    if(props.rotationA) {
+      rotationA = props.rotationA
+    }
+    if(props.rotationB) {
+      rotationB = props.rotationB
+    }
+    if(props.rotationC) {
+      rotationC = props.rotationC
+    }
+    if(props.rotationD) {
+      rotationD = props.rotationD
+    }
   };
 
   async function resizeCanvasByParent() {}
@@ -113,15 +112,18 @@ export default function sketch(p5) {
   };
 
   p5.setup = async () => {
+    window.p5 = p5.constructor;
+    easyCam_ini(p5);
     parent = document.getElementById("sketch-container");
     p5.createCanvas(parent.offsetWidth, parent.offsetHeight, p5.WEBGL);
+    addScreenPositionFunction(p5);
 
 
     easycam = p5.createEasyCam(p5._renderer, { distance: 1000 });
-    easycam.setRotation([0.9, -0.09, 0.3, -0.03]);
+    easycam.setRotation([rotationA, rotationB, rotationC, rotationD]);
     //easycam.setDefaultInterpolationTime(2000);
 
-    easycam.setDistance(900, 3500);
+    easycam.setDistance(1600, 3500);
      easycam.setCenter([0, 0, 0]);
  
 
@@ -129,19 +131,12 @@ export default function sketch(p5) {
     const scale = 1.5;
     const defaultScale = 1.5;
 
-    cam = p5.createCamera();
-    cam.ortho(-p5.width / scale, p5.width / scale, -p5.height / scale, p5.height / scale, -20, 3000);
-
-    cameraStartView = iniStartCamera(p5.createCamera(), scale);
-    cameraDefaultView = iniDefaultCamera(p5.createCamera(), scale, defaultScale);
-
     solarSystem = new SolarSystem(p5);
 
     await new Promise((r) => setTimeout(r, 400));
 
-
-    const entriesDistance = 17
-    const entriesColumns = 10
+    const entriesDistance = 17;
+    const entriesColumns = 10;
 
     solarSystem.addPlanet(
       new Planet(p5, {
@@ -157,23 +152,20 @@ export default function sketch(p5) {
       })
     );
 
-
-
     solarSystem.addPlanet(
       new Planet(p5, {
         mode: "stripe",
         distance: planetData.authors.length * 4 || 0,
-        centralPoint: p5.createVector(0, ((planetData.entries.length/entriesColumns)*entriesDistance)/4, 0),
+        centralPoint: p5.createVector(0, ((planetData.entries.length / entriesColumns) * entriesDistance) / 4, 0),
         rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
         data: planetData.authors || [],
-          distance: 300,
+        distance: 300,
         id: "authors",
         stripeSettings: {
           maxPerRing: 120,
           layerDistance: 10,
           layerRotation: 10,
         },
-
       })
     );
 
@@ -181,9 +173,9 @@ export default function sketch(p5) {
       new Planet(p5, {
         mode: "ring",
         distance: planetData?.semesters?.length * 4 || 0,
-        centralPoint: p5.createVector(0, ((planetData.entries.length/entriesColumns)*entriesDistance)/4*-1, 0),
+        centralPoint: p5.createVector(0, (((planetData.entries.length / entriesColumns) * entriesDistance) / 4) * -1, 0),
         rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
-         distance: 300,
+        distance: 300,
         data: planetData?.semesters || [],
         id: "semesters",
       })
@@ -195,26 +187,26 @@ export default function sketch(p5) {
         distance: planetData?.archive?.length || 0,
         centralPoint: p5.createVector(0, 0, 0),
         rotationAngles: { angleX: 90, angleY: 0, angleZ: 0 },
-         distance: 485,
+        distance: 485,
         data: planetData?.archive || [],
         id: "archive",
         stripeSettings: {
           maxPerRing: 120,
           layerDistance: 14,
           layerRotation: 10,
-        }
+        },
       })
     );
-
 
     p5.textFont(font);
     p5.textSize(32);
     p5.textAlign(p5.CENTER, p5.CENTER);
 
+    hud = new Hud(p5);
     hud.addLabel({ point: centralPoint, text: "Projects" });
-    hud.addLabel({ point: p5.createVector(-1 * planetData.authors.length * 4, 0, 0), text: "Persons" });
-    hud.addLabel({ point: p5.createVector(-1 * planetData.semesters.length * 4, -500, 0), text: "Semesters" });
-    hud.addLabel({ point: p5.createVector(-1 * planetData.archive.length, 500, 0), text: "Archive" });
+    hud.addLabel({ point: p5.createVector(-1 * planetData.authors.length * 2+20, 175, 0), text: "Persons" });
+    hud.addLabel({ point: p5.createVector(-1 * planetData.semesters.length * 4-37, -175, 0), text: "Semesters" });
+    hud.addLabel({ point: p5.createVector(-1 * planetData.archive.length/2-15, -60, 0), text: "Archive" });
   };
 
   function updateRotation() {
@@ -224,6 +216,7 @@ export default function sketch(p5) {
   }
 
   p5.draw = () => {
+
 
    // easycam.setRotation([rotationA, rotationB, rotationC, rotationD]);
 
@@ -250,10 +243,30 @@ export default function sketch(p5) {
     // }
 
 
-    p5.background(236, 239, 241);
 
-    //p5.ambientLight(150);
-    // p5.directionalLight(255, 255, 255, 1, 1, -1);
+    var cam_dist = easycam.getDistance();
+    var oscale = cam_dist * 0.001;
+    var ox = (p5.width / 2) * oscale;
+    var oy = (p5.height / 2) * oscale;
+    p5.ortho(-ox, +ox, -oy, +oy, -10000, 10000);
+      easycam.setPanScale(0.004 / p5.sqrt(cam_dist));
+
+    // if (!introAnimationFinished) {
+    //   if (amt < 1) {
+    //     if (p5.millis() > 100) {
+    //       amt += 0.005;
+    //     }
+    //     //  cam.slerp(cameraStartView, cameraDefaultView, easingFunctions.easeOutCubic(amt));
+    //     //   p5.setCamera(cam);
+    //   } else {
+    //     //   p5.setCamera(cam);
+    //     introAnimationFinished = true;
+    //   }
+    // } else {
+    //   p5.orbitControl(-1, -1, 0.25);
+    // }
+
+    p5.background(236, 239, 241);
 
     if (autoRotation && p5.millis() > 2000) {
       updateRotation();
@@ -269,19 +282,20 @@ export default function sketch(p5) {
     // p5.fill(236, 239, 241)
     // p5.plane(200,1400)
 
+    hud?.updateLabelPositions()
+
     if (autoRotation && p5.millis() > 2000) p5.pop();
 
-    // const hoverIds = solarSystem.getHoverIds()
-    // if(hoverIds && hoverIds.length > 0) {
-    //   hud.clearLabels()
-    //   const d = solarSystem.getPlanet(hoverIds[0]?.planetId)?.getPointById(hoverIds[0]?.id)
-    //   console.log(hoverIds[0], d)
-    //   hud.addLabel({point:d,text: "hover", type:"hover"});
-    // }
+    easycam.beginHUD();
+    p5.push();
+    p5.translate(p5.width / 2, p5.height / 2);
+    solarSystem.draw2d();
+    hud?.draw()
 
-    //    hud.draw(centralPoint);
+    p5.pop();
 
-    
+    easycam.endHUD();
+
 
   };
 
@@ -333,28 +347,5 @@ export default function sketch(p5) {
       console.error("Error fetching planet data:", error);
       return [];
     }
-  }
-
-  function iniDefaultCamera(camera, scale, defaultScale) {
-    camera = p5.createCamera();
-    camera.ortho(
-      (-p5.width / scale) * defaultScale,
-      (p5.width / scale) * defaultScale,
-      (-p5.height / scale) * defaultScale,
-      (p5.height / scale) * defaultScale,
-      0.1,
-      3000
-    );
-    camera.setPosition(0, 1350, 1040);
-    camera.lookAt(0, 0, 0);
-    return camera;
-  }
-
-  function iniStartCamera(camera, scale) {
-    camera = p5.createCamera();
-    camera.ortho(-p5.width / scale, p5.width / scale, -p5.height / scale, p5.height / scale, -2000, 8000);
-    camera.setPosition(0.000006, 3000, 110.0003);
-    camera.lookAt(0, 0, 0);
-    return camera;
   }
 }

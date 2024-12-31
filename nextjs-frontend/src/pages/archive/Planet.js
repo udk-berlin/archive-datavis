@@ -407,6 +407,12 @@ class Planet {
     if (this.selfRotation) this.p5.pop();
   }
 
+  draw2d() {
+    this.renderPoints.forEach((p) => {
+      p.draw2d();
+    })
+  }
+
   setPointToHover(id) {
     this.renderPoints.forEach((p) => {
       p.setHover(p.getId() === id);
@@ -420,11 +426,9 @@ class Planet {
     this.renderPoints.find((p) => p.getId() === aId)?.setActive(true);
   }
   showHiddenId(id) {
-    console.log("show id", id);
     this.renderPoints.find((p) => p.getId() === id)?.setHidden(false);
   }
   hideActiveId(id) {
-    console.log("hide id", id);
     this.renderPoints.find((p) => p.getId() === id)?.setHidden(true);
   }
   setActiveIds(aIds) {
