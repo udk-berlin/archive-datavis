@@ -93,10 +93,7 @@ const SidePanel = ({ focusedIds, setFocusedIds, focusedType, className, cachedDa
             <div className="grid gap-8 mt-4">
              
             </div>
-            <div>
-              const [rotationA, setRotationA] = useState({rotationA}); const [rotationB, setRotationB] = useState({rotationB}); const
-              [rotationC, setRotationC] = useState({rotationC}); const [rotationD, setRotationD] = useState({rotationD});
-            </div>
+            
           </>
         )}
 

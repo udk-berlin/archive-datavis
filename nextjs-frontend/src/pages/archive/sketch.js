@@ -224,22 +224,7 @@ export default function sketch(p5) {
   }
 
   p5.draw = () => {
-<<<<<<< Updated upstream
-    if (!introAnimationFinished) {
-      if (amt < 1) {
-        if (p5.millis() > 100) {
-          amt += 0.005;
-        }
-        cam.slerp(cameraStartView, cameraDefaultView, easingFunctions.easeOutCubic(amt));
-        p5.setCamera(cam);
-      } else {
-        p5.setCamera(cam);
-        introAnimationFinished = true;
-      }
-    } else {
-      p5.orbitControl(-1, -1, 0.25);
-    }
-=======
+
    // easycam.setRotation([rotationA, rotationB, rotationC, rotationD]);
 
     var cam_dist = easycam.getDistance();
@@ -263,7 +248,7 @@ export default function sketch(p5) {
     // } else {
     //   p5.orbitControl(-1, -1, 0.25);
     // }
->>>>>>> Stashed changes
+
 
     p5.background(236, 239, 241);
 
