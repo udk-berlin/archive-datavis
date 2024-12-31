@@ -16,15 +16,7 @@ class Hud {
     this.p5.ellipse(0, 0, 50, 50);
 
     if (side === "left") {
-<<<<<<< Updated upstream
-      this.p5.line(-25, 0, -150, 0);
-      // this.p5.fill(236, 239, 241)
-      this.p5.rect(-150, -25, -1 * text?.length * 22, 50);
-      typeof stroke === "object" ? this.p5.fill(stroke.r, stroke.g, stroke.b) : this.p5.fill(0); 
-      this.p5.textAlign(this.p5.RIGHT, this.p5.CENTER);
-      this.p5.textSize(32);
-      this.p5.text(text, -175, -7);
-=======
+
       this.p5.line(screenPos.x + -10, screenPos.y, screenPos.x + -50, screenPos.y);
       this.p5.fill(236, 239, 241)
       this.p5.rect(screenPos.x + -50, screenPos.y + -15, -1 * text?.length * 11, 30);
@@ -32,7 +24,7 @@ class Hud {
       this.p5.textAlign(this.p5.RIGHT, this.p5.CENTER);
       this.p5.textSize(16);
       this.p5.text(text, screenPos.x + -60, screenPos.y + -3);
->>>>>>> Stashed changes
+
     }
 
     this.p5.pop();

@@ -116,9 +116,7 @@ export default function sketch(p5) {
     parent = document.getElementById("sketch-container");
     p5.createCanvas(parent.offsetWidth, parent.offsetHeight, p5.WEBGL);
 
-<<<<<<< Updated upstream
-    hud = new Hud(p5);
-=======
+
     easycam = p5.createEasyCam(p5._renderer, { distance: 1000 });
     easycam.setRotation([0.9, -0.09, 0.3, -0.03]);
     //easycam.setDefaultInterpolationTime(2000);
@@ -126,7 +124,7 @@ export default function sketch(p5) {
     easycam.setDistance(900, 3500);
      easycam.setCenter([0, 0, 0]);
  
->>>>>>> Stashed changes
+
 
     const scale = 1.5;
     const defaultScale = 1.5;
